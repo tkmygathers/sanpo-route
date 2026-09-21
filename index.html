@@ -226,11 +226,64 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
  .live-sanpo-stat{padding:0 3px}
 }
 
+
+/* ===== SANPO v20 header weather ===== */
+.top-left-v20{display:flex;align-items:center;gap:10px;min-width:0}
+.header-weather-v20{
+  position:static!important;
+  left:auto!important;top:auto!important;
+  z-index:auto!important;
+  display:flex;align-items:center;gap:6px;
+  padding:5px 8px;
+  background:#f4f8f6;
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:none;
+  backdrop-filter:none;
+  max-width:165px;
+}
+.header-weather-v20 b{
+  display:block;
+  font-size:9px;
+  line-height:1.15;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.header-weather-v20 small{
+  display:block;
+  font-size:7px;
+  line-height:1.15;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:105px;
+}
+.header-weather-v20 .weather-dot-v12{
+  width:8px;height:8px;flex:0 0 8px;
+}
+@media(max-width:360px){
+  .top-left-v20{gap:7px}
+  .header-weather-v20{padding:4px 6px;max-width:140px}
+  .header-weather-v20 small{display:none}
+  .header-weather-v20 b{font-size:8px}
+}
+
 </style>
 </head>
 <body>
 <div class="shell">
-<header class="top"><div class="logo">SANP<span>O</span></div><div id="date" class="date"></div></header>
+<header class="top">
+  <div class="top-left-v20">
+    <div class="logo">SANP<span>O</span></div>
+    <div class="hero-weather-v12 header-weather-v20" id="weatherCard">
+      <span class="weather-dot-v12" id="weatherDot"></span>
+      <div><b id="weatherTitle">天気を確認中</b><small id="weatherSub">現在地から取得</small></div>
+    </div>
+  </div>
+  <div id="date" class="date"></div>
+</header>
 
 
 
@@ -239,10 +292,6 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
     <div class="card hero-v12">
       <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
-      <div class="hero-weather-v12" id="weatherCard">
-        <span class="weather-dot-v12" id="weatherDot"></span>
-        <div><b id="weatherTitle">天気を確認中</b><small id="weatherSub">現在地から取得します</small></div>
-      </div>
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
       <img id="homeWalker" class="hero-person-v12" src="assets/female_stage_1.png" alt="今日のキャラクター">
