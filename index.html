@@ -117,6 +117,48 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
  .hero-talk-hint-v16{left:168px;top:102px}
 }
 
+
+/* ===== SANPO v18 ===== */
+.daily-track-status{margin-top:6px;font-size:9px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.daily-track-status:before{content:"";width:7px;height:7px;border-radius:50%;background:#a9b5b0;display:inline-block}
+.daily-track-status.live:before{background:var(--g);box-shadow:0 0 0 3px rgba(16,168,100,.12)}
+.daily-track-status.warn:before{background:#e5a536}
+.hero-weather-v12.weather-rain .weather-dot-v12{background:#5aa6df;box-shadow:0 0 0 4px rgba(90,166,223,.16)}
+.hero-weather-v12.weather-cloud .weather-dot-v12{background:#9aa8b1;box-shadow:0 0 0 4px rgba(154,168,177,.16)}
+.hero-weather-v12.weather-snow .weather-dot-v12{background:#b8d9eb;box-shadow:0 0 0 4px rgba(184,217,235,.18)}
+.hero-weather-v12.weather-hot .weather-dot-v12{background:#ef8b52;box-shadow:0 0 0 4px rgba(239,139,82,.16)}
+.hero-weather-v12.weather-cold .weather-dot-v12{background:#75aee0;box-shadow:0 0 0 4px rgba(117,174,224,.16)}
+
+/* character speech bubbles: tail actually points to character */
+.hero-bubble-v12{
+  right:12px;top:72px;width:min(45vw,170px);max-width:170px;
+  padding:12px 13px;border-radius:20px;
+}
+.hero-bubble-v12:after{
+  left:-10px;bottom:18px;width:18px;height:18px;
+  border-left:1.6px solid rgba(16,168,100,.78);
+  border-bottom:1.6px solid rgba(16,168,100,.78);
+  transform:rotate(45deg) skew(-7deg,-7deg);
+}
+.track-scene{overflow:hidden}
+.track-scene img{left:42%;width:min(61vw,240px);height:min(72vw,280px)}
+.track-bubble{
+  right:10px;top:18px;width:min(43vw,168px);max-width:168px;
+  min-width:118px;padding:11px 12px;border-radius:19px;
+  font-size:clamp(10px,2.8vw,12px);line-height:1.5;
+}
+.track-bubble:after{
+  left:-10px;bottom:16px;width:17px;height:17px;
+  border-left:1.6px solid rgba(16,168,100,.78);
+  border-bottom:1.6px solid rgba(16,168,100,.78);
+  transform:rotate(45deg) skew(-7deg,-7deg);
+}
+@media(max-width:370px){
+ .hero-bubble-v12{width:42vw;right:8px;font-size:10px}
+ .track-bubble{right:7px;width:41vw;min-width:110px;padding:9px 10px}
+ .track-scene img{left:39%;width:58vw}
+}
+
 </style>
 </head>
 <body>
@@ -130,9 +172,9 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
     <div class="card hero-v12">
       <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
-      <div class="hero-weather-v12">
-        <span class="weather-dot-v12"></span>
-        <div><b>今日も散歩日和</b><small>自分のペースでいこう</small></div>
+      <div class="hero-weather-v12" id="weatherCard">
+        <span class="weather-dot-v12" id="weatherDot"></span>
+        <div><b id="weatherTitle">天気を確認中</b><small id="weatherSub">現在地から取得します</small></div>
       </div>
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
@@ -147,6 +189,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
           <div class="sum-label">今日の歩数</div>
           <div class="summary-steps"><span id="todaySteps">0</span><small> / <span id="goalSteps">7,000</span> 歩</small></div>
           <div class="goal-km-line">距離目標 <strong id="goalKmDisplay">5.0 km</strong></div>
+          <div id="dailyTrackStatus" class="daily-track-status">GPSを準備中</div>
         </div>
         <div id="goalRing" class="ring"><span id="goalPct">0%</span></div>
       </div>
@@ -288,17 +331,39 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
-const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9'};
+const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
 let mode='random',recordPeriod='week',map,startPoint,startMarker,poiMarker,routeLine,routeShadow,currentRoute=null;
 let walkFrame=1,walkTimer=null,tracking=false,paused=false,startTime=0,pauseAt=0,pauseTotal=0,timerInt=null,watchId=null,trackKm=0,lastPos=null,trackPath=[];
+let dailyWatchId=null,dailyLastPos=null,dailyWeatherCoords=null;
 function json(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}}
 function profile(){const saved={...json(KEY.profile,{})};delete saved.voice;return {...{age:'',height:'',weight:'',goalKm:5,gender:'female',dog:true},...saved}}
 function hist(){const h=json(KEY.history,[]);return Array.isArray(h)?h:[]}
 function saveHist(h){localStorage.setItem(KEY.history,JSON.stringify(h))}
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function dayKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function dailyState(){
+ const key=dayKey(),raw=json(KEY.daily,{});
+ if(raw.date!==key)return{date:key,km:0,steps:0,lastSavedAt:Date.now()};
+ return{date:key,km:+raw.km||0,steps:+raw.steps||0,lastSavedAt:+raw.lastSavedAt||Date.now()}
+}
+function saveDailyState(s){localStorage.setItem(KEY.daily,JSON.stringify({...s,date:dayKey(),lastSavedAt:Date.now()}))}
+function strideMeters(){
+ const p=profile(),h=+p.height||170;
+ return Math.max(.48,Math.min(.90,h*.415/100))
+}
+function dailyEstimatedSteps(km){return Math.round((km*1000)/strideMeters())}
+
 function weekStart(){const d=new Date(),x=new Date(d),day=x.getDay();x.setDate(x.getDate()+(day===0?-6:1-day));x.setHours(0,0,0,0);return x}
-function today(){const n=new Date(),o={km:0,steps:0,cal:0,min:0};hist().forEach(i=>{const d=new Date(i.date);if(sameDay(d,n)){o.km+=+i.km||0;o.steps+=+i.steps||0;o.cal+=+i.cal||0;o.min+=+i.min||0}});return o}
+function today(){
+ const n=new Date(),o={km:0,steps:0,cal:0,min:0};
+ hist().forEach(i=>{const d=new Date(i.date);if(sameDay(d,n)){o.km+=+i.km||0;o.steps+=+i.steps||0;o.cal+=+i.cal||0;o.min+=+i.min||0}});
+ const ds=dailyState();
+ // daily GPS is the live day total. Use whichever is larger to prevent duplicate counting after a walk is saved.
+ o.km=Math.max(o.km,ds.km);
+ o.steps=Math.max(o.steps,ds.steps||dailyEstimatedSteps(ds.km));
+ return o
+}
 function stage(p){return p>=100?5:p>=75?4:p>=50?3:p>=25?2:1}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
 function asset(g,s){return `assets/${g}_stage_${s}.png`}
@@ -531,12 +596,97 @@ function showTrackTalk(kind='auto'){
  lastTrackTalkSec=elapsed();
  showTalkBubble('trackBubble',pickTalk(pool,'track'),6200)
 }
-function renderHome(){
+
+function fetchWithTimeout(url,options={},ms=6500){
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),ms);
+ return fetch(url,{...options,signal:ctrl.signal}).finally(()=>clearTimeout(timer))
+}
+function weatherLabel(code,temp,precip){
+ const rainy=[51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99];
+ const snowy=[71,73,75,77,85,86];
+ const cloudy=[2,3,45,48];
+ if(snowy.includes(code))return{title:'雪に注意',sub:`${Math.round(temp)}℃ ・ 足元に気をつけて`,cls:'weather-snow'};
+ if(rainy.includes(code)||precip>=45)return{title:'雨の可能性あり',sub:`${Math.round(temp)}℃ ・ 降水 ${Math.round(precip)}%`,cls:'weather-rain'};
+ if(temp>=31)return{title:'暑さに注意',sub:`${Math.round(temp)}℃ ・ 無理せず短めに`,cls:'weather-hot'};
+ if(temp<=5)return{title:'冷え込み注意',sub:`${Math.round(temp)}℃ ・ 暖かくして歩こう`,cls:'weather-cold'};
+ if(cloudy.includes(code))return{title:'くもり',sub:`${Math.round(temp)}℃ ・ 歩きやすそう`,cls:'weather-cloud'};
+ return{title:'晴れ',sub:`${Math.round(temp)}℃ ・ 自分のペースでいこう`,cls:''}
+}
+async function updateWeather(lat,lng,force=false){
+ const card=$('weatherCard'),title=$('weatherTitle'),sub=$('weatherSub');
+ if(!card||!title||!sub)return;
+ const cache=json(KEY.weather,{});
+ if(!force&&cache.time&&Date.now()-cache.time<30*60*1000&&cache.day===dayKey()){
+  title.textContent=cache.title;sub.textContent=cache.sub;
+  card.className='hero-weather-v12 '+(cache.cls||'');return
+ }
+ try{
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&hourly=precipitation_probability&forecast_days=1&timezone=auto`;
+  const r=await fetchWithTimeout(url,{},6500);if(!r.ok)throw Error('weather');
+  const d=await r.json(),temp=d.current?.temperature_2m,code=d.current?.weather_code??0;
+  const nowIso=d.current?.time||'',idx=(d.hourly?.time||[]).indexOf(nowIso),precip=idx>=0?(d.hourly.precipitation_probability?.[idx]??0):0;
+  if(temp==null)throw Error('weather data');
+  const w=weatherLabel(code,temp,precip);
+  title.textContent=w.title;sub.textContent=w.sub;card.className='hero-weather-v12 '+w.cls;
+  localStorage.setItem(KEY.weather,JSON.stringify({...w,time:Date.now(),day:dayKey()}));
+ }catch(e){
+  const cache=json(KEY.weather,{});
+  if(cache.title){title.textContent=cache.title;sub.textContent=cache.sub+'（前回取得）';card.className='hero-weather-v12 '+(cache.cls||'')}
+  else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 weather-cloud'}
+ }
+}
+function updateDailyStatus(kind='live'){
+ const el=$('dailyTrackStatus');if(!el)return;
+ el.classList.remove('live','warn');
+ if(kind==='live'){el.classList.add('live');el.textContent='今日のGPS距離を計測中'}
+ else if(kind==='permission'){el.classList.add('warn');el.textContent='位置情報を許可すると今日の距離を記録'}
+ else{el.classList.add('warn');el.textContent='GPS計測を利用できません'}
+}
+function acceptDailyPosition(pos){
+ const c={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy||999,t:Date.now()};
+ if(!dailyWeatherCoords||airKm(dailyWeatherCoords.lat,dailyWeatherCoords.lng,c.lat,c.lng)>.5){
+  dailyWeatherCoords=c;updateWeather(c.lat,c.lng)
+ }
+ // Accuracy too poor: don't add movement, but keep as next anchor only if usable
+ if(c.acc>80)return;
+ const ds=dailyState();
+ if(dailyLastPos){
+  const seconds=(c.t-dailyLastPos.t)/1000;
+  const d=hav(dailyLastPos.lat,dailyLastPos.lng,c.lat,c.lng);
+  // walking-like movement only; removes GPS jumps and vehicle-scale jumps
+  const speed=seconds>0?(d*1000/seconds):0;
+  if(d>=.003&&d<=.12&&speed<=3.2){
+    ds.km=Math.max(0,ds.km+d);
+    ds.steps=dailyEstimatedSteps(ds.km);
+    saveDailyState(ds);
+    renderHome(false);
+  }
+ }
+ dailyLastPos=c;
+ updateDailyStatus('live')
+}
+function startDailyTracking(){
+ if(!navigator.geolocation){updateDailyStatus('error');return}
+ if(dailyWatchId!=null)return;
+ updateDailyStatus('permission');
+ navigator.geolocation.getCurrentPosition(
+  p=>{acceptDailyPosition(p);updateWeather(p.coords.latitude,p.coords.longitude,true)},
+  ()=>updateDailyStatus('permission'),
+  {enableHighAccuracy:true,maximumAge:30000,timeout:8000}
+ );
+ dailyWatchId=navigator.geolocation.watchPosition(
+  acceptDailyPosition,
+  ()=>updateDailyStatus('permission'),
+  {enableHighAccuracy:true,maximumAge:5000,timeout:15000}
+ )
+}
+
+function renderHome(talk=true){
  const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=stage(pct);
  $('todaySteps').textContent=Math.round(t.steps).toLocaleString();$('goalSteps').textContent=gsteps.toLocaleString();$('goalKmDisplay').textContent=(+p.goalKm||5).toFixed(1)+' km';$('goalPct').textContent=Math.round(pct)+'%';$('goalRing').style.setProperty('--p',pct+'%');$('goalBar').style.width=pct+'%';$('todayCal').textContent=Math.round(t.cal);$('todayMin').textContent=Math.round(t.min);$('todayKm').textContent=t.km.toFixed(1);
  $('rice').textContent=food(t.cal,FOOD.rice);$('banana').textContent=food(t.cal,FOOD.banana);$('cake').textContent=food(t.cal,FOOD.cake);$('ramen').textContent=food(t.cal,FOOD.ramen);
 if($('homeWalker'))$('homeWalker').src=asset(p.gender,st);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
- if($('homePage').classList.contains('active'))showHomeTalk();
+ if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
 function navTo(id){qsa('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');qsa('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));if(id==='homePage')renderHome();if(id==='mapPage')setTimeout(()=>map&&map.invalidateSize(),80);if(id==='recordPage')renderRecords();if(id==='settingsPage')renderSettingsProgress()}
 qsa('.nav[data-page]').forEach(n=>n.onclick=()=>navTo(n.dataset.page));$('homeRoute').onclick=()=>navTo('mapPage');$('homeWalker').onclick=showHomeTalk;$('homeTalkHint').onclick=showHomeTalk;$('trackWalker').onclick=()=>showTrackTalk('auto');$('date').textContent=new Date().toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',weekday:'short'});
@@ -571,15 +721,19 @@ const notes={random:'歩きやすさと距離のバランスを見て、気軽�
 qsa('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;qsa('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('modeNote').textContent=notes[mode]});
 function initMap(){try{map=L.map('map',{zoomControl:false}).setView([35.681236,139.767125],14);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);map.on('click',e=>setStart(e.latlng.lat,e.latlng.lng))}catch(e){$('mapStatus').textContent='地図を読み込めませんでした'}}
 function setStart(lat,lng){startPoint={lat,lng};if(startMarker)map.removeLayer(startMarker);const icon=L.divIcon({html:'<div class="start-dot"></div>',iconSize:[20,20],iconAnchor:[10,10]});startMarker=L.marker([lat,lng],{icon}).addTo(map);map.flyTo([lat,lng],15);$('mapStatus').textContent='スタート地点を設定しました'}
-$('useLocation').onclick=()=>{if(!navigator.geolocation)return alert('現在地取得に対応していません');$('mapStatus').textContent='現在地を取得中…';navigator.geolocation.getCurrentPosition(p=>setStart(p.coords.latitude,p.coords.longitude),()=>{$('mapStatus').textContent='現在地を取得できませんでした'})};
+$('useLocation').onclick=()=>{if(!navigator.geolocation)return alert('現在地取得に対応していません');$('mapStatus').textContent='現在地を取得中…';navigator.geolocation.getCurrentPosition(p=>{setStart(p.coords.latitude,p.coords.longitude);updateWeather(p.coords.latitude,p.coords.longitude,true)},()=>{$('mapStatus').textContent='現在地を取得できませんでした'},{enableHighAccuracy:true,maximumAge:10000,timeout:10000})};
 function dest(lat,lng,km,b){const R=6371,br=b*Math.PI/180,p1=lat*Math.PI/180,l1=lng*Math.PI/180,a=km/R,p2=Math.asin(Math.sin(p1)*Math.cos(a)+Math.cos(p1)*Math.sin(a)*Math.cos(br)),l2=l1+Math.atan2(Math.sin(br)*Math.sin(a)*Math.cos(p1),Math.cos(a)-Math.sin(p1)*Math.sin(p2));return{lat:p2*180/Math.PI,lng:l2*180/Math.PI}}
 function normalPoints(lat,lng,target,bearing=Math.random()*360,scale=1){const r=Math.max(.16,target/6.4)*scale,p1=dest(lat,lng,r,bearing),p2=dest(lat,lng,r*1.04,bearing+105),p3=dest(lat,lng,r*.96,bearing+215);return[{lat,lon:lng},{lat:p1.lat,lon:p1.lng},{lat:p2.lat,lon:p2.lng},{lat:p3.lat,lon:p3.lng},{lat,lon:lng}]}
 function airKm(a,b,c,d){const R=6371,to=x=>x*Math.PI/180,d1=to(c-a),d2=to(d-b),x=Math.sin(d1/2)**2+Math.cos(to(a))*Math.cos(to(c))*Math.sin(d2/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 async function overpassFetch(query){
- const endpoints=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+ const endpoints=['https://overpass.kumi.systems/api/interpreter','https://overpass-api.de/api/interpreter'];
  for(const url of endpoints){
   try{
-   const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(query)});
+   const r=await fetchWithTimeout(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'data='+encodeURIComponent(query)
+   },6500);
    if(!r.ok)continue;
    return await r.json();
   }catch(e){console.warn('overpass endpoint failed',url,e)}
@@ -621,18 +775,18 @@ async function featureSearch(kind,lat,lng,target){
  if(kind==='random'||kind==='workout')return [];
  const rad=Math.round(Math.min(3800,Math.max(1100,target*620)));
  if(kind==='green'){
-  const q=`[out:json][timeout:12];(nwr["leisure"="park"](around:${rad},${lat},${lng});nwr["leisure"="garden"](around:${rad},${lat},${lng});nwr["landuse"~"forest|grass|meadow|recreation_ground"](around:${rad},${lat},${lng});nwr["natural"="wood"](around:${rad},${lat},${lng});nwr["waterway"~"river|canal|stream"](around:${rad},${lat},${lng}););out center 70;`;
+  const q=`[out:json][timeout:8];(nwr["leisure"="park"](around:${rad},${lat},${lng});nwr["leisure"="garden"](around:${rad},${lat},${lng});nwr["landuse"~"forest|grass|meadow|recreation_ground"](around:${rad},${lat},${lng});nwr["natural"="wood"](around:${rad},${lat},${lng});nwr["waterway"~"river|canal|stream"](around:${rad},${lat},${lng}););out center 70;`;
   return normalizeFeatureItems(await overpassFetch(q),'green',lat,lng,target);
  }
  if(kind==='water'){
-  const q=`[out:json][timeout:12];(nwr["waterway"~"river|canal|stream"](around:${rad},${lat},${lng});nwr["natural"="water"](around:${rad},${lat},${lng});nwr["water"~"pond|lake|reservoir|river|canal"](around:${rad},${lat},${lng}););out center 90;`;
+  const q=`[out:json][timeout:8];(nwr["waterway"~"river|canal|stream"](around:${rad},${lat},${lng});nwr["natural"="water"](around:${rad},${lat},${lng});nwr["water"~"pond|lake|reservoir|river|canal"](around:${rad},${lat},${lng}););out center 90;`;
   return normalizeFeatureItems(await overpassFetch(q),'water',lat,lng,target);
  }
- const radii=[1200,2200,3600,4800];
+ const radii=[1300,2600,4200];
  for(let i=0;i<radii.length;i++){
   const r=radii[i];
   $('mapStatus').textContent=`寄り道スポットを探索中… 半径 ${(r/1000).toFixed(1)} km`;
-  const q=`[out:json][timeout:13];(nwr["amenity"="cafe"](around:${r},${lat},${lng});nwr["shop"="bakery"](around:${r},${lat},${lng});nwr["amenity"="ice_cream"](around:${r},${lat},${lng});nwr["shop"="convenience"](around:${r},${lat},${lng});nwr["tourism"="viewpoint"](around:${r},${lat},${lng});nwr["leisure"="park"](around:${r},${lat},${lng});nwr["amenity"="bench"](around:${r},${lat},${lng});nwr["amenity"="drinking_water"](around:${r},${lat},${lng}););out center 90;`;
+  const q=`[out:json][timeout:8];(nwr["amenity"="cafe"](around:${r},${lat},${lng});nwr["shop"="bakery"](around:${r},${lat},${lng});nwr["amenity"="ice_cream"](around:${r},${lat},${lng});nwr["shop"="convenience"](around:${r},${lat},${lng});nwr["tourism"="viewpoint"](around:${r},${lat},${lng});nwr["leisure"="park"](around:${r},${lat},${lng});nwr["amenity"="bench"](around:${r},${lat},${lng});nwr["amenity"="drinking_water"](around:${r},${lat},${lng}););out center 90;`;
   const items=normalizeFeatureItems(await overpassFetch(q),'detour',lat,lng,target);
   if(items.length>=3||i===radii.length-1)return items;
  }
@@ -640,7 +794,17 @@ async function featureSearch(kind,lat,lng,target){
 }
 function poiPoints(lat,lng,target,p,bearing=Math.random()*360,scale=1){const base=Math.max(.12,target/8.2)*scale,s1=dest(lat,lng,base,bearing),s2=dest(p.lat,p.lng,base*.72,bearing+155);return[{lat,lon:lng},{lat:s1.lat,lon:s1.lng},{lat:p.lat,lon:p.lng},{lat:s2.lat,lon:s2.lng},{lat,lon:lng}]}
 function decode(s){let i=0,lat=0,lng=0,o=[];while(i<s.length){let r=0,sh=0,b;do{b=s.charCodeAt(i++)-63;r|=(b&31)<<sh;sh+=5}while(b>=32);lat+=(r&1)?~(r>>1):(r>>1);r=0;sh=0;do{b=s.charCodeAt(i++)-63;r|=(b&31)<<sh;sh+=5}while(b>=32);lng+=(r&1)?~(r>>1):(r>>1);o.push([lat/1e6,lng/1e6])}return o}
-async function requestWalkingRoute(points){const r=await fetch('https://valhalla1.openstreetmap.de/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({locations:points,costing:'pedestrian',units:'kilometers',directions_type:'none'})});if(!r.ok)throw Error('route api');const d=await r.json();if(!d.trip?.legs?.length||!d.trip?.summary)throw Error('route missing');let coords=[];d.trip.legs.forEach(l=>{if(l.shape)coords=coords.concat(decode(l.shape))});if(!coords.length)throw Error('shape missing');return{data:d,coords,km:+d.trip.summary.length,dur:Math.round(d.trip.summary.time/60)}}
+async function requestWalkingRoute(points){
+ const r=await fetchWithTimeout('https://valhalla1.openstreetmap.de/route',{
+  method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({locations:points,costing:'pedestrian',units:'kilometers',directions_type:'none'})
+ },9000);
+ if(!r.ok)throw Error('route api');
+ const d=await r.json();if(!d.trip?.legs?.length||!d.trip?.summary)throw Error('route missing');
+ let coords=[];d.trip.legs.forEach(l=>{if(l.shape)coords=coords.concat(decode(l.shape))});
+ if(!coords.length)throw Error('shape missing');
+ return{data:d,coords,km:+d.trip.summary.length,dur:Math.round(d.trip.summary.time/60)}
+}
 function routeSamples(coords,max=70){const step=Math.max(1,Math.floor(coords.length/max));return coords.filter((_,i)=>i%step===0)}
 function retraceRatio(coords){const pts=routeSamples(coords,60),seen=new Map();let dup=0;pts.forEach((p,i)=>{if(i===pts.length-1)return;const k=`${p[0].toFixed(3)},${p[1].toFixed(3)}`;if(seen.has(k)&&i-seen.get(k)>3)dup++;else if(!seen.has(k))seen.set(k,i)});return dup/Math.max(1,pts.length)}
 function natureStats(coords,features,kind='green'){if(!features.length)return{coverage:0,hits:0,river:false,water:false};const nearLimit=kind==='water'?.22:.16,hitLimit=kind==='water'?.26:.18,pts=routeSamples(coords,65);let near=0;for(const p of pts){let ok=false;for(const f of features){if(airKm(p[0],p[1],f.lat,f.lng)<=nearLimit){ok=true;break}}if(ok)near++}const close=features.filter(f=>routeSamples(coords,45).some(p=>airKm(p[0],p[1],f.lat,f.lng)<=hitLimit));return{coverage:near/Math.max(1,pts.length),hits:close.length,river:close.some(x=>x.type==='river'),water:close.some(x=>x.type==='waterside'||x.type==='river')}}
@@ -769,7 +933,7 @@ qsa('.period button').forEach(b=>b.onclick=()=>{recordPeriod=b.dataset.period;qs
 function renderRecords(){const a=inPeriod(recordPeriod),sum=a.reduce((o,i)=>(o.km+=+i.km||0,o.steps+=+i.steps||0,o.cal+=+i.cal||0,o.min+=+i.min||0,o),{km:0,steps:0,cal:0,min:0});$('sumSteps').textContent=Math.round(sum.steps).toLocaleString();$('sumKm').textContent=sum.km.toFixed(1);$('sumCal').textContent=Math.round(sum.cal);$('sumMin').textContent=Math.round(sum.min);const ch=$('chart');ch.innerHTML='';const days=[0,0,0,0,0,0,0];const labels=['月','火','水','木','金','土','日'];hist().forEach(i=>{const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});const max=Math.max(...days,1);days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(18+v/max*110)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});const list=$('historyList');list.innerHTML='';hist().slice(0,10).forEach(i=>{const d=new Date(i.date),r=document.createElement('div');r.className='hist';r.innerHTML=`<b>${d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})}</b><span>${(+i.km||0).toFixed(1)} km</span><span>${Math.round(+i.cal||0)} kcal</span>`;list.appendChild(r)});if(!hist().length)list.innerHTML='<div class="sub" style="padding:12px 0">まだ散歩記録はありません。</div>'}
 /* photo */
 const stored=localStorage.getItem(KEY.photo);if(stored){$('motivationImg').src=stored;$('photoBox').classList.add('has')}$('selectPhoto').onclick=()=>$('photoInput').click();$('deletePhoto').onclick=()=>{localStorage.removeItem(KEY.photo);$('photoBox').classList.remove('has');$('motivationImg').removeAttribute('src')};$('photoInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height,max=900,s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);const d=c.toDataURL('image/jpeg',.75);try{localStorage.setItem(KEY.photo,d);$('motivationImg').src=d;$('photoBox').classList.add('has')}catch{alert('画像を保存できませんでした')}};im.src=ev.target.result};r.readAsDataURL(f)};
-loadSettings();renderHome();renderSettingsProgress();renderRecords();initMap();
+loadSettings();renderHome();renderSettingsProgress();renderRecords();initMap();startDailyTracking();
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 })();
 </script>
