@@ -38,7 +38,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 .setting-card{padding:12px;margin-bottom:10px}.setting-card h3{font-size:12px;margin:0 0 8px}.setting-row{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border-bottom:0}.setting-row label{font-size:10px}.setting-row input{width:100%;border:0;border-bottom:1px solid #bac5c0;background:transparent;padding:7px;outline:none}.gender{display:grid;grid-template-columns:1fr 1fr;gap:7px}.gender button{height:66px;border:1px solid var(--line);border-radius:13px;background:white;display:flex;align-items:center;justify-content:center;gap:5px}.gender button.active{border:2px solid var(--g);background:var(--mint)}.gender img{height:54px;width:54px;object-fit:contain}.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:10px}.toggle{width:44px;height:25px;border-radius:99px;border:0;background:#cfd8d4;position:relative}.toggle.on{background:var(--g)}.toggle:after{content:"";position:absolute;width:19px;height:19px;top:3px;left:3px;background:white;border-radius:50%;transition:.2s}.toggle.on:after{left:22px}
 
 /* bottom nav */
-.navbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--nav) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.98);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 1.35fr 1fr 1fr;z-index:5000}.nav{border:0;background:none;color:#8b9a95;font-size:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.nav .ico{font-size:20px}.nav.active{color:var(--g);font-weight:800}.nav.start{width:66px;height:66px;align-self:center;justify-self:center;border-radius:50%;background:var(--g);color:#fff;transform:translateY(-11px);box-shadow:0 6px 18px rgba(16,168,100,.27);font-size:9px}
+.navbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--nav) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.98);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:5000}.nav{border:0;background:none;color:#8b9a95;font-size:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.nav .ico{font-size:20px}.nav.active{color:var(--g);font-weight:800}.nav.start{width:66px;height:66px;align-self:center;justify-self:center;border-radius:50%;background:var(--g);color:#fff;transform:translateY(-11px);box-shadow:0 6px 18px rgba(16,168,100,.27);font-size:9px}
 @media(max-width:360px){.hero-content{grid-template-columns:1.05fr .95fr}.walker{width:165px}.today-num{font-size:29px}.mapbox{height:445px}}
 .goal-km{margin-top:4px;font-size:10px;color:var(--muted)}.goal-km strong{color:var(--gd);font-size:11px}.unit-input{display:grid;grid-template-columns:1fr auto;align-items:center;gap:7px}.unit-input span{font-size:11px;color:var(--muted)}
 .home-premium{display:flex;flex-direction:column;gap:12px}
@@ -159,6 +159,73 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
  .track-scene img{left:39%;width:58vw}
 }
 
+
+/* ===== SANPO v19 LIVE SANPO ===== */
+.live-sanpo-card{
+  padding:15px 14px 13px;
+  border-radius:26px;
+  overflow:hidden;
+  position:relative;
+}
+.live-sanpo-card:before{
+  content:"";
+  position:absolute;
+  width:130px;height:130px;border-radius:50%;
+  right:-52px;top:-65px;
+  background:rgba(16,168,100,.055);
+  pointer-events:none;
+}
+.live-sanpo-head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  position:relative;z-index:1;
+}
+.live-sanpo-kicker{
+  display:flex;align-items:center;gap:7px;
+  font-size:9px;letter-spacing:.12em;font-weight:900;color:var(--g);
+}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--g);
+  box-shadow:0 0 0 4px rgba(16,168,100,.12);
+  animation:liveSanpoPulse 1.8s ease-in-out infinite;
+}
+@keyframes liveSanpoPulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(16,168,100,.11)}
+  50%{box-shadow:0 0 0 7px rgba(16,168,100,.035)}
+}
+.live-sanpo-title{margin-top:5px;font-size:14px;font-weight:900;color:#21372f}
+.live-sanpo-pct{
+  min-width:47px;height:29px;border-radius:999px;
+  display:grid;place-items:center;
+  background:#edf8f2;color:var(--gd);font-size:11px;font-weight:900;
+}
+.live-sanpo-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  margin-top:15px;
+}
+.live-sanpo-stat{text-align:center;padding:0 5px;min-width:0}
+.live-sanpo-stat:not(:last-child){border-right:1px solid var(--line)}
+.live-sanpo-stat small{display:block;font-size:8px;color:var(--muted);margin-bottom:5px}
+.live-sanpo-stat b{
+  display:block;font-size:17px;letter-spacing:-.03em;color:#17382e;
+  white-space:nowrap;
+}
+.live-sanpo-stat em{font-style:normal;font-size:8px;color:var(--muted);margin-left:2px;font-weight:700}
+.live-sanpo-progress{
+  height:6px;background:#e9efec;border-radius:999px;overflow:hidden;margin-top:14px;
+}
+.live-sanpo-progress>div{
+  height:100%;width:0;background:var(--g);border-radius:999px;transition:width .35s ease;
+}
+.live-sanpo-message{
+  margin-top:10px;padding:9px 11px;
+  background:#f5faf7;border-radius:13px;
+  color:#52655e;font-size:10px;line-height:1.5;
+}
+@media(max-width:360px){
+ .live-sanpo-stat b{font-size:15px}
+ .live-sanpo-stat{padding:0 3px}
+}
+
 </style>
 </head>
 <body>
@@ -215,6 +282,38 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
           <div class="ml">距離</div><div class="mv"><span id="todayKm">0.0</span><span class="metric-unit">km</span></div>
         </div>
       </div>
+    </div>
+
+    <div class="card live-sanpo-card">
+      <div class="live-sanpo-head">
+        <div>
+          <div class="live-sanpo-kicker"><span class="live-dot"></span>LIVE SANPO</div>
+          <div class="live-sanpo-title">今日の歩きをウォッチ中</div>
+        </div>
+        <div id="liveSanpoPct" class="live-sanpo-pct">0%</div>
+      </div>
+
+      <div class="live-sanpo-grid">
+        <div class="live-sanpo-stat">
+          <small>歩数</small>
+          <b><span id="liveDaySteps">0</span><em>歩</em></b>
+        </div>
+        <div class="live-sanpo-stat">
+          <small>距離</small>
+          <b><span id="liveDayKm">0.0</span><em>km</em></b>
+        </div>
+        <div class="live-sanpo-stat">
+          <small>消費</small>
+          <b><span id="liveDayCal">0</span><em>kcal</em></b>
+        </div>
+        <div class="live-sanpo-stat">
+          <small>目標まで</small>
+          <b><span id="liveDayRemain">5.0</span><em>km</em></b>
+        </div>
+      </div>
+
+      <div class="live-sanpo-progress"><div id="liveSanpoBar"></div></div>
+      <div id="liveSanpoMessage" class="live-sanpo-message">位置情報を確認しています。</div>
     </div>
 
     <div class="card premium-food">
@@ -321,7 +420,6 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 <nav class="navbar">
  <button class="nav active" data-page="homePage"><span class="ico">⌂</span>ホーム</button>
  <button class="nav" data-page="mapPage"><span class="ico">⌖</span>マップ</button>
- <button id="startWalk" class="nav start"><span class="ico">♟</span>散歩開始</button>
  <button class="nav" data-page="recordPage"><span class="ico">▥</span>記録</button>
  <button class="nav" data-page="settingsPage"><span class="ico">⚙</span>設定</button>
 </nav>
@@ -353,6 +451,33 @@ function strideMeters(){
  return Math.max(.48,Math.min(.90,h*.415/100))
 }
 function dailyEstimatedSteps(km){return Math.round((km*1000)/strideMeters())}
+function dailyEstimatedCal(km){
+ const p=profile(),w=Math.max(35,+p.weight||60);
+ return Math.round(Math.max(0,km)*w*.72)
+}
+function liveSanpoMessage(t,goalKm,pct){
+ const steps=Math.round(t.steps),remain=Math.max(0,goalKm-t.km);
+ if(pct>=100)return '今日の距離目標を達成。ここから先は、歩いた分だけプラス。';
+ if(steps<500)return '今日の歩きはこれから。移動した分を自動で積み上げます。';
+ if(steps<2000)return `いいスタート。あと${remain.toFixed(1)}kmで今日の距離目標。`;
+ if(steps<4000)return `歩数が伸びてきた。今日は${t.km.toFixed(1)}km歩いています。`;
+ if(steps<7000)return `しっかり歩けています。目標まであと${remain.toFixed(1)}km。`;
+ return `今日は${steps.toLocaleString()}歩。日常の移動もちゃんと積み上がっています。`;
+}
+function renderLiveSanpo(){
+ if(!$('liveDaySteps'))return;
+ const p=profile(),t=today(),goalKm=Math.max(.5,+p.goalKm||5);
+ const pct=Math.min(100,t.km/goalKm*100),remain=Math.max(0,goalKm-t.km);
+ const passiveCal=Math.max(Math.round(t.cal||0),dailyEstimatedCal(t.km));
+ $('liveDaySteps').textContent=Math.round(t.steps).toLocaleString();
+ $('liveDayKm').textContent=t.km.toFixed(1);
+ $('liveDayCal').textContent=passiveCal;
+ $('liveDayRemain').textContent=remain.toFixed(1);
+ $('liveSanpoPct').textContent=Math.round(pct)+'%';
+ $('liveSanpoBar').style.width=pct+'%';
+ $('liveSanpoMessage').textContent=liveSanpoMessage(t,goalKm,pct);
+}
+
 
 function weekStart(){const d=new Date(),x=new Date(d),day=x.getDay();x.setDate(x.getDate()+(day===0?-6:1-day));x.setHours(0,0,0,0);return x}
 function today(){
@@ -683,8 +808,10 @@ function startDailyTracking(){
 
 function renderHome(talk=true){
  const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=stage(pct);
- $('todaySteps').textContent=Math.round(t.steps).toLocaleString();$('goalSteps').textContent=gsteps.toLocaleString();$('goalKmDisplay').textContent=(+p.goalKm||5).toFixed(1)+' km';$('goalPct').textContent=Math.round(pct)+'%';$('goalRing').style.setProperty('--p',pct+'%');$('goalBar').style.width=pct+'%';$('todayCal').textContent=Math.round(t.cal);$('todayMin').textContent=Math.round(t.min);$('todayKm').textContent=t.km.toFixed(1);
- $('rice').textContent=food(t.cal,FOOD.rice);$('banana').textContent=food(t.cal,FOOD.banana);$('cake').textContent=food(t.cal,FOOD.cake);$('ramen').textContent=food(t.cal,FOOD.ramen);
+ const displayCal=Math.max(Math.round(t.cal||0),dailyEstimatedCal(t.km));
+ $('todaySteps').textContent=Math.round(t.steps).toLocaleString();$('goalSteps').textContent=gsteps.toLocaleString();$('goalKmDisplay').textContent=(+p.goalKm||5).toFixed(1)+' km';$('goalPct').textContent=Math.round(pct)+'%';$('goalRing').style.setProperty('--p',pct+'%');$('goalBar').style.width=pct+'%';$('todayCal').textContent=displayCal;$('todayMin').textContent=Math.round(t.min);$('todayKm').textContent=t.km.toFixed(1);
+ $('rice').textContent=food(displayCal,FOOD.rice);$('banana').textContent=food(displayCal,FOOD.banana);$('cake').textContent=food(displayCal,FOOD.cake);$('ramen').textContent=food(displayCal,FOOD.ramen);
+ renderLiveSanpo();
 if($('homeWalker'))$('homeWalker').src=asset(p.gender,st);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
  if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
@@ -923,7 +1050,7 @@ function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%6
 function elapsed(){if(!tracking)return 0;const end=paused?pauseAt:Date.now();return Math.max(0,Math.floor((end-startTime-pauseTotal)/1000))}
 function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
 function startTracking(){tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');timerInt=setInterval(liveRender,1000);if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{const c={lat:pos.coords.latitude,lng:pos.coords.longitude};if(lastPos&&!paused){const d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng);if(d<.2)trackKm+=d}lastPos=c;trackPath.push(c);liveRender()},()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:10000})}
-$('startWalk').onclick=startTracking;$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';showTrackTalk('resumed')}};
+$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';showTrackTalk('resumed')}};
 $('finishBtn').onclick=()=>{if(!tracking)return;const sec=elapsed(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5);tracking=false;clearInterval(timerInt);if(trackBubbleTimer)clearTimeout(trackBubbleTimer);if(watchId!=null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);const h=hist();if(trackKm>0.005||sec>10)h.unshift({date:new Date().toISOString(),km:trackKm,min:Math.max(1,Math.round(sec/60)),steps,cal,mode:'tracking'});saveHist(h);renderHome();renderRecords();navTo('recordPage')};
 $('photoBtn').onclick=()=>alert('散歩中の写真撮影は、ネイティブアプリ化時にカメラ連携できます。');
 
