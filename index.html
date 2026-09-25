@@ -442,6 +442,32 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   background:#eef2f0;color:#5e6e68;font-size:10px;font-weight:800;
 }
 
+
+/* ===== SANPO v23: character state test ===== */
+.hero-person-v12{
+  transition:opacity .16s ease,transform .24s ease,filter .24s ease;
+  transform-origin:center bottom;
+  animation:sanpoIdleBreathV23 3.8s ease-in-out infinite;
+}
+.hero-person-v12.char-switching-v23{
+  opacity:.08;
+  transform:translateY(4px) scale(.985);
+  filter:drop-shadow(0 4px 6px rgba(30,55,45,.06));
+}
+@keyframes sanpoIdleBreathV23{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-3px)}
+}
+.character-test-badge-v23{
+  position:absolute;z-index:7;right:12px;top:12px;
+  padding:6px 9px;border-radius:999px;
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(16,168,100,.18);
+  box-shadow:0 4px 14px rgba(20,74,50,.06);
+  backdrop-filter:blur(8px);
+  color:#4e6a5f;font-size:7px;font-weight:900;letter-spacing:.09em;
+}
+
 </style>
 </head>
 <body>
@@ -466,7 +492,8 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
-      <img id="homeWalker" class="hero-person-v12" src="assets/female_stage_1.png" alt="今日のキャラクター">
+      <div class="character-test-badge-v23">CHARACTER TEST ・ 10s</div>
+      <img id="homeWalker" class="hero-person-v12" src="assets/characters/female/normal.png" alt="今日のキャラクター">
       <img id="homeDog" class="hero-dog-v12" src="assets/dog.png" alt="犬">
       <div class="hero-stage-badge-v12"><span id="heroStagePct">0%</span> / 今日の目標</div>
     </div>
@@ -482,7 +509,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
     <div class="card premium-summary">
       <div class="summary-top">
         <div>
-          <div class="sum-label">今日の歩数</div>
+          <div class="sum-label">今日の推定歩数</div>
           <div class="summary-steps"><span id="todaySteps">0</span><small> / <span id="goalSteps">7,000</span> 歩</small></div>
           <div class="goal-km-line">距離目標 <strong id="goalKmDisplay">5.0 km</strong></div>
           <div id="dailyTrackStatus" class="daily-track-status">GPSを準備中</div>
@@ -517,7 +544,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       <div class="live-sanpo-head">
         <div>
           <div class="live-sanpo-kicker"><span class="live-dot"></span>LIVE SANPO</div>
-          <div class="live-sanpo-title">今日の歩きをウォッチ中</div>
+          <div class="live-sanpo-title">今日の歩きをウォッチ中（歩数は推定）</div>
         </div>
         <div id="liveSanpoPct" class="live-sanpo-pct">0%</div>
       </div>
@@ -550,7 +577,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       <div class="home-nav-wrap-v22">
         <div id="homeNavMap" class="home-nav-map-v21"></div>
         <div class="route-companion-v22">
-          <img id="routeCompanion" src="assets/female_stage_1.png" alt="一緒に歩くキャラクター">
+          <img id="routeCompanion" src="assets/characters/female/guide.png" alt="一緒に歩くキャラクター">
           <div id="routeCompanionBubble" class="route-companion-bubble-v22">このコース、一緒に歩こ。</div>
         </div>
       </div>
@@ -628,7 +655,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   </div>
 
   <div class="route-nav-guide-v22">
-    <img id="navCompanion" src="assets/female_stage_1.png" alt="ナビするキャラクター">
+    <img id="navCompanion" src="assets/characters/female/discover.png" alt="ナビするキャラクター">
     <div class="route-nav-guide-copy-v22">
       <div class="route-nav-guide-label-v22">SANPO GUIDE</div>
       <div id="routeNavGuide" class="route-nav-guide-text-v22">現在地を確認しています。</div>
@@ -642,7 +669,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
  <div class="titlebar"><div class="title">散歩中</div><div class="sub">GPS</div></div>
  <div id="timer" class="timer">00:00:00</div>
  <div class="track-metrics"><div><div class="ml">歩数</div><div class="mv" id="liveSteps">0</div></div><div><div class="ml">距離</div><div class="mv"><span id="liveKm">0.00</span> km</div></div><div><div class="ml">カロリー</div><div class="mv"><span id="liveCal">0</span> kcal</div></div></div>
- <div class="track-scene"><div id="trackBubble" class="track-bubble">いってみよっか。</div><img id="trackWalker" src="assets/female_stage_1.png" alt="散歩中のキャラクター"></div>
+ <div class="track-scene"><div id="trackBubble" class="track-bubble">いってみよっか。</div><img id="trackWalker" src="assets/characters/female/normal.png" alt="散歩中のキャラクター"></div>
  <div class="track-actions"><button class="round" id="photoBtn">📷</button><button class="round pause" id="pauseBtn">Ⅱ</button><button class="round" id="finishBtn">✓</button></div>
 </section>
 
@@ -716,6 +743,23 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
 const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
+/* ===== v23 character test mode =====
+   テスト中はホームのキャラクターを10秒ごとに
+   normal → guide → discover → cheer → think の順で確認できます。
+   本番化するときは false にするだけで停止できます。
+*/
+const CHARACTER_TEST_MODE=true;
+const CHARACTER_TEST_INTERVAL=10000;
+const CHARACTER_TEST_POSES=['normal','guide','discover','cheer','think'];
+const CHARACTER_TEST_LINES={
+ normal:'今日はどんな感じで歩こうか。',
+ guide:'このコースもよさそうだね。',
+ discover:'この先、ちょっと気になるね。',
+ cheer:'いい感じに積み上がってるね。',
+ think:'ちょっと見てみようか。'
+};
+let currentCharacterPose='normal',characterTestIndex=0,characterTestTimer=null,characterSwitchTimer=null;
+
 let mode='random',recordPeriod='week',map,startPoint,startMarker,poiMarker,routeLine,routeShadow,currentRoute=null;
 let walkFrame=1,walkTimer=null,tracking=false,paused=false,startTime=0,pauseAt=0,pauseTotal=0,timerInt=null,watchId=null,trackKm=0,lastPos=null,trackPath=[];
 let dailyWatchId=null,dailyLastPos=null,dailyWeatherCoords=null;
@@ -741,6 +785,50 @@ function dailyEstimatedSteps(km){return Math.round((km*1000)/strideMeters())}
 function dailyEstimatedCal(km){
  const p=profile(),w=Math.max(35,+p.weight||60);
  return Math.round(Math.max(0,km)*w*.72)
+}
+
+function characterPoseAsset(gender,pose='normal'){
+ const g=gender==='male'?'male':'female';
+ const p=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
+ return `assets/characters/${g}/${p}.png`
+}
+function setCharacterImage(img,src,animate=false){
+ if(!img||!src)return;
+ const current=img.getAttribute('src')||'';
+ if(current===src)return;
+ if(!animate){img.src=src;return}
+ img.classList.add('char-switching-v23');
+ if(characterSwitchTimer)clearTimeout(characterSwitchTimer);
+ characterSwitchTimer=setTimeout(()=>{
+   img.src=src;
+   requestAnimationFrame(()=>img.classList.remove('char-switching-v23'));
+ },145)
+}
+function setHomeCharacterPose(pose='normal',speak=false){
+ currentCharacterPose=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
+ const p=profile();
+ setCharacterImage($('homeWalker'),characterPoseAsset(p.gender,currentCharacterPose),true);
+ if(speak&&$('homePage')?.classList.contains('active')){
+   showTalkBubble('homeBubble',CHARACTER_TEST_LINES[currentCharacterPose],7200,'homeTalkHint');
+ }
+}
+function refreshCharacterGender(){
+ const p=profile();
+ setCharacterImage($('homeWalker'),characterPoseAsset(p.gender,currentCharacterPose),false);
+ setCharacterImage($('routeCompanion'),characterPoseAsset(p.gender,'guide'),false);
+ setCharacterImage($('navCompanion'),characterPoseAsset(p.gender,'discover'),false);
+ if(!tracking)setCharacterImage($('trackWalker'),characterPoseAsset(p.gender,'normal'),false);
+}
+function startCharacterTestCycle(){
+ if(!CHARACTER_TEST_MODE)return;
+ if(characterTestTimer)clearInterval(characterTestTimer);
+ characterTestIndex=Math.max(0,CHARACTER_TEST_POSES.indexOf(currentCharacterPose));
+ setHomeCharacterPose(CHARACTER_TEST_POSES[characterTestIndex],true);
+ characterTestTimer=setInterval(()=>{
+   if(document.hidden||!$('homePage')?.classList.contains('active'))return;
+   characterTestIndex=(characterTestIndex+1)%CHARACTER_TEST_POSES.length;
+   setHomeCharacterPose(CHARACTER_TEST_POSES[characterTestIndex],true);
+ },CHARACTER_TEST_INTERVAL);
 }
 function getActiveRoute(){
  const r=json(KEY.activeRoute,null);
@@ -793,9 +881,9 @@ function routeGuideText(route,p,pos){
  if(p.progress<5)return `スタート。まずは${dir}方向へ。緑の線をたどっていこう。`;
  return `いい感じ。次の目安は${dir}方向。残り約${p.remainKm.toFixed(1)}km。`
 }
-function routeCompanionImage(){
+function routeCompanionImage(pose='guide'){
  const p=profile(),t=today(),goalKm=Math.max(.5,+p.goalKm||5),st=stage(Math.min(100,t.km/goalKm*100));
- return asset(p.gender,st)
+ return CHARACTER_TEST_MODE?characterPoseAsset(p.gender,pose):asset(p.gender,st)
 }
 
 function initHomeNavMap(route){
@@ -864,7 +952,7 @@ function renderRouteNavigation(recenter=false){
  const route=getActiveRoute();
  if(!route)return;
  if($('routeNavTitle'))$('routeNavTitle').textContent=`${activeRouteModeName(route.mode)}コース ・ ${(+route.km||0).toFixed(1)} km`;
- if($('navCompanion'))$('navCompanion').src=routeCompanionImage();
+ if($('navCompanion'))$('navCompanion').src=routeCompanionImage('discover');
  if(!routeNavMap)initRouteNavMap(route);
  const pos=dailyLastPos;
  if(!pos){
@@ -1020,80 +1108,80 @@ const FRIEND_LINES={
  male:{
   start:[
    '今日はどっち方面いく？','ちょっと歩きに出る？','いつもの道、少し変えてみる？',
-   '寄り道ありもよさそうだな。','今日はどんなコースにする？'
+   '寄り道ありもよさそうだね。','今日はどんなコースにする？'
   ],
   quarter:[
-   'いい感じに進んでるな。','もうここまで来てる。','ちょっと遠回りもありかも。',
+   'いい感じに進んでるね。','もうここまで来てる。','ちょっと遠回りもありかも。',
    'このペース、気持ちいいな。','次の角、どっち行く？'
   ],
   half:[
-   'もう半分きたな。','意外と歩いたな笑','ここからのルートも楽しもう。',
-   '半分まで来た。次どっち行く？','いいところまで来てるな。'
+   'もう半分きたね。','意外と歩いたね笑','ここからのルートも楽しもう。',
+   '半分まで来た。次どっち行く？','いいところまで来てるね。'
   ],
   near:[
-   'あと少しで目標だな。','いいところまで来た！','このまま気持ちよくいこう。',
-   '寄り道しながらでも届きそうだな。','ゴールが見えてきたな。'
+   'あと少しで目標だね。','いいところまで来た！','このまま気持ちよくいこう。',
+   '寄り道しながらでも届きそうだね。','ゴールが見えてきたね。'
   ],
   done:[
-   '目標クリア！いい散歩だったな。','今日けっこう歩いたな。','目標こえた！まだ歩く？いいな笑',
-   'ここまで来ると、ちょっと達成感あるな。','次は寄り道コースもありだな。'
+   '目標クリア！いい散歩だったね。','今日けっこう歩いたね。','目標こえた！まだ歩く？いいね笑',
+   'ここまで来ると、ちょっと達成感あるね。','次は寄り道コースもありだね。'
   ],
   morning:[
-   '朝の空気、いいな。どこ行く？','朝散歩、ちょっと気持ちよさそうだな。','今日は朝から歩く？',
+   '朝の空気、いいな。どこ行く？','朝散歩、ちょっと気持ちよさそうだね。','今日は朝から歩く？',
    'まだ街が静かなうちに行ってみる？'
   ],
   daytime:[
    '外の空気、見に行ってみる？','今日はどんな道がよさそう？','ちょっと気分転換に歩く？',
-   '近所でも、道を変えるとけっこう新鮮だな。'
+   '近所でも、道を変えるとけっこう新鮮だね。'
   ],
   evening:[
-   '夕方の散歩ってちょっといいよな。','帰り道、少しだけ遠回りする？','夕方の空、見ながら歩く？',
-   'この時間、寄り道コースもよさそうだな。'
+   '夕方の散歩ってちょっといいよね。','帰り道、少しだけ遠回りする？','夕方の空、見ながら歩く？',
+   'この時間、寄り道コースもよさそうだね。'
   ],
   night:[
-   '夜の空気、ちょっと歩きたくなるな。','明るい道で、ゆるっと歩く？','夜の散歩、いつもと雰囲気ちがうな。',
+   '夜の空気、ちょっと歩きたくなるね。','明るい道で、ゆるっと歩く？','夜の散歩、いつもと雰囲気ちがうな。',
    '近場をふらっと歩くのもいいな。'
   ],
   trackStart:[
-   '出発！どんな道になるかな。','いってみるか。','今日はどこまで行く？',
-   'いい散歩になりそうだな。','まずは気持ちよく歩こう。'
+   '出発！どんな道になるかな。','いってみようか。','今日はどこまで行く？',
+   'いい散歩になりそうだね。','まずは気持ちよく歩こう。'
   ],
   trackQuarter:[
-   'いい感じに乗ってきたな。','景色見ながらいこう。','もう25%きてる。',
-   'このままのペース、いいな。','次の道、ちょっと気になるな。'
+   'いい感じに乗ってきたね。','景色見ながらいこう。','もう25%きてる。',
+   'このままのペース、いいな。','次の道、ちょっと気になるね。'
   ],
   trackHalf:[
-   '半分きた！意外と早いな。','もう半分だな。','ここからどっち行く？',
-   'いい感じ。まだ景色楽しめそうだな。','半分まで来た。順調！'
+   '半分きた！意外と早いな。','もう半分だね。','ここからどっち行く？',
+   'いい感じ。まだ景色楽しめそうだね。','半分まで来た。順調！'
   ],
   trackNear:[
-   'もうすぐ目標だな。','この先ちょっと気になるな。','あと少し、いい感じ！',
-   'ゴール近いな。寄り道もありかも。','ここまで来たら景色も変わってきたな。'
+   'もうすぐ目標だね。','この先ちょっと気になるね。','あと少し、いい感じ！',
+   'ゴール近いな。寄り道もありかも。','ここまで来たら景色も変わってきたね。'
   ],
   trackDone:[
-   '目標クリア！いい散歩だったな。','100%きた！','今日の目標、ちゃんと届いたな。',
-   'いい散歩になったな。','目標こえた！この先も楽しめそうだな。'
+   '目標クリア！いい散歩だったね。','100%きた！','今日の目標、ちゃんと届いたね。',
+   'いい散歩になったね。','目標こえた！この先も楽しめそうだね。'
   ],
   paused:[
-   'ちょっとひと息。再開したら続きいこう。','ひと休み中だな。','ここで景色見るのもありだな。'
+   'ちょっとひと息。再開したら続きいこう。','ひと休み中だね。','ここで景色見るのもありだね。'
   ],
   resumed:[
-   'よし、続きいこう。','再開！この先も見てみるか。','じゃあ、また歩こう。'
+   'よし、続きいこう。','再開！この先も見てみようか。','じゃあ、また歩こう。'
   ],
   routeGreen:[
-   '緑が多いコース、ちょっと楽しそうだな。','今日は緑のある道もよさそうだな。'
+   '緑が多いコース、ちょっと楽しそうだね。','今日は緑のある道もよさそうだね。'
   ],
   routeDetour:[
-   '寄り道コース、いいな。何があるかな。','寄り道ありってちょっとワクワクするな。'
+   '寄り道コース、いいな。何があるかな。','寄り道ありってちょっとワクワクするね。'
   ],
   routeRandom:[
-   '気軽に歩けそうなコースだな。','今日はこのくらいがちょうどよさそうだな。'
+   '気軽に歩けそうなコースだね。','今日はこのくらいがちょうどよさそうだね。'
   ],
   routeWater:[
-   '水辺を通るコース、気持ちよさそうだな。','川や池の近くを歩くのもいいな。'
+   '水辺を通るコース、気持ちよさそうだね。','川や池の近くを歩くのもいいな。'
   ],
   routeWorkout:[
-   '今日はしっかり歩くコースだな。','ちょっと運動したい日にちょうどよさそうだ。'
+   '今日はしっかり歩くコースだね。','ちょっと運動したい日にちょうどよさそうだ。'
   ]
  }
 };
@@ -1127,7 +1215,7 @@ function homeTalkPool(){
  const pool=[...(L[progressBucket(pct)]||[]),...(L[talkTimeBucket()]||[])];
  if(t.km>.15){
    const km=t.km.toFixed(1);
-   pool.push(p.gender==='male'?`今日はもう${km}km歩いてるな。`:`今日はもう${km}km歩いてるね。`);
+   pool.push(p.gender==='male'?`今日はもう${km}km歩いてるね。`:`今日はもう${km}km歩いてるね。`);
  }
  if(pct>0&&pct<100){
    const remain=Math.max(0,goalKm-t.km).toFixed(1);
@@ -1152,7 +1240,7 @@ function showTrackTalk(kind='auto'){
  const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),L=FRIEND_LINES[p.gender]||FRIEND_LINES.female;
  const key=trackContext(pct,kind),pool=[...(L[key]||[])];
  if(kind==='auto'&&trackKm>.2){
-   pool.push(p.gender==='male'?`${trackKm.toFixed(1)}kmきたな。`:`${trackKm.toFixed(1)}kmきたね。`);
+   pool.push(p.gender==='male'?`${trackKm.toFixed(1)}kmきたね。`:`${trackKm.toFixed(1)}kmきたね。`);
  }
  lastTrackTalkSec=elapsed();
  showTalkBubble('trackBubble',pickTalk(pool,'track'),6200)
@@ -1251,7 +1339,7 @@ function renderHome(talk=true){
  $('rice').textContent=food(displayCal,FOOD.rice);$('banana').textContent=food(displayCal,FOOD.banana);$('cake').textContent=food(displayCal,FOOD.cake);$('ramen').textContent=food(displayCal,FOOD.ramen);
  renderLiveSanpo();
  renderActiveRouteCard();
-if($('homeWalker'))$('homeWalker').src=asset(p.gender,st);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
+if($('homeWalker'))setCharacterImage($('homeWalker'),CHARACTER_TEST_MODE?characterPoseAsset(p.gender,currentCharacterPose):asset(p.gender,st),false);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
  if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
 function navTo(id){
@@ -1290,7 +1378,7 @@ function renderSettingsProgress(){
  }
 }
 function loadSettings(){const p=profile();$('age').value=p.age;$('height').value=p.height;$('weight').value=p.weight;$('goalKm').value=p.goalKm;$('femaleBtn').classList.toggle('active',p.gender==='female');$('maleBtn').classList.toggle('active',p.gender==='male');$('dogToggle').classList.toggle('on',p.dog);renderSettingsProgress()}
-function setGender(g){const p=profile();p.gender=g;localStorage.setItem(KEY.profile,JSON.stringify(p));loadSettings();renderHome();renderSettingsProgress()}
+function setGender(g){const p=profile();p.gender=g;localStorage.setItem(KEY.profile,JSON.stringify(p));loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress()}
 $('femaleBtn').onclick=()=>setGender('female');$('maleBtn').onclick=()=>setGender('male');
 $('dogToggle').onclick=()=>$('dogToggle').classList.toggle('on');
 $('saveSettings').onclick=()=>{const p=profile();Object.assign(p,{age:+$('age').value||'',height:+$('height').value||'',weight:+$('weight').value||'',goalKm:Math.max(.5,+$('goalKm').value||5),dog:$('dogToggle').classList.contains('on')});delete p.voice;localStorage.setItem(KEY.profile,JSON.stringify(p));$('saved').textContent='保存しました';setTimeout(()=>$('saved').textContent='',1300);renderHome();renderSettingsProgress()};
@@ -1509,9 +1597,9 @@ $('useActiveRoute').onclick=()=>{
 function hav(a,b,c,d){const R=6371,to=x=>x*Math.PI/180,d1=to(c-a),d2=to(d-b),x=Math.sin(d1/2)**2+Math.cos(to(a))*Math.cos(to(c))*Math.sin(d2/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return[h,m,s].map(x=>String(x).padStart(2,'0')).join(':')}
 function elapsed(){if(!tracking)return 0;const end=paused?pauseAt:Date.now();return Math.max(0,Math.floor((end-startTime-pauseTotal)/1000))}
-function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
+function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=CHARACTER_TEST_MODE?characterPoseAsset(p.gender,paused?'think':'normal'):asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
 function startTracking(){tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');timerInt=setInterval(liveRender,1000);if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{const c={lat:pos.coords.latitude,lng:pos.coords.longitude};if(lastPos&&!paused){const d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng);if(d<.2)trackKm+=d}lastPos=c;trackPath.push(c);liveRender()},()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:10000})}
-$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';showTrackTalk('resumed')}};
+$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'normal'),true);showTrackTalk('resumed')}};
 $('finishBtn').onclick=()=>{if(!tracking)return;const sec=elapsed(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5);tracking=false;clearInterval(timerInt);if(trackBubbleTimer)clearTimeout(trackBubbleTimer);if(watchId!=null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);const h=hist();if(trackKm>0.005||sec>10)h.unshift({date:new Date().toISOString(),km:trackKm,min:Math.max(1,Math.round(sec/60)),steps,cal,mode:'tracking'});saveHist(h);renderHome();renderRecords();navTo('recordPage')};
 $('photoBtn').onclick=()=>alert('散歩中の写真撮影は、ネイティブアプリ化時にカメラ連携できます。');
 
@@ -1521,7 +1609,7 @@ qsa('.period button').forEach(b=>b.onclick=()=>{recordPeriod=b.dataset.period;qs
 function renderRecords(){const a=inPeriod(recordPeriod),sum=a.reduce((o,i)=>(o.km+=+i.km||0,o.steps+=+i.steps||0,o.cal+=+i.cal||0,o.min+=+i.min||0,o),{km:0,steps:0,cal:0,min:0});$('sumSteps').textContent=Math.round(sum.steps).toLocaleString();$('sumKm').textContent=sum.km.toFixed(1);$('sumCal').textContent=Math.round(sum.cal);$('sumMin').textContent=Math.round(sum.min);const ch=$('chart');ch.innerHTML='';const days=[0,0,0,0,0,0,0];const labels=['月','火','水','木','金','土','日'];hist().forEach(i=>{const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});const max=Math.max(...days,1);days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(18+v/max*110)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});const list=$('historyList');list.innerHTML='';hist().slice(0,10).forEach(i=>{const d=new Date(i.date),r=document.createElement('div');r.className='hist';r.innerHTML=`<b>${d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})}</b><span>${(+i.km||0).toFixed(1)} km</span><span>${Math.round(+i.cal||0)} kcal</span>`;list.appendChild(r)});if(!hist().length)list.innerHTML='<div class="sub" style="padding:12px 0">まだ散歩記録はありません。</div>'}
 /* photo */
 const stored=localStorage.getItem(KEY.photo);if(stored){$('motivationImg').src=stored;$('photoBox').classList.add('has')}$('selectPhoto').onclick=()=>$('photoInput').click();$('deletePhoto').onclick=()=>{localStorage.removeItem(KEY.photo);$('photoBox').classList.remove('has');$('motivationImg').removeAttribute('src')};$('photoInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height,max=900,s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);const d=c.toDataURL('image/jpeg',.75);try{localStorage.setItem(KEY.photo,d);$('motivationImg').src=d;$('photoBox').classList.add('has')}catch{alert('画像を保存できませんでした')}};im.src=ev.target.result};r.readAsDataURL(f)};
-loadSettings();renderHome();renderSettingsProgress();renderRecords();initMap();startDailyTracking();setTimeout(()=>renderActiveRouteCard(),150);
+loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress();renderRecords();initMap();startDailyTracking();startCharacterTestCycle();setTimeout(()=>renderActiveRouteCard(),150);
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 })();
 </script>
