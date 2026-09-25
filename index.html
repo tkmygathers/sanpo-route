@@ -642,6 +642,43 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .hero-weather-v27 small{max-width:105px;overflow:hidden;text-overflow:ellipsis}
 }
 
+
+
+/* ===== SANPO v28: loop route / flexible time / clear navigation map ===== */
+.time-flex-v28{
+  margin-top:10px;padding:12px 12px 10px;border:1px solid var(--line);border-radius:16px;background:#fbfdfc;
+}
+.time-flex-head-v28{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted)}
+.time-flex-head-v28 b{font-size:20px;color:#17382e;letter-spacing:-.03em}
+.time-range-v28{width:100%;accent-color:var(--g);margin:9px 0 8px}
+.time-quick-v28{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.time-quick-v28 button{height:31px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#63756d;font-size:9px;font-weight:800}
+.time-quick-v28 button.active{background:#eaf8f1;border-color:#bfe7d2;color:var(--gd)}
+.time-hint-v28{margin-top:7px;font-size:8px;line-height:1.5;color:var(--muted)}
+.time-hint-v28 span{color:var(--gd);font-weight:800}
+.map-controls-v28{grid-template-columns:1fr 1.35fr;margin-top:7px}
+.map-controls-v28 select,.map-controls-v28 button{width:100%}
+.route-companion-inline-v28{
+  position:relative!important;left:auto!important;bottom:auto!important;z-index:auto!important;
+  display:flex!important;align-items:center!important;gap:2px!important;pointer-events:none;
+  min-height:82px;margin:8px 8px 0;padding:4px 10px 2px 2px;
+  border-radius:18px;background:linear-gradient(135deg,#f3faf6,#fffdf9);border:1px solid #e3eee8;
+}
+.route-companion-inline-v28 img{
+  width:70px!important;height:78px!important;flex:0 0 70px;object-fit:contain;align-self:flex-end;
+}
+.route-companion-inline-v28 .route-companion-bubble-v22{
+  position:relative;margin:0!important;max-width:none!important;flex:1;font-size:10px!important;line-height:1.65!important;
+  box-shadow:none!important;background:transparent!important;border:0!important;padding:8px 8px!important;
+}
+.route-companion-inline-v28 .route-companion-bubble-v22:before{display:none!important}
+.active-route-card-v27 .home-nav-map-v21{height:225px}
+@media(max-width:390px){
+  .active-route-card-v27 .home-nav-map-v21{height:205px}
+  .time-quick-v28{gap:4px}
+  .time-quick-v28 button{font-size:8.5px}
+}
+
 </style>
 </head>
 <body>
@@ -680,10 +717,10 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
       <div class="home-nav-wrap-v22">
         <div id="homeNavMap" class="home-nav-map-v21"></div>
-        <div class="route-companion-v22">
-          <img id="routeCompanion" src="assets/characters/female/guide.png" alt="一緒に歩くキャラクター">
-          <div id="routeCompanionBubble" class="route-companion-bubble-v22">このコース、一緒に歩こ。</div>
-        </div>
+      </div>
+      <div class="route-companion-v22 route-companion-inline-v28">
+        <img id="routeCompanion" src="assets/characters/female/guide.png" alt="一緒に歩くキャラクター">
+        <div id="routeCompanionBubble" class="route-companion-bubble-v22">このコース、一緒に歩こ。</div>
       </div>
 
       <div class="active-route-stats-v21">
@@ -785,7 +822,15 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
    <div class="route-builder-sub">今日の気分に合わせてルートの特性を選べます</div>
    <div class="mode-tabs"><button class="mode active" data-mode="random">気軽に</button><button class="mode" data-mode="green">緑</button><button class="mode" data-mode="water">水辺</button><button class="mode" data-mode="detour">寄り道</button><button class="mode" data-mode="workout">しっかり</button></div>
    <div id="modeNote" class="mode-note">歩きやすさと距離のバランスを見て、気軽な周回コースを選びます。</div>
-   <div class="map-controls"><select id="timeSelect"><option value="15">15分</option><option value="30" selected>30分</option><option value="45">45分</option><option value="60">60分</option></select><select id="paceSelect"><option value="3.5">ゆっくり</option><option value="4.5" selected>普通</option><option value="5.5">早歩き</option></select><button id="buildRoute" class="primary">コース作成</button></div>
+   <div class="time-flex-v28">
+     <div class="time-flex-head-v28"><span>歩く時間</span><b><span id="timeValue">30</span>分</b></div>
+     <input id="timeSelect" class="time-range-v28" type="range" min="10" max="120" step="5" value="30" aria-label="歩く時間">
+     <div class="time-quick-v28">
+       <button type="button" data-time="20">20</button><button type="button" data-time="30" class="active">30</button><button type="button" data-time="45">45</button><button type="button" data-time="60">60</button><button type="button" data-time="90">90</button>
+     </div>
+     <div class="time-hint-v28">10〜120分を5分刻みで設定できます ・ 目安 <span id="timeDistancePreview">2.3 km</span></div>
+   </div>
+   <div class="map-controls map-controls-v28"><select id="paceSelect"><option value="3.5">ゆっくり</option><option value="4.5" selected>普通</option><option value="5.5">早歩き</option></select><button id="buildRoute" class="primary">コース作成</button></div>
    <div class="under"><button id="useLocation" class="link">現在地を使う</button><div id="loading" class="loading">コースを作成中…</div></div>
  </div>
 </section>
@@ -1630,7 +1675,30 @@ async function requestWalkingRoute(points){
  return{data:d,coords,km:+d.trip.summary.length,dur:Math.round(d.trip.summary.time/60)}
 }
 function routeSamples(coords,max=70){const step=Math.max(1,Math.floor(coords.length/max));return coords.filter((_,i)=>i%step===0)}
-function retraceRatio(coords){const pts=routeSamples(coords,60),seen=new Map();let dup=0;pts.forEach((p,i)=>{if(i===pts.length-1)return;const k=`${p[0].toFixed(3)},${p[1].toFixed(3)}`;if(seen.has(k)&&i-seen.get(k)>3)dup++;else if(!seen.has(k))seen.set(k,i)});return dup/Math.max(1,pts.length)}
+function retraceRatio(coords){
+ const pts=routeSamples(coords,180);
+ const seenPoints=new Map();let pointDup=0;
+ pts.forEach((p,i)=>{
+  if(i===pts.length-1)return;
+  const k=`${p[0].toFixed(4)},${p[1].toFixed(4)}`;
+  if(seenPoints.has(k)&&i-seenPoints.get(k)>5)pointDup++;
+  else if(!seenPoints.has(k))seenPoints.set(k,i);
+ });
+ const segSeen=new Map();let segDup=0,segCount=0;
+ for(let i=0;i<coords.length-1;i++){
+  const a=coords[i],b=coords[i+1];
+  if(airKm(a[0],a[1],b[0],b[1])<.004)continue;
+  const ak=`${a[0].toFixed(4)},${a[1].toFixed(4)}`,bk=`${b[0].toFixed(4)},${b[1].toFixed(4)}`;
+  if(ak===bk)continue;
+  const key=ak<bk?`${ak}|${bk}`:`${bk}|${ak}`;
+  segCount++;
+  if(segSeen.has(key)&&i-segSeen.get(key)>4)segDup++;
+  else if(!segSeen.has(key))segSeen.set(key,i);
+ }
+ const pointRatio=pointDup/Math.max(1,pts.length),segRatio=segDup/Math.max(1,segCount);
+ return Math.max(pointRatio,segRatio);
+}
+function isCleanLoop(route){return retraceRatio(route.coords)<=.08}
 function natureStats(coords,features,kind='green'){if(!features.length)return{coverage:0,hits:0,river:false,water:false};const nearLimit=kind==='water'?.22:.16,hitLimit=kind==='water'?.26:.18,pts=routeSamples(coords,65);let near=0;for(const p of pts){let ok=false;for(const f of features){if(airKm(p[0],p[1],f.lat,f.lng)<=nearLimit){ok=true;break}}if(ok)near++}const close=features.filter(f=>routeSamples(coords,45).some(p=>airKm(p[0],p[1],f.lat,f.lng)<=hitLimit));return{coverage:near/Math.max(1,pts.length),hits:close.length,river:close.some(x=>x.type==='river'),water:close.some(x=>x.type==='waterside'||x.type==='river')}}
 function scoreRoute(route,target,kind,features){
  const err=Math.abs(route.km-target)/Math.max(.5,target),retrace=retraceRatio(route.coords);
@@ -1650,7 +1718,7 @@ function scoreRoute(route,target,kind,features){
  if(kind==='workout')return err*96+retrace*52;
  return err*88+retrace*34;
 }
-function candidateSpecs(){const base=Math.random()*360;return[{bearing:base,scale:.82},{bearing:base+58,scale:.94},{bearing:base+118,scale:1.04},{bearing:base+181,scale:1.12},{bearing:base+243,scale:1.22},{bearing:base+306,scale:1.32}]}
+function candidateSpecs(){const base=Math.random()*360;return[{bearing:base,scale:.88},{bearing:base+61,scale:.98},{bearing:base+123,scale:1.06},{bearing:base+187,scale:1.14},{bearing:base+249,scale:1.24},{bearing:base+311,scale:1.30}]}
 async function bestLoopRoute(lat,lng,target,kind,features){
  const specs=candidateSpecs(),candidates=[];
  let poiPool=[];
@@ -1661,18 +1729,31 @@ async function bestLoopRoute(lat,lng,target,kind,features){
    const sp=specs[i],poi=poiPool.length?poiPool[i%poiPool.length]:null;
    try{
      const pts=poi?poiPoints(lat,lng,target,poi,sp.bearing,sp.scale):normalPoints(lat,lng,target,sp.bearing,sp.scale);
-     const route=await requestWalkingRoute(pts);route.poi=poi;route.score=scoreRoute(route,target,kind,features);candidates.push(route)
+     const route=await requestWalkingRoute(pts);
+     route.poi=poi;route.retrace=retraceRatio(route.coords);
+     if(!isCleanLoop(route)){console.info('折り返し候補を除外',Math.round(route.retrace*100)+'%');continue}
+     route.score=scoreRoute(route,target,kind,features);candidates.push(route)
    }catch(e){console.warn('candidate route failed',i,e)}
  }
- if(!candidates.length)throw Error('all candidates failed');
+ if(!candidates.length)throw Error('no clean loop');
  candidates.sort((a,b)=>a.score-b.score);let best=candidates[0];
  const err=Math.abs(best.km-target)/Math.max(.5,target);
- if(err>.12){$('mapStatus').textContent='距離を微調整中…';const adjust=Math.max(.72,Math.min(1.34,target/Math.max(.3,best.km))),sp={bearing:Math.random()*360,scale:adjust},poi=best.poi||poiPool[0]||null;try{const pts=poi?poiPoints(lat,lng,target,poi,sp.bearing,sp.scale):normalPoints(lat,lng,target,sp.bearing,sp.scale),refined=await requestWalkingRoute(pts);refined.poi=poi;refined.score=scoreRoute(refined,target,kind,features);if(refined.score<best.score)best=refined}catch(e){console.warn('refine route failed',e)}}
+ if(err>.12){$('mapStatus').textContent='距離を微調整中…';const adjust=Math.max(.72,Math.min(1.34,target/Math.max(.3,best.km))),sp={bearing:Math.random()*360,scale:adjust},poi=best.poi||poiPool[0]||null;try{const pts=poi?poiPoints(lat,lng,target,poi,sp.bearing,sp.scale):normalPoints(lat,lng,target,sp.bearing,sp.scale),refined=await requestWalkingRoute(pts);refined.poi=poi;refined.retrace=retraceRatio(refined.coords);if(isCleanLoop(refined)){refined.score=scoreRoute(refined,target,kind,features);if(refined.score<best.score)best=refined}}catch(e){console.warn('refine route failed',e)}}
  return best
 }
 function clearRoute(){[routeLine,routeShadow,poiMarker].forEach(x=>{if(x)try{map.removeLayer(x)}catch{}});routeLine=routeShadow=poiMarker=null;$('mapResult').classList.remove('show')}
 function calcSteps(km){const p=profile(),stride=p.height?(+p.height*.415/100):.72;return Math.round(km*1000/Math.max(.45,stride))}
 function calcCal(min,speed){const p=profile(),w=+p.weight||60,met=speed<=3.8?3:speed>4.8?4.3:3.5;return Math.round(met*w*min/60)}
+function syncRouteTimeUI(){
+ const min=+$('timeSelect').value||30,speed=+$('paceSelect').value||4.5;
+ if($('timeValue'))$('timeValue').textContent=min;
+ if($('timeDistancePreview'))$('timeDistancePreview').textContent=`${(speed*min/60).toFixed(1)} km`;
+ qsa('.time-quick-v28 button').forEach(b=>b.classList.toggle('active',+b.dataset.time===min));
+}
+$('timeSelect').addEventListener('input',syncRouteTimeUI);
+$('paceSelect').addEventListener('change',syncRouteTimeUI);
+qsa('.time-quick-v28 button').forEach(b=>b.onclick=()=>{$('timeSelect').value=b.dataset.time;syncRouteTimeUI()});
+syncRouteTimeUI();
 async function buildRoute(){
  if(!startPoint)return alert('スタート地点を設定してください');
  $('loading').classList.add('show');$('buildRoute').disabled=true;clearRoute();
@@ -1718,10 +1799,10 @@ async function buildRoute(){
    featureText=poi?`寄り道：${poi.name}`:'寄り道候補が見つからなかったため、距離優先で選定';
   }else if(mode==='workout'){
    const back=Math.round(retraceRatio(best.coords)*100);
-   featureText=`少し長めの目標 ・ 往復重複 ${back}%`;
+   featureText=`少し長めの目標 ・ 同じ道の重複 ${back}%`;
   }else{
    const back=Math.round(retraceRatio(best.coords)*100);
-   featureText=`歩きやすさを優先 ・ 往復重複 ${back}%`;
+   featureText=`歩きやすさを優先 ・ 同じ道の重複 ${back}%`;
   }
 
   const modeNames={random:'気軽に',green:'緑',water:'水辺',detour:'寄り道',workout:'しっかり'};
@@ -1734,7 +1815,7 @@ async function buildRoute(){
   $('mapStatus').textContent=`${modeName}コース完成（目標 ${target.toFixed(1)} km）`;
  }catch(e){
   console.error(e);$('mapStatus').textContent='コースを作成できませんでした';
-  alert('ルート候補を作れませんでした。場所を少し変えるか、時間を変えてもう一度試してください。');
+  alert(e?.message==='no clean loop'?'同じ道を折り返さない周回コースが見つかりませんでした。時間を少し長くするか、スタート地点を少し変えてもう一度試してください。':'ルート候補を作れませんでした。場所を少し変えるか、時間を変えてもう一度試してください。');
  }finally{
   $('loading').classList.remove('show');$('buildRoute').disabled=false;
  }
