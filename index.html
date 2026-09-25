@@ -812,8 +812,7 @@ function initHomeNavMap(route){
  homeNavMap.fitBounds(homeNavLine.getBounds(),{padding:[18,18]});
  setTimeout(()=>homeNavMap&&homeNavMap.invalidateSize(),90)
 }
-function renderActiveRouteCard();
- if($('routeNavPage')?.classList.contains('active'))renderRouteNavigation(false){
+function renderActiveRouteCard(){
  const card=$('activeRouteCard');if(!card)return;
  const route=getActiveRoute();
  if(!route){card.hidden=true;return}
@@ -1226,7 +1225,8 @@ function acceptDailyPosition(pos){
  }
  dailyLastPos=c;
  updateDailyStatus('live');
- renderActiveRouteCard()
+ renderActiveRouteCard();
+ if($('routeNavPage')?.classList.contains('active'))renderRouteNavigation(false)
 }
 function startDailyTracking(){
  if(!navigator.geolocation){updateDailyStatus('error');return}
