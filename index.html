@@ -470,7 +470,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
 
 
-/* ===== SANPO v24: header + speech polish ===== */
+/* ===== SANPO v25: weather header fix + no-key OSM map + speech polish ===== */
 :root{--speech-bg:#fffdfa;--speech-border:#dceee5;--speech-ink:#35534a}
 .top-v24{
   height:auto;min-height:58px;padding:8px 14px;
@@ -535,6 +535,12 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .hero-bubble-v12{width:43vw;right:8px;font-size:10.5px!important;padding:10px 11px!important}
   .track-bubble{right:8px;width:42vw;min-width:112px;font-size:10px!important}
 }
+
+
+/* v25: weather must never leave the header flow */
+.top-v24 .header-weather-v22{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important}
+.top-v24{grid-template-columns:max-content minmax(0,1fr)}
+.top-v24 .top-meta-v22{min-width:0}
 
 </style>
 </head>
@@ -958,8 +964,8 @@ function initHomeNavMap(route){
  if(!$('homeNavMap')||!route)return;
  if(homeNavMap){homeNavMap.remove();homeNavMap=null}
  homeNavMap=L.map('homeNavMap',{zoomControl:false,attributionControl:true,dragging:true,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false}).setView(route.coords[0],15);
- L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
-   maxZoom:20,subdomains:'abcd',attribution:'&copy; OSM &copy; CARTO'
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+   maxZoom:19,attribution:'&copy; OpenStreetMap contributors'
  }).addTo(homeNavMap);
  homeNavLine=L.polyline(route.coords,{color:'#10a864',weight:5,opacity:.92}).addTo(homeNavMap);
  const finish=route.coords[route.coords.length-1];
@@ -1006,8 +1012,8 @@ function initRouteNavMap(route){
  if(!$('routeNavMap')||!route)return;
  if(routeNavMap){routeNavMap.remove();routeNavMap=null}
  routeNavMap=L.map('routeNavMap',{zoomControl:false,attributionControl:true}).setView(route.coords[0],16);
- L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
-  maxZoom:20,subdomains:'abcd',attribution:'&copy; OSM &copy; CARTO'
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19,attribution:'&copy; OpenStreetMap contributors'
  }).addTo(routeNavMap);
  routeNavLine=L.polyline(route.coords,{color:'#10a864',weight:6,opacity:.95}).addTo(routeNavMap);
  const finish=route.coords[route.coords.length-1],
@@ -1335,7 +1341,7 @@ async function updateWeather(lat,lng,force=false){
  const cache=json(KEY.weather,{});
  if(!force&&cache.time&&Date.now()-cache.time<30*60*1000&&cache.day===dayKey()){
   title.textContent=cache.title;sub.textContent=cache.sub;
-  card.className='hero-weather-v12 '+(cache.cls||'');return
+  card.className='hero-weather-v12 header-weather-v22 '+(cache.cls||'');return
  }
  try{
   const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&hourly=precipitation_probability&forecast_days=1&timezone=auto`;
@@ -1344,12 +1350,12 @@ async function updateWeather(lat,lng,force=false){
   const nowIso=d.current?.time||'',idx=(d.hourly?.time||[]).indexOf(nowIso),precip=idx>=0?(d.hourly.precipitation_probability?.[idx]??0):0;
   if(temp==null)throw Error('weather data');
   const w=weatherLabel(code,temp,precip);
-  title.textContent=w.title;sub.textContent=w.sub;card.className='hero-weather-v12 '+w.cls;
+  title.textContent=w.title;sub.textContent=w.sub;card.className='hero-weather-v12 header-weather-v22 '+w.cls;
   localStorage.setItem(KEY.weather,JSON.stringify({...w,time:Date.now(),day:dayKey()}));
  }catch(e){
   const cache=json(KEY.weather,{});
-  if(cache.title){title.textContent=cache.title;sub.textContent=cache.sub+'（前回取得）';card.className='hero-weather-v12 '+(cache.cls||'')}
-  else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 weather-cloud'}
+  if(cache.title){title.textContent=cache.title;sub.textContent=cache.sub+'（前回取得）';card.className='hero-weather-v12 header-weather-v22 '+(cache.cls||'')}
+  else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 header-weather-v22 weather-cloud'}
  }
 }
 function updateDailyStatus(kind='live'){
@@ -1454,7 +1460,7 @@ $('saveSettings').onclick=()=>{const p=profile();Object.assign(p,{age:+$('age').
 /* map and route */
 const notes={random:'歩きやすさと距離のバランスを見て、気軽な周回コースを選びます。',green:'公園・緑地・林・川沿いなど、緑を感じやすい場所の近くを優先します。',water:'川・池・湖・運河など、水辺の近くを通る候補を比べます。',detour:'公園・カフェ・展望・ベンチなど、途中で立ち寄れる場所を1つ入れます。',workout:'寄り道を抑え、距離と周回性を優先してテンポよく歩けるコースを選びます。'};
 qsa('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;qsa('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('modeNote').textContent=notes[mode]});
-function initMap(){try{map=L.map('map',{zoomControl:false}).setView([35.681236,139.767125],14);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);map.on('click',e=>setStart(e.latlng.lat,e.latlng.lng))}catch(e){$('mapStatus').textContent='地図を読み込めませんでした'}}
+function initMap(){try{map=L.map('map',{zoomControl:false}).setView([35.681236,139.767125],14);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);map.on('click',e=>setStart(e.latlng.lat,e.latlng.lng))}catch(e){$('mapStatus').textContent='地図を読み込めませんでした'}}
 function setStart(lat,lng){startPoint={lat,lng};if(startMarker)map.removeLayer(startMarker);const icon=L.divIcon({html:'<div class="start-dot"></div>',iconSize:[20,20],iconAnchor:[10,10]});startMarker=L.marker([lat,lng],{icon}).addTo(map);map.flyTo([lat,lng],15);$('mapStatus').textContent='スタート地点を設定しました'}
 $('useLocation').onclick=()=>{if(!navigator.geolocation)return alert('現在地取得に対応していません');$('mapStatus').textContent='現在地を取得中…';navigator.geolocation.getCurrentPosition(p=>{setStart(p.coords.latitude,p.coords.longitude);updateWeather(p.coords.latitude,p.coords.longitude,true)},()=>{$('mapStatus').textContent='現在地を取得できませんでした'},{enableHighAccuracy:true,maximumAge:10000,timeout:10000})};
 function dest(lat,lng,km,b){const R=6371,br=b*Math.PI/180,p1=lat*Math.PI/180,l1=lng*Math.PI/180,a=km/R,p2=Math.asin(Math.sin(p1)*Math.cos(a)+Math.cos(p1)*Math.sin(a)*Math.cos(br)),l2=l1+Math.atan2(Math.sin(br)*Math.sin(a)*Math.cos(p1),Math.cos(a)-Math.sin(p1)*Math.sin(p2));return{lat:p2*180/Math.PI,lng:l2*180/Math.PI}}
