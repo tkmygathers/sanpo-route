@@ -914,7 +914,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
    <div class="settings-progress-head-v12">
      <div>
        <h3>体型変化プレビュー</h3>
-       <div class="sub">今日の距離 ÷ 目標距離でキャラが変化します。各Stageをタップすると15秒プレビューできます</div>
+       <div class="sub">今日の距離 ÷ 目標距離で、Stage4からStage1へ変化します。各Stageをタップすると15秒プレビューできます</div>
      </div>
      <div class="settings-current-v12"><span id="settingsPct">0%</span></div>
    </div>
@@ -1008,7 +1008,7 @@ function characterPoseAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
  // v34: 実ファイル名 stage_N_pose.png に合わせて読み込み。
  // 例: assets/characters/female/stage_1/stage_1_normal.png
- return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=36-posepack`;
+ return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=37-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1259,13 +1259,15 @@ function today(){
  o.steps=Math.max(o.steps,ds.steps||dailyEstimatedSteps(ds.km));
  return o
 }
-function stage(p){return p>=75?4:p>=50?3:p>=25?2:1}
+// v37: 0kmでは最も大きいStage4からスタートし、目標距離への達成率に応じて細くなる。
+// 0〜24% = Stage4 / 25〜49% = Stage3 / 50〜74% = Stage2 / 75〜100% = Stage1
+function stage(p){return p>=75?1:p>=50?2:p>=25?3:4}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=36-stage4`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=37-stage4start`;}
 function stageNormalAsset(g,s){
  const gg=g==='male'?'male':'female';
  const st=Math.max(1,Math.min(4,+s||1));
- return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=36-home`;
+ return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=37-home`;
 }
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
@@ -1624,21 +1626,25 @@ function renderSettingsProgress(){
  if(!$('settingsStageRow'))return;
  $('settingsPct').textContent=Math.round(pct)+'%';
  $('settingsStageBar').style.width=pct+'%';
- const labels=['スタート','少しすっきり','見た目も変わってきた','かなりすっきり'];
- $('settingsStageMessage').textContent=pct>=100?'目標達成':labels[st-1];
+ // v37: Stage4(スタート) → Stage3 → Stage2 → Stage1(いちばんすっきり)
+ const progressStep=pct>=75?3:pct>=50?2:pct>=25?1:0;
+ const labels=['ここからスタート','少しすっきりしてきたね','見た目も変わってきたね','かなりすっきりしてきたね'];
+ $('settingsStageMessage').textContent=pct>=100?'今日の目標達成':labels[progressStep];
  $('settingsStageRow').innerHTML='';
- for(let i=1;i<=4;i++){
+ const stageOrder=[4,3,2,1];
+ const stagePct=['0%','25%','50%','75%以上'];
+ stageOrder.forEach((stageNum,index)=>{
    const box=document.createElement('div');
-   box.className='settings-stage-v12'+(i<st?' done':'')+(i===st?' current':'');
+   box.className='settings-stage-v12'+(index<progressStep?' done':'')+(stageNum===st?' current':'');
    const im=document.createElement('img');
-   im.src=stageNormalAsset(p.gender,i);
-   im.alt=['0%','25%','50%','75%以上'][i-1]+'の体型';
+   im.src=stageNormalAsset(p.gender,stageNum);
+   im.alt=stagePct[index]+'の体型';
    im.onerror=()=>{box.classList.add('stage-load-error-v30');box.title='画像を読み込めませんでした';};
-   box.title=`Stage ${i} をホームで15秒プレビュー`;
-   box.onclick=()=>previewBodyStage(i);
+   box.title=`Stage ${stageNum} をホームで15秒プレビュー`;
+   box.onclick=()=>previewBodyStage(stageNum);
    box.appendChild(im);
    $('settingsStageRow').appendChild(box);
- }
+ });
 }
 
 function previewBodyStage(stageNum){
