@@ -1819,6 +1819,126 @@ body{
   }
 }
 
+
+/* ===== SANPO v56: character + information closer, while keeping full-body safe ===== */
+/* Keep the character exactly in the v55 safe full-body position. */
+#homePage .hero-v39 .hero-person-v12{
+  left:-42px!important;
+  bottom:58px!important;
+  width:205px!important;
+  height:275px!important;
+}
+
+/* Bring the information area leftward and slightly downward.
+   The character itself is not moved, so head/hair/hands/feet stay fully visible. */
+#homePage .hero-side-v39{
+  width:63%!important;
+  top:28px!important;
+  bottom:0!important;
+  padding:12px 10px 10px 7px!important;
+  gap:6px!important;
+  background:linear-gradient(90deg,
+    rgba(247,252,249,0) 0%,
+    rgba(247,252,249,.12) 8%,
+    rgba(247,252,249,.32) 20%,
+    rgba(247,252,249,.58) 38%,
+    rgba(247,252,249,.74) 62%,
+    rgba(247,252,249,.82) 100%)!important;
+}
+
+/* Make the speech feel like it belongs beside the character rather than floating far away. */
+#homePage .hero-v39 .hero-bubble-v12{
+  min-height:44px!important;
+  padding:9px 11px!important;
+  font-size:9.4px!important;
+  line-height:1.5!important;
+  border-radius:18px!important;
+}
+#homePage .hero-v39 .hero-bubble-v12:after{
+  left:-7px!important;
+  top:17px!important;
+}
+
+/* Compact the right-side stats so the whole group can sit closer to the character. */
+#homePage .hero-remain-v39{
+  padding:8px 10px 7px!important;
+  border-radius:14px!important;
+}
+#homePage .hero-remain-v39 b{
+  font-size:20px!important;
+}
+#homePage .hero-mini-grid-v54{
+  gap:4px!important;
+}
+#homePage .hero-mini-grid-v54 .hero-mini-stat-v39{
+  padding:6px 3px!important;
+  border-radius:11px!important;
+}
+#homePage .hero-gps-v54{
+  padding-left:2px!important;
+  margin-top:-1px!important;
+}
+
+/* Keep the phase card in its existing safe footer lane. */
+#homePage .character-phase-v46{
+  left:12px!important;
+  bottom:12px!important;
+  width:124px!important;
+}
+
+/* Preserve a strong, reachable action button at the bottom right. */
+#homePage .hero-route-btn-v39{
+  height:40px!important;
+  border-radius:14px!important;
+  margin-top:auto!important;
+}
+
+/* Phone tuning */
+@media(max-width:390px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-42px!important;
+    bottom:56px!important;
+    width:196px!important;
+    height:266px!important;
+  }
+  #homePage .hero-side-v39{
+    width:63.5%!important;
+    top:24px!important;
+    padding:10px 8px 9px 5px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    font-size:8.9px!important;
+    min-height:42px!important;
+  }
+  #homePage .character-phase-v46{
+    left:10px!important;
+    bottom:10px!important;
+    width:120px!important;
+  }
+}
+@media(max-width:350px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-42px!important;
+    bottom:54px!important;
+    width:190px!important;
+    height:258px!important;
+  }
+  #homePage .hero-side-v39{
+    width:64%!important;
+    top:21px!important;
+    padding-left:4px!important;
+    padding-right:7px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    font-size:8.3px!important;
+  }
+  #homePage .character-phase-v46{
+    left:8px!important;
+    bottom:9px!important;
+    width:116px!important;
+  }
+}
+
 </style>
 </head>
 <body>
