@@ -691,7 +691,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
 
 
-/* ===== SANPO v45: wider right panel + speech inside panel + full weather info ===== */
+/* ===== SANPO v46: unified walking card + body phase label ===== */
 /* Weather stays between logo and date even after weather classes are updated. */
 #weatherCard.header-weather-v41{
   position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;
@@ -841,6 +841,79 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .top-v41 .date{font-size:7.6px!important}
 }
 
+
+/* ===== v46 unified park card ===== */
+.hero-v12.hero-v39{
+  height:320px!important;
+  background:#dff2ea!important;
+  position:relative;
+}
+.hero-v39 .hero-scene-v39{
+  width:100%!important;
+  background:#dff2ea!important;
+}
+.hero-v39 .hero-bg-v12{
+  opacity:.96!important;
+  object-position:45% center!important;
+}
+.hero-v39:after{
+  width:100%!important;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.03) 38%,rgba(248,252,250,.58) 55%,rgba(248,252,250,.88) 72%,rgba(248,252,250,.96) 100%)!important;
+}
+.hero-v39 .hero-person-v12{
+  left:-42px!important;bottom:36px!important;width:205px!important;height:275px!important;z-index:4!important;
+}
+.hero-side-v39{
+  width:49%!important;
+  background:rgba(248,252,250,.88)!important;
+  border-left:1px solid rgba(219,235,226,.75)!important;
+  backdrop-filter:blur(9px)!important;
+  -webkit-backdrop-filter:blur(9px)!important;
+  padding:12px 12px 11px!important;
+  gap:7px!important;
+}
+.hero-v39 .hero-bubble-v12{
+  background:rgba(255,255,255,.88)!important;
+  border-color:rgba(220,234,226,.92)!important;
+}
+.hero-v39 .hero-bubble-v12:after{
+  background:rgba(255,255,255,.88)!important;
+  border-color:rgba(220,234,226,.92)!important;
+}
+.hero-stage-mini-v39{display:none!important}
+
+/* Compact body phase sits under the character, never inside the info panel. */
+.character-phase-v46{
+  position:absolute;left:13px;bottom:9px;z-index:9;width:158px;
+  padding:6px 8px 7px;border-radius:14px;
+  background:rgba(255,255,255,.90);border:1px solid rgba(222,235,228,.95);
+  box-shadow:0 5px 15px rgba(29,72,53,.07);backdrop-filter:blur(7px);
+}
+.character-phase-top-v46{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+.character-phase-name-v46{font-size:10.5px;font-weight:900;color:#23463a;white-space:nowrap}
+.character-phase-next-v46{font-size:7.2px;color:#71817b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.character-phase-bar-v46{height:4px;margin-top:5px;border-radius:99px;background:#e6eee9;overflow:hidden}
+.character-phase-bar-v46>div{height:100%;width:0;background:var(--g);border-radius:99px;transition:width .35s ease}
+
+/* Right panel keeps only useful action information. */
+.hero-remain-v39{background:rgba(239,249,244,.92)!important}
+
+@media(max-width:390px){
+  .hero-v12.hero-v39{height:312px!important}
+  .hero-v39 .hero-person-v12{left:-42px!important;bottom:35px!important;width:196px!important;height:266px!important}
+  .hero-side-v39{width:49%!important;padding:10px 9px 9px!important;gap:6px!important}
+  .character-phase-v46{left:10px;bottom:8px;width:151px;padding:6px 7px}
+  .character-phase-name-v46{font-size:10px}
+  .character-phase-next-v46{font-size:6.8px}
+}
+@media(max-width:350px){
+  .hero-v12.hero-v39{height:305px!important}
+  .hero-v39 .hero-person-v12{left:-42px!important;bottom:34px!important;width:190px!important;height:258px!important}
+  .character-phase-v46{left:8px;width:145px}
+  .character-phase-name-v46{font-size:9.4px}
+  .character-phase-next-v46{font-size:6.4px}
+}
+
 </style>
 </head>
 <body>
@@ -864,14 +937,17 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
         <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
       </div>
       <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
+      <div class="character-phase-v46" aria-live="polite">
+        <div class="character-phase-top-v46">
+          <span id="heroBodyPhaseV46" class="character-phase-name-v46">ぽっちゃり</span>
+          <span id="heroNextPhaseV46" class="character-phase-next-v46">ちょいぽちゃまであと 1.3km</span>
+        </div>
+        <div class="character-phase-bar-v46"><div id="heroPhaseBarV46"></div></div>
+      </div>
 
       <div class="hero-side-v39">
         <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
         <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
-        <div class="hero-stage-mini-v39">
-          <span id="heroStageNameV39">STAGE 4</span>
-          <strong><span id="heroStagePct">0%</span></strong>
-        </div>
         <div class="hero-remain-v39">
           <small>目標まであと</small>
           <b><span id="heroRemainKmV39">5.0</span><span>km</span></b>
@@ -1806,7 +1882,21 @@ if($('homeWalker')){
  }
  if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';
  if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
- if($('heroStageNameV39'))$('heroStageNameV39').textContent='STAGE '+st;
+ // v46: show human-readable body phase under the character instead of internal Stage numbers.
+ const bodyPhaseNames={4:'ぽっちゃり',3:'ちょいぽちゃ',2:'標準',1:'スリム'};
+ const nextPhaseNames={4:'ちょいぽちゃ',3:'標準',2:'スリム',1:'目標達成'};
+ const nextThresholdRatio={4:.25,3:.50,2:.75,1:1};
+ const phaseStartRatio={4:0,3:.25,2:.50,1:.75};
+ const nextThresholdKm=goalKm*nextThresholdRatio[st];
+ const phaseStartKm=goalKm*phaseStartRatio[st];
+ const nextPhaseKm=Math.max(0,nextThresholdKm-t.km);
+ const phaseSpan=Math.max(.001,nextThresholdKm-phaseStartKm);
+ const phaseProgress=Math.max(0,Math.min(100,(t.km-phaseStartKm)/phaseSpan*100));
+ if($('heroBodyPhaseV46'))$('heroBodyPhaseV46').textContent=bodyPhaseNames[st]||'ぽっちゃり';
+ if($('heroNextPhaseV46')){
+   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`${nextPhaseNames[st]}まであと ${nextPhaseKm.toFixed(1)}km`;
+ }
+ if($('heroPhaseBarV46'))$('heroPhaseBarV46').style.width=(pct>=100?100:phaseProgress)+'%';
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
  if($('heroDistanceV39'))$('heroDistanceV39').textContent=t.km.toFixed(1);
  if($('heroCalV39'))$('heroCalV39').textContent=displayCal;
@@ -1848,7 +1938,7 @@ function renderSettingsProgress(){
    im.src=stageNormalAsset(p.gender,stageNum);
    im.alt=stagePct[index]+'の体型';
    im.onerror=()=>{box.classList.add('stage-load-error-v30');box.title='画像を読み込めませんでした';};
-   box.title=`Stage ${stageNum} をホームで15秒プレビュー`;
+   box.title=`${({4:'ぽっちゃり',3:'ちょいぽちゃ',2:'標準',1:'スリム'})[stageNum]}をホームで15秒プレビュー`;
    box.onclick=()=>previewBodyStage(stageNum);
    box.appendChild(im);
    $('settingsStageRow').appendChild(box);
@@ -1862,7 +1952,7 @@ function previewBodyStage(stageNum){
  renderHome(false);
  const p=profile();
  setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,'normal',manualStagePreview),true);
- if($('settingsStageMessage'))$('settingsStageMessage').textContent=`Stage ${manualStagePreview} を15秒プレビュー中`;
+ if($('settingsStageMessage'))$('settingsStageMessage').textContent=`${({4:'ぽっちゃり',3:'ちょいぽちゃ',2:'標準',1:'スリム'})[manualStagePreview]}を15秒プレビュー中`;
  manualStagePreviewTimer=setTimeout(()=>{
    manualStagePreview=null;
    renderHome(false);
