@@ -1007,9 +1007,9 @@ function characterPoseAsset(gender,pose='normal',stageNum=null){
  const g=gender==='male'?'male':'female';
  const p=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
  const st=stageNum ?? currentBodyStage();
- // v32: stage_1〜4 × 10ポーズの命名規則を先読み。
+ // v33: stage_1〜4 × 10ポーズの命名規則を先読み。
  // 画像がまだ無い場合は setCharacterImage() が旧素材へ自動フォールバックする。
- return `assets/characters/${g}/stage_${st}/${p}.png?v=32-stage4-posepack`;
+ return `assets/characters/${g}/stage_${st}/${p}.png?v=33-stage4-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1026,16 +1026,17 @@ function setCharacterImage(img,src,animate=false){
  const current=img.getAttribute('src')||'';
  if(current===src)return;
 
- // stage別ポーズ画像がまだ未配置でも壊れないようにする。
- // 例: assets/characters/female/stage_4/rest.png が無ければ
- //     assets/characters/female/rest.png → assets/female_stage_4.png の順で退避。
+ // v33: Stage別画像を最優先。読み込みに失敗しても旧ポーズ画像へは戻さない。
+ // 旧 assets/characters/{gender}/{pose}.png が残っていると、
+ // Stage別ファイルのパスミスを隠して古いキャラが表示され続けるため。
+ // Stage別ポーズが無い場合だけ、そのStageの基本画像へ退避する。
  img.onerror=()=>{
    const raw=(img.getAttribute('src')||'').split('?')[0];
    const m=raw.match(/^assets\/characters\/(female|male)\/stage_(\d+)\/([a-z_]+)\.png$/);
    if(m){
-     const [,g,st,p]=m;
-     img.onerror=()=>{ img.onerror=null; img.src=asset(g,+st); };
-     img.src=`assets/characters/${g}/${p}.png`;
+     const [,g,st]=m;
+     img.onerror=null;
+     img.src=asset(g,+st);
      return;
    }
    img.onerror=null;
@@ -1260,7 +1261,7 @@ function today(){
 }
 function stage(p){return p>=75?4:p>=50?3:p>=25?2:1}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=32-stage4`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=33-stage4`;}
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
 
