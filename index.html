@@ -691,7 +691,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
 
 
-/* ===== SANPO v46: unified walking card + body phase label ===== */
+/* ===== SANPO v47: seamless park card + closer panel + clearer body phase label ===== */
 /* Weather stays between logo and date even after weather classes are updated. */
 #weatherCard.header-weather-v41{
   position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;
@@ -914,6 +914,93 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .character-phase-next-v46{font-size:6.4px}
 }
 
+
+
+/* ===== SANPO v47 visual merge overrides ===== */
+/* One continuous park scene across the entire hero card. */
+.hero-v12.hero-v39{
+  background:#dff2ea!important;
+}
+.hero-v39 .hero-scene-v39{
+  width:100%!important;
+  inset:0!important;
+}
+.hero-v39 .hero-bg-v12{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:43% center!important;
+  opacity:.92!important;
+}
+/* Soft fade only; no hard left/right split. */
+.hero-v39:after{
+  width:100%!important;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 33%,
+    rgba(247,252,249,.18) 42%,
+    rgba(247,252,249,.52) 54%,
+    rgba(247,252,249,.76) 70%,
+    rgba(247,252,249,.90) 100%)!important;
+}
+/* Keep character in the same safe position so no hair, arms or feet are cropped. */
+.hero-v39 .hero-person-v12{
+  left:-42px!important;
+}
+/* Bring the information closer, but make its left edge visually dissolve into the park. */
+.hero-side-v39{
+  width:56%!important;
+  background:linear-gradient(90deg,
+    rgba(248,252,250,.22) 0%,
+    rgba(248,252,250,.62) 16%,
+    rgba(248,252,250,.86) 35%,
+    rgba(248,252,250,.94) 100%)!important;
+  border-left:0!important;
+  box-shadow:none!important;
+  padding-left:18px!important;
+  backdrop-filter:blur(6px)!important;
+  -webkit-backdrop-filter:blur(6px)!important;
+}
+/* Keep content clear of the character while allowing the panel itself to visually reach leftward. */
+.hero-v39 .hero-bubble-v12,
+.hero-remain-v39,
+.hero-mini-grid-v39,
+.hero-route-btn-v39{
+  position:relative;
+  z-index:2;
+}
+/* Phase meter: full wording, still compact. */
+.character-phase-v46{
+  width:176px!important;
+  padding:6px 9px 7px!important;
+  background:rgba(255,255,255,.93)!important;
+}
+.character-phase-top-v46{
+  display:grid!important;
+  grid-template-columns:auto 1fr!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+.character-phase-name-v46{
+  font-size:10.5px!important;
+}
+.character-phase-next-v46{
+  font-size:7.1px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  text-align:right!important;
+}
+@media(max-width:390px){
+  .hero-side-v39{width:57%!important;padding-left:16px!important}
+  .character-phase-v46{width:168px!important}
+  .character-phase-next-v46{font-size:6.8px!important}
+}
+@media(max-width:350px){
+  .hero-side-v39{width:58%!important;padding-left:14px!important}
+  .character-phase-v46{width:160px!important}
+  .character-phase-next-v46{font-size:6.4px!important}
+}
 </style>
 </head>
 <body>
@@ -1894,7 +1981,7 @@ if($('homeWalker')){
  const phaseProgress=Math.max(0,Math.min(100,(t.km-phaseStartKm)/phaseSpan*100));
  if($('heroBodyPhaseV46'))$('heroBodyPhaseV46').textContent=bodyPhaseNames[st]||'ぽっちゃり';
  if($('heroNextPhaseV46')){
-   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`${nextPhaseNames[st]}まであと ${nextPhaseKm.toFixed(1)}km`;
+   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`次：${nextPhaseNames[st]}まで ${nextPhaseKm.toFixed(1)}km`;
  }
  if($('heroPhaseBarV46'))$('heroPhaseBarV46').style.width=(pct>=100?100:phaseProgress)+'%';
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
