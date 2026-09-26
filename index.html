@@ -951,13 +951,13 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
 const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
-/* ===== v35 Stage1〜4 home-safe loader =====
-   v35ではホームをnormal画像に固定し、7秒ポーズ切替テストは停止しています。
-   現在のStageに応じて assets/characters/{gender}/stage_{1〜4}/{pose}.png を自動参照します。
-   ファイルが未配置なら旧ポーズ画像、さらに無ければ従来のStage画像へ自動フォールバックします。
-   そのため今後は命名ルールどおり画像を追加するだけでコード変更なしで反映できます。
+/* ===== v36 Stage1〜4 × 10ポーズ =====
+   ホームでは現在のStageを維持したまま、7秒ごとに10ポーズを切り替えます。
+   参照先: assets/characters/{gender}/stage_{1〜4}/stage_{N}_{pose}.png
+   Stage別ポーズ画像が無い場合は、そのStageのnormal画像へ戻ります。
+   古い共通ポーズ画像には戻さないため、体型が勝手に旧素材へ戻ることはありません。
 */
-const CHARACTER_TEST_MODE=false; // v35: ホームはStageごとのnormal画像に固定
+const CHARACTER_TEST_MODE=true; // v36: Stage別10ポーズ切り替えを有効化
 const CHARACTER_TEST_INTERVAL=7000;
 const CHARACTER_TEST_POSES=['normal','walk','turn','guide','cheer','think','discover','rest','recommend','finish'];
 const CHARACTER_TEST_LINES={
@@ -1008,7 +1008,7 @@ function characterPoseAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
  // v34: 実ファイル名 stage_N_pose.png に合わせて読み込み。
  // 例: assets/characters/female/stage_1/stage_1_normal.png
- return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=35-posepack`;
+ return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=36-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1034,7 +1034,7 @@ function setCharacterImage(img,src,animate=false){
    const m=raw.match(/^assets\/characters\/(female|male)\/stage_(\d+)\/stage_\2_([a-z_]+)\.png$/);
    if(m){
      const [,g,st]=m;
-     // v35: まず同じStageのnormal画像へ。これも失敗した時だけ旧Stage画像へ。
+     // v36: まず同じStageのnormal画像へ。これも失敗した時だけ旧Stage画像へ。
      img.onerror=()=>{ img.onerror=null; img.src=asset(g,+st); };
      img.src=stageNormalAsset(g,+st);
      return;
@@ -1261,11 +1261,11 @@ function today(){
 }
 function stage(p){return p>=75?4:p>=50?3:p>=25?2:1}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=35-stage4`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=36-stage4`;}
 function stageNormalAsset(g,s){
  const gg=g==='male'?'male':'female';
  const st=Math.max(1,Math.min(4,+s||1));
- return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=35-home`;
+ return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=36-home`;
 }
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
@@ -1591,8 +1591,12 @@ function renderHome(talk=true){
  renderLiveSanpo();
  renderActiveRouteCard();
 if($('homeWalker')){
-  // v35: ホームは必ず現在Stageのnormal画像を直接表示。
-  setCharacterImage($('homeWalker'),stageNormalAsset(p.gender,st),false);
+  // v36: 現在Stageを固定したまま、同じStage内のポーズだけ切り替える。
+  setCharacterImage(
+    $('homeWalker'),
+    characterDisplayAsset(p.gender,currentCharacterPose,st),
+    false
+  );
  }
  if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';
  if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
@@ -1643,7 +1647,7 @@ function previewBodyStage(stageNum){
  currentCharacterPose='normal';
  renderHome(false);
  const p=profile();
- setCharacterImage($('homeWalker'),stageNormalAsset(p.gender,manualStagePreview),true);
+ setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,'normal',manualStagePreview),true);
  if($('settingsStageMessage'))$('settingsStageMessage').textContent=`Stage ${manualStagePreview} を15秒プレビュー中`;
  manualStagePreviewTimer=setTimeout(()=>{
    manualStagePreview=null;
