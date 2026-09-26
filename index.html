@@ -1272,6 +1272,146 @@ body{
   .hero-route-btn-v39{width:calc(100% - 12px)!important;margin-left:12px!important}
 }
 
+
+
+/* ===== SANPO v51: phase footer safety + settings live sync ===== */
+/* Reserve a real footer lane so the body-phase card never sits on the character's feet. */
+.hero-v12.hero-v39{
+  height:344px!important;
+}
+.hero-v39 .hero-person-v12{
+  bottom:72px!important;
+}
+.character-phase-v46{
+  left:12px!important;
+  bottom:10px!important;
+  width:124px!important;
+  min-height:52px!important;
+  padding:7px 8px 7px!important;
+  z-index:12!important;
+  background:rgba(255,255,255,.97)!important;
+}
+.character-phase-name-v46{
+  font-size:10.2px!important;
+}
+.character-phase-next-v46{
+  font-size:6.6px!important;
+  line-height:1.2!important;
+}
+.character-phase-bar-v46{
+  margin-top:5px!important;
+}
+/* Keep the action button entirely in the dashboard side. */
+.hero-route-btn-v39{
+  position:relative!important;
+  z-index:10!important;
+}
+@media(max-width:390px){
+  .hero-v12.hero-v39{height:336px!important}
+  .hero-v39 .hero-person-v12{bottom:69px!important}
+  .character-phase-v46{left:10px!important;bottom:9px!important;width:120px!important}
+}
+@media(max-width:350px){
+  .hero-v12.hero-v39{height:328px!important}
+  .hero-v39 .hero-person-v12{bottom:66px!important}
+  .character-phase-v46{left:8px!important;bottom:8px!important;width:116px!important}
+}
+
+
+
+/* ===== SANPO v52: full-body lock + compact safe footer ===== */
+/*
+  Character position is restored to the proven v50/v49 safe placement.
+  We keep the taller hero card only to ADD headroom; the character itself is not raised.
+*/
+.hero-v12.hero-v39{
+  height:344px!important;
+}
+.hero-v39 .hero-person-v12{
+  left:-42px!important;
+  bottom:53px!important;
+  width:205px!important;
+  height:275px!important;
+  object-fit:contain!important;
+}
+/*
+  The phase UI fits completely in the empty lane below the character's feet.
+  It is intentionally shallow so it never overlaps the character bounding box.
+*/
+.character-phase-v46{
+  left:10px!important;
+  bottom:5px!important;
+  width:120px!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:5px 8px 5px!important;
+  border-radius:12px!important;
+  z-index:12!important;
+  background:rgba(255,255,255,.97)!important;
+}
+.character-phase-top-v46{
+  display:block!important;
+}
+.character-phase-name-v46{
+  display:block!important;
+  font-size:9.7px!important;
+  line-height:1.05!important;
+  margin:0 0 2px!important;
+}
+.character-phase-next-v46{
+  display:block!important;
+  width:100%!important;
+  font-size:6.0px!important;
+  line-height:1.12!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  margin:0!important;
+}
+.character-phase-bar-v46{
+  height:3px!important;
+  margin-top:4px!important;
+}
+/* Protect the character: no later animation/state may scale it beyond its box. */
+.hero-v39 .hero-person-v12:not(.char-switching-v23){
+  max-width:205px!important;
+  max-height:275px!important;
+}
+@media(max-width:390px){
+  .hero-v12.hero-v39{height:336px!important}
+  .hero-v39 .hero-person-v12{
+    left:-42px!important;
+    bottom:50px!important;
+    width:196px!important;
+    height:266px!important;
+  }
+  .character-phase-v46{
+    left:9px!important;
+    bottom:5px!important;
+    width:116px!important;
+    padding:5px 7px!important;
+  }
+  .character-phase-name-v46{font-size:9.3px!important}
+  .character-phase-next-v46{font-size:5.8px!important}
+}
+@media(max-width:350px){
+  .hero-v12.hero-v39{height:328px!important}
+  .hero-v39 .hero-person-v12{
+    left:-42px!important;
+    bottom:48px!important;
+    width:190px!important;
+    height:258px!important;
+  }
+  .character-phase-v46{
+    left:8px!important;
+    bottom:4px!important;
+    width:112px!important;
+    padding:4px 7px!important;
+  }
+  .character-phase-name-v46{font-size:9px!important}
+  .character-phase-next-v46{font-size:5.6px!important}
+}
+
 </style>
 </head>
 <body>
@@ -2323,7 +2463,42 @@ function loadSettings(){const p=profile();$('age').value=p.age;$('height').value
 function setGender(g){const p=profile();p.gender=g;localStorage.setItem(KEY.profile,JSON.stringify(p));loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress()}
 $('femaleBtn').onclick=()=>setGender('female');$('maleBtn').onclick=()=>setGender('male');
 $('dogToggle').onclick=()=>$('dogToggle').classList.toggle('on');
-$('saveSettings').onclick=()=>{const p=profile();Object.assign(p,{age:+$('age').value||'',height:+$('height').value||'',weight:+$('weight').value||'',goalKm:Math.max(.5,+$('goalKm').value||5),dog:$('dogToggle').classList.contains('on')});delete p.voice;localStorage.setItem(KEY.profile,JSON.stringify(p));$('saved').textContent='保存しました';setTimeout(()=>$('saved').textContent='',1300);renderHome();renderSettingsProgress()};
+function syncProfileFromSettings(showSaved=false){
+ const p=profile();
+ Object.assign(p,{
+   age:+$('age').value||'',
+   height:+$('height').value||'',
+   weight:+$('weight').value||'',
+   goalKm:Math.max(.5,+$('goalKm').value||5),
+   dog:$('dogToggle').classList.contains('on')
+ });
+ delete p.voice;
+ localStorage.setItem(KEY.profile,JSON.stringify(p));
+
+ // A settings change should immediately win over any temporary Stage preview.
+ if(manualStagePreviewTimer)clearTimeout(manualStagePreviewTimer);
+ manualStagePreview=null;
+
+ // Recalculate every home value from the newly saved profile.
+ renderHome(false);
+ renderSettingsProgress();
+
+ if(showSaved){
+   $('saved').textContent='保存しました';
+   setTimeout(()=>$('saved').textContent='',1300);
+ }
+}
+$('saveSettings').onclick=()=>syncProfileFromSettings(true);
+
+// v51: live-link profile values to the Home panel.
+// Changing goal distance instantly updates "目標まであと", goal %, body phase and next-phase distance.
+// Height/weight also immediately update step/calorie estimates.
+['age','height','weight','goalKm'].forEach(id=>{
+ const el=$(id);
+ if(!el)return;
+ el.addEventListener('input',()=>syncProfileFromSettings(false));
+ el.addEventListener('change',()=>syncProfileFromSettings(false));
+});
 
 /* map and route */
 const notes={random:'歩きやすさと距離のバランスを見て、気軽な周回コースを選びます。',green:'公園・緑地・林・川沿いなど、緑を感じやすい場所の近くを優先します。',water:'川・池・湖・運河など、水辺の近くを通る候補を比べます。',detour:'公園・カフェ・展望・ベンチなど、途中で立ち寄れる場所を1つ入れます。',workout:'寄り道を抑え、距離と周回性を優先してテンポよく歩けるコースを選びます。'};
