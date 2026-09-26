@@ -679,6 +679,12 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .time-quick-v28 button{font-size:8.5px}
 }
 
+
+/* ===== SANPO v30 stage image fix ===== */
+#settingsStageRow .settings-stage-v12{cursor:pointer;transition:transform .18s ease,opacity .18s ease}
+#settingsStageRow .settings-stage-v12:active{transform:scale(.96)}
+#settingsStageRow .stage-load-error-v30{outline:1px dashed #d97b7b;opacity:.55}
+
 </style>
 </head>
 <body>
@@ -908,7 +914,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
    <div class="settings-progress-head-v12">
      <div>
        <h3>体型変化プレビュー</h3>
-       <div class="sub">今日の距離 ÷ 目標距離でキャラが変化します</div>
+       <div class="sub">今日の距離 ÷ 目標距離でキャラが変化します。各Stageをタップすると15秒プレビューできます</div>
      </div>
      <div class="settings-current-v12"><span id="settingsPct">0%</span></div>
    </div>
@@ -963,6 +969,7 @@ const CHARACTER_TEST_LINES={
  think:'ちょっと見てみようか。'
 };
 let currentCharacterPose='normal',characterTestIndex=0,characterTestTimer=null,characterSwitchTimer=null;
+let manualStagePreview=null,manualStagePreviewTimer=null;
 
 let mode='random',recordPeriod='week',map,startPoint,startMarker,poiMarker,routeLine,routeShadow,currentRoute=null;
 let walkFrame=1,walkTimer=null,tracking=false,paused=false,startTime=0,pauseAt=0,pauseTotal=0,timerInt=null,watchId=null,trackKm=0,lastPos=null,trackPath=[];
@@ -997,12 +1004,13 @@ function characterPoseAsset(gender,pose='normal'){
  return `assets/characters/${g}/${p}.png`
 }
 function currentBodyStage(){
+ if(manualStagePreview)return manualStagePreview;
  const p=profile(),goalKm=Math.max(.5,+p.goalKm||5);
  const pct=Math.min(100,today().km/goalKm*100);
  return stage(pct);
 }
 function characterDisplayAsset(gender,pose='normal',stageNum=null){
- const st=stageNum||currentBodyStage();
+ const st=stageNum ?? currentBodyStage();
  return pose==='normal'?asset(gender,st):characterPoseAsset(gender,pose);
 }
 function setCharacterImage(img,src,animate=false){
@@ -1228,7 +1236,7 @@ function today(){
 }
 function stage(p){return p>=100?5:p>=75?4:p>=50?3:p>=25?2:1}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){return `assets/${g}_stage_${s}.png`}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=30-stage`;}
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
 
@@ -1546,7 +1554,7 @@ function startDailyTracking(){
 }
 
 function renderHome(talk=true){
- const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=stage(pct);
+ const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=manualStagePreview||stage(pct);
  const displayCal=Math.max(Math.round(t.cal||0),dailyEstimatedCal(t.km));
  $('todaySteps').textContent=Math.round(t.steps).toLocaleString();$('goalSteps').textContent=gsteps.toLocaleString();$('goalKmDisplay').textContent=(+p.goalKm||5).toFixed(1)+' km';$('goalPct').textContent=Math.round(pct)+'%';$('goalRing').style.setProperty('--p',pct+'%');$('goalBar').style.width=pct+'%';$('todayCal').textContent=displayCal;$('todayMin').textContent=Math.round(t.min);$('todayKm').textContent=t.km.toFixed(1);
  $('rice').textContent=food(displayCal,FOOD.rice);$('banana').textContent=food(displayCal,FOOD.banana);$('cake').textContent=food(displayCal,FOOD.cake);$('ramen').textContent=food(displayCal,FOOD.ramen);
@@ -1586,9 +1594,27 @@ function renderSettingsProgress(){
    const im=document.createElement('img');
    im.src=asset(p.gender,i);
    im.alt=['0%','25%','50%','75%','100%'][i-1]+'の体型';
+   im.onerror=()=>{box.classList.add('stage-load-error-v30');box.title='画像を読み込めませんでした';};
+   box.title=`Stage ${i} をホームで15秒プレビュー`;
+   box.onclick=()=>previewBodyStage(i);
    box.appendChild(im);
    $('settingsStageRow').appendChild(box);
  }
+}
+
+function previewBodyStage(stageNum){
+ manualStagePreview=Math.max(1,Math.min(5,+stageNum||1));
+ if(manualStagePreviewTimer)clearTimeout(manualStagePreviewTimer);
+ currentCharacterPose='normal';
+ renderHome(false);
+ const p=profile();
+ setCharacterImage($('homeWalker'),asset(p.gender,manualStagePreview),true);
+ if($('settingsStageMessage'))$('settingsStageMessage').textContent=`Stage ${manualStagePreview} を15秒プレビュー中`;
+ manualStagePreviewTimer=setTimeout(()=>{
+   manualStagePreview=null;
+   renderHome(false);
+   renderSettingsProgress();
+ },15000);
 }
 function loadSettings(){const p=profile();$('age').value=p.age;$('height').value=p.height;$('weight').value=p.weight;$('goalKm').value=p.goalKm;$('femaleBtn').classList.toggle('active',p.gender==='female');$('maleBtn').classList.toggle('active',p.gender==='male');$('dogToggle').classList.toggle('on',p.dog);renderSettingsProgress()}
 function setGender(g){const p=profile();p.gender=g;localStorage.setItem(KEY.profile,JSON.stringify(p));loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress()}
