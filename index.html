@@ -458,6 +458,10 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-3px)}
 }
+/* ===== SANPO v38: no legacy-image flash on first paint ===== */
+#homeWalker:not(.char-ready-v38){opacity:0!important}
+#homeWalker.char-ready-v38{opacity:1}
+#homeWalker.char-ready-v38.char-switching-v23{opacity:.08}
 .character-test-badge-v23{
   position:absolute;z-index:7;right:12px;top:12px;
   padding:6px 9px;border-radius:999px;
@@ -707,7 +711,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       </div>
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
-      <img id="homeWalker" class="hero-person-v12" src="assets/female_stage_1.png" alt="今日のキャラクター">
+      <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
       <img id="homeDog" class="hero-dog-v12" src="assets/dog.png" alt="犬">
       <div class="hero-stage-badge-v12"><span id="heroStagePct">0%</span> / 今日の目標</div>
     </div>
@@ -1008,7 +1012,7 @@ function characterPoseAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
  // v34: 実ファイル名 stage_N_pose.png に合わせて読み込み。
  // 例: assets/characters/female/stage_1/stage_1_normal.png
- return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=37-posepack`;
+ return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=38-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1020,43 +1024,75 @@ function characterDisplayAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
  return characterPoseAsset(gender,pose,st);
 }
-function setCharacterImage(img,src,animate=false){
+function setCharacterImage(img,src,animate=false,onShown=null){
  if(!img||!src)return;
  const current=img.getAttribute('src')||'';
- if(current===src)return;
+ if(current===src){
+   img.classList.add('char-ready-v38');
+   if(typeof onShown==='function')onShown();
+   return;
+ }
 
- // v34: 実ファイル名に合わせてStage別画像を最優先。読み込みに失敗しても旧ポーズ画像へは戻さない。
- // 旧 assets/characters/{gender}/{pose}.png が残っていると、
- // Stage別ファイルのパスミスを隠して古いキャラが表示され続けるため。
- // Stage別ポーズが無い場合だけ、そのStageの基本画像へ退避する。
+ // v38: セリフは「画像の読み込みが完了した瞬間」に出す。
+ // これで画像とセリフの切り替えタイミングを同期する。
+ if(animate)img.classList.add('char-switching-v23');
+
+ const finish=()=>{
+   img.classList.add('char-ready-v38');
+   img.classList.remove('char-switching-v23');
+   if(typeof onShown==='function')onShown();
+ };
+
+ img.onload=()=>{
+   img.onload=null;
+   finish();
+ };
+
+ // Stage別ポーズが無い場合は「同じStageのnormal」へ退避。
+ // それも無い場合だけ旧Stage基本画像へ退避する。
  img.onerror=()=>{
    const raw=(img.getAttribute('src')||'').split('?')[0];
    const m=raw.match(/^assets\/characters\/(female|male)\/stage_(\d+)\/stage_\2_([a-z_]+)\.png$/);
    if(m){
-     const [,g,st]=m;
-     // v36: まず同じStageのnormal画像へ。これも失敗した時だけ旧Stage画像へ。
-     img.onerror=()=>{ img.onerror=null; img.src=asset(g,+st); };
-     img.src=stageNormalAsset(g,+st);
+     const [,g,st,p]=m;
+     const normal=stageNormalAsset(g,+st);
+     if(p!=='normal' && raw!==normal.split('?')[0]){
+       img.onerror=()=>{
+         img.onerror=null;
+         img.onload=()=>{img.onload=null;finish()};
+         img.src=asset(g,+st);
+       };
+       img.src=normal;
+       return;
+     }
+     img.onerror=()=>{
+       img.onerror=null;
+       img.onload=()=>{img.onload=null;finish()};
+       img.src=asset(g,+st);
+     };
      return;
    }
    img.onerror=null;
+   img.classList.remove('char-switching-v23');
  };
 
- if(!animate){img.src=src;return}
- img.classList.add('char-switching-v23');
- if(characterSwitchTimer)clearTimeout(characterSwitchTimer);
- characterSwitchTimer=setTimeout(()=>{
-   img.src=src;
-   requestAnimationFrame(()=>img.classList.remove('char-switching-v23'));
- },145)
+ // 145ms待ってから画像を変える旧方式を廃止。
+ // ブラウザの画像ロード完了を基準に切り替えるので、セリフとのズレが出にくい。
+ img.src=src;
 }
 function setHomeCharacterPose(pose='normal',speak=false){
  currentCharacterPose=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
  const p=profile();
- setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,currentCharacterPose),true);
- if(speak&&$('homePage')?.classList.contains('active')){
-   showTalkBubble('homeBubble',CHARACTER_TEST_LINES[currentCharacterPose],5400,'homeTalkHint');
- }
+ setCharacterImage(
+   $('homeWalker'),
+   characterDisplayAsset(p.gender,currentCharacterPose),
+   true,
+   ()=>{
+     if(speak&&$('homePage')?.classList.contains('active')){
+       showTalkBubble('homeBubble',CHARACTER_TEST_LINES[currentCharacterPose],5400,'homeTalkHint');
+     }
+   }
+ );
 }
 function refreshCharacterGender(){
  const p=profile();
@@ -1263,11 +1299,11 @@ function today(){
 // 0〜24% = Stage4 / 25〜49% = Stage3 / 50〜74% = Stage2 / 75〜100% = Stage1
 function stage(p){return p>=75?1:p>=50?2:p>=25?3:4}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=37-stage4start`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=38-stage4start`;}
 function stageNormalAsset(g,s){
  const gg=g==='male'?'male':'female';
  const st=Math.max(1,Math.min(4,+s||1));
- return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=37-home`;
+ return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=38-home`;
 }
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
