@@ -1625,6 +1625,76 @@ body{
   .premium-route img{width:86px!important;height:62px!important}
 }
 
+
+/* ===== SANPO v54: home consolidation / much less vertical scrolling ===== */
+/* Keep legacy DOM alive for calculations, but remove duplicate home cards from layout. */
+#homePage .premium-summary,
+#homePage .live-sanpo-card{
+  display:none!important;
+}
+
+/* Three compact metrics live in the hero instead. */
+.hero-mini-grid-v54{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important;
+}
+.hero-mini-grid-v54 .hero-mini-stat-v39{
+  padding:7px 3px!important;
+  border-radius:12px!important;
+}
+.hero-mini-grid-v54 .hero-mini-stat-v39 small{
+  font-size:6.4px!important;
+}
+.hero-mini-grid-v54 .hero-mini-stat-v39 b{
+  font-size:10.8px!important;
+  letter-spacing:-.02em!important;
+}
+.hero-mini-grid-v54 .hero-mini-stat-v39 em{
+  font-size:6px!important;
+}
+.hero-gps-v54{
+  min-height:13px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:0 2px;
+  color:#70847c;
+  font-size:6.7px;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.hero-gps-v54 span{
+  width:5px;height:5px;flex:0 0 5px;border-radius:50%;
+  background:#a9b5b0;
+}
+.hero-gps-v54.live span{
+  background:var(--g);
+  box-shadow:0 0 0 2px rgba(16,168,100,.12);
+}
+.hero-gps-v54.warn span{background:#e5a536}
+
+/* Pull the useful lower cards upward now that duplicate cards are gone. */
+#homePage .premium-food{margin-top:0!important}
+#homePage .premium-route{margin-top:0!important}
+
+/* Keep the hero comfortable despite the third metric + GPS line. */
+.hero-side-v39{gap:6px!important}
+.hero-route-btn-v39{margin-top:auto!important}
+
+@media(max-width:390px){
+  .hero-mini-grid-v54{gap:4px!important}
+  .hero-mini-grid-v54 .hero-mini-stat-v39{padding:6px 2px!important}
+  .hero-mini-grid-v54 .hero-mini-stat-v39 small{font-size:6px!important}
+  .hero-mini-grid-v54 .hero-mini-stat-v39 b{font-size:10px!important}
+  .hero-gps-v54{font-size:6.2px!important}
+}
+@media(max-width:350px){
+  .hero-mini-grid-v54 .hero-mini-stat-v39 b{font-size:9.4px!important}
+  .hero-gps-v54{font-size:5.9px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1664,10 +1734,12 @@ body{
           <small>目標まであと</small>
           <b><span id="heroRemainKmV39">5.0</span><span>km</span></b>
         </div>
-        <div class="hero-mini-grid-v39">
+        <div class="hero-mini-grid-v39 hero-mini-grid-v54">
           <div class="hero-mini-stat-v39"><small>今日の距離</small><b><span id="heroDistanceV39">0.0</span><em>km</em></b></div>
           <div class="hero-mini-stat-v39"><small>消費</small><b><span id="heroCalV39">0</span><em>kcal</em></b></div>
+          <div class="hero-mini-stat-v39"><small>歩数</small><b><span id="heroStepsV54">0</span><em>歩</em></b></div>
         </div>
+        <div id="heroGpsV54" class="hero-gps-v54"><span></span>GPSを準備中</div>
         <button id="heroRouteV39" class="hero-route-btn-v39" type="button">コースを見る</button>
       </div>
     </div>
@@ -2539,11 +2611,22 @@ async function updateWeather(lat,lng,force=false){
  }
 }
 function updateDailyStatus(kind='live'){
- const el=$('dailyTrackStatus');if(!el)return;
- el.classList.remove('live','warn');
- if(kind==='live'){el.classList.add('live');el.textContent='今日のGPS距離を計測中'}
- else if(kind==='permission'){el.classList.add('warn');el.textContent='位置情報を許可すると今日の距離を記録'}
- else{el.classList.add('warn');el.textContent='GPS計測を利用できません'}
+ const el=$('dailyTrackStatus');
+ const hero=$('heroGpsV54');
+ const apply=(node)=>{
+   if(!node)return;
+   node.classList.remove('live','warn');
+   if(kind==='live'){node.classList.add('live');node.lastChild.textContent=' GPSで今日の距離を計測中'}
+   else if(kind==='permission'){node.classList.add('warn');node.lastChild.textContent=' 位置情報を許可すると距離を記録'}
+   else{node.classList.add('warn');node.lastChild.textContent=' GPS計測を利用できません'}
+ };
+ if(el){
+   el.classList.remove('live','warn');
+   if(kind==='live'){el.classList.add('live');el.textContent='今日のGPS距離を計測中'}
+   else if(kind==='permission'){el.classList.add('warn');el.textContent='位置情報を許可すると今日の距離を記録'}
+   else{el.classList.add('warn');el.textContent='GPS計測を利用できません'}
+ }
+ apply(hero);
 }
 function acceptDailyPosition(pos){
  const c={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy||999,t:Date.now()};
@@ -2623,6 +2706,7 @@ if($('homeWalker')){
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
  if($('heroDistanceV39'))$('heroDistanceV39').textContent=t.km.toFixed(1);
  if($('heroCalV39'))$('heroCalV39').textContent=displayCal;
+ if($('heroStepsV54'))$('heroStepsV54').textContent=Math.round(t.steps||0).toLocaleString();
 
  // v53: the primary action follows the user's actual state.
  const activeRoute=getActiveRoute();
