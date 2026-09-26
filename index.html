@@ -1001,6 +1001,77 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .character-phase-v46{width:160px!important}
   .character-phase-next-v46{font-size:6.4px!important}
 }
+
+
+/* ===== SANPO v48: tighter phase meter + closer glass panel + stronger park continuity ===== */
+/* Let the park remain visible across the whole card, including behind the dashboard. */
+.hero-v39 .hero-bg-v12{
+  opacity:.98!important;
+  object-position:45% center!important;
+}
+.hero-v39:after{
+  background:linear-gradient(90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 38%,
+    rgba(247,252,249,.08) 46%,
+    rgba(247,252,249,.22) 58%,
+    rgba(247,252,249,.38) 74%,
+    rgba(247,252,249,.52) 100%)!important;
+}
+/* Pull the dashboard left until it almost meets the character, without moving/cropping her. */
+.hero-side-v39{
+  width:58%!important;
+  padding-left:12px!important;
+  background:linear-gradient(90deg,
+    rgba(248,252,250,.12) 0%,
+    rgba(248,252,250,.34) 18%,
+    rgba(248,252,250,.58) 42%,
+    rgba(248,252,250,.76) 100%)!important;
+  backdrop-filter:blur(2px)!important;
+  -webkit-backdrop-filter:blur(2px)!important;
+}
+/* Three compact rows under the character: phase / next phase / meter. */
+.character-phase-v46{
+  width:138px!important;
+  padding:7px 9px 8px!important;
+  background:rgba(255,255,255,.90)!important;
+  border-radius:14px!important;
+}
+.character-phase-top-v46{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:2px!important;
+}
+.character-phase-name-v46{
+  display:block!important;
+  font-size:10.5px!important;
+  line-height:1.15!important;
+}
+.character-phase-next-v46{
+  display:block!important;
+  width:100%!important;
+  font-size:6.9px!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:left!important;
+}
+.character-phase-bar-v46{
+  margin-top:5px!important;
+  width:100%!important;
+}
+@media(max-width:390px){
+  .hero-side-v39{width:58.5%!important;padding-left:10px!important}
+  .character-phase-v46{width:132px!important;left:8px!important}
+  .character-phase-next-v46{font-size:6.6px!important}
+}
+@media(max-width:350px){
+  .hero-side-v39{width:59%!important;padding-left:9px!important}
+  .character-phase-v46{width:126px!important;left:7px!important;padding-left:8px!important;padding-right:8px!important}
+  .character-phase-next-v46{font-size:6.2px!important}
+}
 </style>
 </head>
 <body>
@@ -1027,7 +1098,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       <div class="character-phase-v46" aria-live="polite">
         <div class="character-phase-top-v46">
           <span id="heroBodyPhaseV46" class="character-phase-name-v46">ぽっちゃり</span>
-          <span id="heroNextPhaseV46" class="character-phase-next-v46">ちょいぽちゃまであと 1.3km</span>
+          <span id="heroNextPhaseV46" class="character-phase-next-v46">次のちょいぽちゃまで 1.3km</span>
         </div>
         <div class="character-phase-bar-v46"><div id="heroPhaseBarV46"></div></div>
       </div>
@@ -1981,7 +2052,7 @@ if($('homeWalker')){
  const phaseProgress=Math.max(0,Math.min(100,(t.km-phaseStartKm)/phaseSpan*100));
  if($('heroBodyPhaseV46'))$('heroBodyPhaseV46').textContent=bodyPhaseNames[st]||'ぽっちゃり';
  if($('heroNextPhaseV46')){
-   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`次：${nextPhaseNames[st]}まで ${nextPhaseKm.toFixed(1)}km`;
+   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`次の${nextPhaseNames[st]}まで ${nextPhaseKm.toFixed(1)}km`;
  }
  if($('heroPhaseBarV46'))$('heroPhaseBarV46').style.width=(pct>=100?100:phaseProgress)+'%';
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
