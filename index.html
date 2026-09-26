@@ -1939,6 +1939,90 @@ body{
   }
 }
 
+
+/* ===== SANPO v57: bigger character + lower info, full-body guaranteed ===== */
+/* Give the character a larger SAFE box, but keep the entire box inside the hero. */
+#homePage .hero-v39 .hero-person-v12{
+  left:-26px!important;
+  bottom:72px!important;
+  width:226px!important;
+  height:304px!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  max-width:none!important;
+  max-height:none!important;
+}
+
+/* Lower the information group so it visually meets the character instead of floating above her. */
+#homePage .hero-side-v39{
+  width:62.5%!important;
+  top:70px!important;
+  bottom:0!important;
+  padding:10px 10px 10px 6px!important;
+  gap:6px!important;
+}
+
+/* Keep the speech/card stack compact after moving it down. */
+#homePage .hero-v39 .hero-bubble-v12{
+  min-height:42px!important;
+  padding:8px 10px!important;
+}
+#homePage .hero-remain-v39{
+  padding:7px 10px!important;
+}
+#homePage .hero-mini-grid-v54 .hero-mini-stat-v39{
+  padding:6px 2px!important;
+}
+
+/* Phase badge remains in the bottom safe lane and does not touch the feet. */
+#homePage .character-phase-v46{
+  left:12px!important;
+  bottom:12px!important;
+  width:124px!important;
+  z-index:15!important;
+}
+
+/* Give the hero a little extra breathing room on short phones so enlargement never clips. */
+#homePage .hero-v12.hero-v39{
+  min-height:500px!important;
+}
+
+/* Phone tuning: every size below still keeps the full character box within the card. */
+@media(max-width:390px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-24px!important;
+    bottom:68px!important;
+    width:216px!important;
+    height:292px!important;
+  }
+  #homePage .hero-side-v39{
+    width:63%!important;
+    top:62px!important;
+    padding-left:5px!important;
+    padding-right:8px!important;
+  }
+  #homePage .hero-v12.hero-v39{
+    min-height:485px!important;
+  }
+}
+@media(max-width:350px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-22px!important;
+    bottom:64px!important;
+    width:206px!important;
+    height:280px!important;
+  }
+  #homePage .hero-side-v39{
+    width:63.5%!important;
+    top:56px!important;
+    padding-left:4px!important;
+    padding-right:7px!important;
+  }
+  #homePage .hero-v12.hero-v39{
+    min-height:470px!important;
+  }
+}
+
 </style>
 </head>
 <body>
