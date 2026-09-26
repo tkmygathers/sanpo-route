@@ -951,22 +951,27 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
 const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
-/* ===== v29 character + body stage hybrid test =====
+/* ===== v31 stage × pose auto-loader =====
    テスト中はホームのキャラクターを7秒ごとに
-   normal → guide → discover → cheer → think の順で確認できます。
-   normal のときだけ、その日の目標進捗に応じた Stage 1〜5 の体型画像を表示します。
-   guide / discover / cheer / think は現行ポーズ画像を使います。
-   本番化するときは false にすると、体型Stage画像を常時表示します。
+   10ポーズを7秒ごとに確認できます。
+   現在のStageに応じて assets/characters/{gender}/stage_{1〜5}/{pose}.png を自動参照します。
+   ファイルが未配置なら旧ポーズ画像、さらに無ければ従来のStage画像へ自動フォールバックします。
+   そのため今後は命名ルールどおり画像を追加するだけでコード変更なしで反映できます。
 */
 const CHARACTER_TEST_MODE=true;
 const CHARACTER_TEST_INTERVAL=7000;
-const CHARACTER_TEST_POSES=['normal','guide','discover','cheer','think'];
+const CHARACTER_TEST_POSES=['normal','walk','turn','guide','cheer','think','discover','rest','recommend','finish'];
 const CHARACTER_TEST_LINES={
  normal:'今日はどんな感じで歩こうか。',
+ walk:'いいペースでいけそうだね。',
+ turn:'こっちも見てみようか。',
  guide:'このコースもよさそうだね。',
- discover:'この先、ちょっと気になるね。',
  cheer:'いい感じに積み上がってるね。',
- think:'ちょっと見てみようか。'
+ think:'ちょっと見てみようか。',
+ discover:'この先、ちょっと気になるね。',
+ rest:'少し休んでから行こうね。',
+ recommend:'ここ、よさそうだね。',
+ finish:'今日もよく歩いたね。'
 };
 let currentCharacterPose='normal',characterTestIndex=0,characterTestTimer=null,characterSwitchTimer=null;
 let manualStagePreview=null,manualStagePreviewTimer=null;
@@ -998,10 +1003,13 @@ function dailyEstimatedCal(km){
  return Math.round(Math.max(0,km)*w*.72)
 }
 
-function characterPoseAsset(gender,pose='normal'){
+function characterPoseAsset(gender,pose='normal',stageNum=null){
  const g=gender==='male'?'male':'female';
  const p=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
- return `assets/characters/${g}/${p}.png`
+ const st=stageNum ?? currentBodyStage();
+ // v31: stage_1〜5 × 10ポーズの命名規則を先読み。
+ // 画像がまだ無い場合は setCharacterImage() が旧素材へ自動フォールバックする。
+ return `assets/characters/${g}/stage_${st}/${p}.png?v=31-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1011,12 +1019,28 @@ function currentBodyStage(){
 }
 function characterDisplayAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
- return pose==='normal'?asset(gender,st):characterPoseAsset(gender,pose);
+ return characterPoseAsset(gender,pose,st);
 }
 function setCharacterImage(img,src,animate=false){
  if(!img||!src)return;
  const current=img.getAttribute('src')||'';
  if(current===src)return;
+
+ // stage別ポーズ画像がまだ未配置でも壊れないようにする。
+ // 例: assets/characters/female/stage_4/rest.png が無ければ
+ //     assets/characters/female/rest.png → assets/female_stage_4.png の順で退避。
+ img.onerror=()=>{
+   const raw=(img.getAttribute('src')||'').split('?')[0];
+   const m=raw.match(/^assets\/characters\/(female|male)\/stage_(\d+)\/([a-z_]+)\.png$/);
+   if(m){
+     const [,g,st,p]=m;
+     img.onerror=()=>{ img.onerror=null; img.src=asset(g,+st); };
+     img.src=`assets/characters/${g}/${p}.png`;
+     return;
+   }
+   img.onerror=null;
+ };
+
  if(!animate){img.src=src;return}
  img.classList.add('char-switching-v23');
  if(characterSwitchTimer)clearTimeout(characterSwitchTimer);
@@ -1038,7 +1062,7 @@ function refreshCharacterGender(){
  setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,currentCharacterPose),false);
  setCharacterImage($('routeCompanion'),characterPoseAsset(p.gender,'guide'),false);
  setCharacterImage($('navCompanion'),characterPoseAsset(p.gender,'discover'),false);
- if(!tracking)setCharacterImage($('trackWalker'),asset(p.gender,currentBodyStage()),false);
+ if(!tracking)setCharacterImage($('trackWalker'),characterDisplayAsset(p.gender,'normal'),false);
 }
 function startCharacterTestCycle(){
  if(!CHARACTER_TEST_MODE)return;
@@ -1236,7 +1260,7 @@ function today(){
 }
 function stage(p){return p>=100?5:p>=75?4:p>=50?3:p>=25?2:1}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=30-stage`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=31-stage`;}
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
 
@@ -1874,7 +1898,7 @@ function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%6
 function elapsed(){if(!tracking)return 0;const end=paused?pauseAt:Date.now();return Math.max(0,Math.floor((end-startTime-pauseTotal)/1000))}
 function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=CHARACTER_TEST_MODE?characterDisplayAsset(p.gender,paused?'think':'normal',st):asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
 function startTracking(){tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');timerInt=setInterval(liveRender,1000);if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{const c={lat:pos.coords.latitude,lng:pos.coords.longitude};if(lastPos&&!paused){const d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng);if(d<.2)trackKm+=d}lastPos=c;trackPath.push(c);liveRender()},()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:10000})}
-$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),asset(profile().gender,currentBodyStage()),true);showTrackTalk('resumed')}};
+$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterDisplayAsset(profile().gender,'normal'),true);showTrackTalk('resumed')}};
 $('finishBtn').onclick=()=>{if(!tracking)return;const sec=elapsed(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5);tracking=false;clearInterval(timerInt);if(trackBubbleTimer)clearTimeout(trackBubbleTimer);if(watchId!=null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);const h=hist();if(trackKm>0.005||sec>10)h.unshift({date:new Date().toISOString(),km:trackKm,min:Math.max(1,Math.round(sec/60)),steps,cal,mode:'tracking'});saveHist(h);renderHome();renderRecords();navTo('recordPage')};
 $('photoBtn').onclick=()=>alert('散歩中の写真撮影は、ネイティブアプリ化時にカメラ連携できます。');
 
