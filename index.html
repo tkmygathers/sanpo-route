@@ -691,7 +691,9 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 
 
 
-/* ===== SANPO v42: speech rail + left character + balanced header ===== */
+/* ===== SANPO v44: weather class lock + safe character position ===== */
+/* Weather must remain in the header before and after geolocation/API updates. */
+#weatherCard.header-weather-v41{position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;}
 .hero-v12.hero-v39{
   height:326px;
   background:#fff;
@@ -851,147 +853,6 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .header-weather-v41{max-width:104px;padding:4px 6px!important;gap:5px}
   .header-weather-v41 b{font-size:7.3px!important}
   .top-v41 .date{font-size:7.7px!important}
-}
-
-
-
-/* ===== SANPO v43: weather locked between logo/date + closer speech bubble ===== */
-/* Header uses three reserved columns, so weather updates can never push the date away. */
-.top-v41{
-  display:grid!important;
-  grid-template-columns:106px minmax(0,1fr) 54px!important;
-  align-items:center!important;
-  gap:6px!important;
-  padding:0 11px!important;
-  min-height:58px!important;
-}
-.top-v41 .logo{
-  grid-column:1!important;
-  justify-self:start!important;
-  white-space:nowrap!important;
-  min-width:0!important;
-  font-size:22px!important;
-}
-.top-v41 .logo span{font-size:14px!important}
-.top-v41 .header-weather-v41{
-  grid-column:2!important;
-  justify-self:center!important;
-  position:static!important;
-  inset:auto!important;
-  transform:none!important;
-  width:min(100%,152px)!important;
-  max-width:152px!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:5px 8px!important;
-  overflow:hidden!important;
-}
-.top-v41 .header-weather-v41>div{min-width:0!important;overflow:hidden!important}
-.top-v41 .header-weather-v41 b,
-.top-v41 .header-weather-v41 small{
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-  white-space:nowrap!important;
-}
-.top-v41 .date{
-  grid-column:3!important;
-  justify-self:end!important;
-  display:block!important;
-  visibility:visible!important;
-  width:54px!important;
-  text-align:right!important;
-  white-space:nowrap!important;
-  font-size:8.5px!important;
-  color:var(--muted)!important;
-}
-
-/* Remove the detached bottom speech rail and place a compact bubble beside the face. */
-.hero-v12.hero-v39{height:286px!important}
-.hero-v39 .hero-scene-v39{height:100%!important;width:57%!important}
-.hero-v39:after{height:100%!important;width:57%!important}
-.hero-v39 .hero-person-v12{
-  left:-82px!important;
-  bottom:4px!important;
-  width:205px!important;
-  height:275px!important;
-}
-.hero-v39 .hero-bubble-v12{
-  left:122px!important;
-  right:auto!important;
-  top:34px!important;
-  bottom:auto!important;
-  width:112px!important;
-  max-width:112px!important;
-  height:auto!important;
-  min-height:48px!important;
-  margin:0!important;
-  padding:9px 10px!important;
-  display:block!important;
-  border:1px solid var(--speech-line-2)!important;
-  border-radius:18px!important;
-  background:var(--speech-bg-2)!important;
-  box-shadow:0 8px 20px rgba(38,75,58,.08)!important;
-  font-size:9.2px!important;
-  line-height:1.48!important;
-  white-space:normal!important;
-  overflow:hidden!important;
-  text-wrap:pretty!important;
-  -webkit-line-clamp:unset!important;
-  z-index:8!important;
-}
-.hero-v39 .hero-bubble-v12:after{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;
-  left:-7px!important;
-  top:24px!important;
-  bottom:auto!important;
-  width:12px!important;
-  height:12px!important;
-  background:var(--speech-bg-2)!important;
-  border-left:1px solid var(--speech-line-2)!important;
-  border-bottom:1px solid var(--speech-line-2)!important;
-  border-top:0!important;
-  transform:rotate(45deg)!important;
-}
-.hero-v39 .hero-talk-hint-v16{
-  left:calc(57% - 34px)!important;
-  top:92px!important;
-  bottom:auto!important;
-  width:28px!important;
-  height:28px!important;
-  z-index:9!important;
-}
-
-@media(max-width:390px){
-  .top-v41{grid-template-columns:96px minmax(0,1fr) 50px!important;gap:5px!important;padding:0 9px!important}
-  .top-v41 .logo{font-size:20px!important}
-  .top-v41 .logo span{font-size:13px!important}
-  .top-v41 .header-weather-v41{width:min(100%,136px)!important;max-width:136px!important;padding:4px 7px!important}
-  .top-v41 .header-weather-v41 b{font-size:7.8px!important}
-  .top-v41 .header-weather-v41 small{font-size:6.2px!important;display:block!important}
-  .top-v41 .date{width:50px!important;font-size:7.8px!important}
-
-  .hero-v12.hero-v39{height:278px!important}
-  .hero-v39 .hero-scene-v39{width:56%!important}
-  .hero-v39:after{width:56%!important}
-  .hero-v39 .hero-person-v12{left:-88px!important;bottom:4px!important;width:196px!important;height:266px!important}
-  .hero-v39 .hero-bubble-v12{left:112px!important;top:31px!important;width:104px!important;max-width:104px!important;font-size:8.6px!important;padding:8px 9px!important}
-  .hero-v39 .hero-talk-hint-v16{left:calc(56% - 31px)!important;top:88px!important}
-}
-
-@media(max-width:350px){
-  .top-v41{grid-template-columns:88px minmax(0,1fr) 46px!important;gap:4px!important;padding:0 7px!important}
-  .top-v41 .logo{font-size:18px!important}
-  .top-v41 .logo span{font-size:12px!important}
-  .top-v41 .header-weather-v41{width:min(100%,118px)!important;max-width:118px!important;padding:4px 6px!important}
-  .top-v41 .header-weather-v41 b{font-size:7.1px!important}
-  .top-v41 .header-weather-v41 small{display:none!important}
-  .top-v41 .date{width:46px!important;font-size:7.2px!important}
-
-  .hero-v12.hero-v39{height:270px!important}
-  .hero-v39 .hero-person-v12{left:-92px!important;width:190px!important;height:258px!important}
-  .hero-v39 .hero-bubble-v12{left:102px!important;top:29px!important;width:96px!important;max-width:96px!important;font-size:8.1px!important}
 }
 
 </style>
@@ -1877,7 +1738,7 @@ async function updateWeather(lat,lng,force=false){
  const cache=json(KEY.weather,{});
  if(!force&&cache.time&&Date.now()-cache.time<30*60*1000&&cache.day===dayKey()){
   title.textContent=cache.title;sub.textContent=cache.sub;
-  card.className='hero-weather-v12 hero-weather-v27 '+(cache.cls||'');return
+  card.className='hero-weather-v12 hero-weather-v27 header-weather-v41 '+(cache.cls||'');return
  }
  try{
   const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&hourly=precipitation_probability&forecast_days=1&timezone=auto`;
@@ -1886,12 +1747,12 @@ async function updateWeather(lat,lng,force=false){
   const nowIso=d.current?.time||'',idx=(d.hourly?.time||[]).indexOf(nowIso),precip=idx>=0?(d.hourly.precipitation_probability?.[idx]??0):0;
   if(temp==null)throw Error('weather data');
   const w=weatherLabel(code,temp,precip);
-  title.textContent=w.title;sub.textContent=w.sub;card.className='hero-weather-v12 hero-weather-v27 '+w.cls;
+  title.textContent=w.title;sub.textContent=w.sub;card.className='hero-weather-v12 hero-weather-v27 header-weather-v41 '+w.cls;
   localStorage.setItem(KEY.weather,JSON.stringify({...w,time:Date.now(),day:dayKey()}));
  }catch(e){
   const cache=json(KEY.weather,{});
-  if(cache.title){title.textContent=cache.title;sub.textContent=cache.sub+'（前回取得）';card.className='hero-weather-v12 hero-weather-v27 '+(cache.cls||'')}
-  else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 hero-weather-v27 weather-cloud'}
+  if(cache.title){title.textContent=cache.title;sub.textContent=cache.sub+'（前回取得）';card.className='hero-weather-v12 hero-weather-v27 header-weather-v41 '+(cache.cls||'')}
+  else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 hero-weather-v27 header-weather-v41 weather-cloud'}
  }
 }
 function updateDailyStatus(kind='live'){
