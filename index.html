@@ -2023,6 +2023,153 @@ body{
   }
 }
 
+
+/* ===== SANPO v58: character left / stronger talking feel / bottom row aligned ===== */
+/* Fill the left side more naturally. Keep full-body safe with contain. */
+#homePage .hero-v39 .hero-person-v12{
+  left:-52px!important;
+  bottom:56px!important;
+  width:238px!important;
+  height:320px!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
+
+/* Bring the whole info cluster slightly lower and a touch left. */
+#homePage .hero-side-v39{
+  width:60.5%!important;
+  top:78px!important;
+  padding:8px 10px 8px 4px!important;
+  gap:5px!important;
+}
+
+/* Make the speech bubble feel like she is actually talking. */
+#homePage .hero-v39 .hero-bubble-v12{
+  align-self:flex-start!important;
+  width:92%!important;
+  min-height:40px!important;
+  padding:8px 11px!important;
+  font-size:9.2px!important;
+  line-height:1.45!important;
+  border-radius:18px!important;
+  margin-left:0!important;
+}
+#homePage .hero-v39 .hero-bubble-v12:after{
+  left:-10px!important;
+  top:22px!important;
+  width:13px!important;
+  height:13px!important;
+  transform:rotate(45deg)!important;
+}
+
+/* Compact the info blocks a little more so phase + CTA can align in the same column system. */
+#homePage .hero-remain-v39{
+  padding:7px 10px 6px!important;
+  border-radius:14px!important;
+}
+#homePage .hero-remain-v39 b{
+  font-size:19px!important;
+}
+#homePage .hero-mini-grid-v54{
+  gap:4px!important;
+}
+#homePage .hero-mini-grid-v54 .hero-mini-stat-v39{
+  padding:5px 2px!important;
+  min-height:56px!important;
+}
+#homePage .hero-gps-v54{
+  margin-top:-1px!important;
+  padding-left:2px!important;
+}
+
+/* Align the phase card with the same card column as the other right-side blocks. */
+#homePage .character-phase-v46{
+  left:39.5%!important;
+  right:12px!important;
+  bottom:58px!important;
+  width:auto!important;
+  min-height:52px!important;
+  padding:8px 10px 8px!important;
+  z-index:14!important;
+  border-radius:16px!important;
+}
+#homePage .phase-kicker-v53{
+  font-size:5.9px!important;
+  margin-bottom:3px!important;
+}
+#homePage .character-phase-name-v46{
+  font-size:10.4px!important;
+}
+#homePage .character-phase-next-v46{
+  font-size:6.9px!important;
+  line-height:1.22!important;
+}
+#homePage .character-phase-bar-v46{
+  margin-top:5px!important;
+}
+
+/* CTA lives on the same column and line system as the cards above. */
+#homePage .hero-route-btn-v39{
+  height:38px!important;
+  border-radius:14px!important;
+  margin-top:auto!important;
+}
+
+/* Because the bottom row is now aligned to the card column, give the hero slightly more vertical room. */
+#homePage .hero-v12.hero-v39{
+  min-height:514px!important;
+}
+
+@media(max-width:390px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-48px!important;
+    bottom:54px!important;
+    width:226px!important;
+    height:306px!important;
+  }
+  #homePage .hero-side-v39{
+    width:61%!important;
+    top:72px!important;
+    padding:8px 8px 8px 3px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    width:94%!important;
+    font-size:8.8px!important;
+  }
+  #homePage .character-phase-v46{
+    left:40%!important;
+    right:10px!important;
+    bottom:56px!important;
+  }
+  #homePage .hero-v12.hero-v39{
+    min-height:500px!important;
+  }
+}
+@media(max-width:350px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-44px!important;
+    bottom:52px!important;
+    width:214px!important;
+    height:292px!important;
+  }
+  #homePage .hero-side-v39{
+    width:61.5%!important;
+    top:68px!important;
+    padding-right:7px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    font-size:8.3px!important;
+  }
+  #homePage .character-phase-v46{
+    left:40.5%!important;
+    right:8px!important;
+    bottom:54px!important;
+  }
+  #homePage .hero-v12.hero-v39{
+    min-height:490px!important;
+  }
+}
+
 </style>
 </head>
 <body>
