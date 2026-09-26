@@ -1412,6 +1412,219 @@ body{
   .character-phase-next-v46{font-size:5.6px!important}
 }
 
+
+/* ===== SANPO v53: full-home visual system ===== */
+:root{
+  --surface:#ffffff;
+  --surface-soft:#f5faf7;
+  --surface-mint:#edf8f2;
+  --ink-2:#244137;
+  --muted-2:#70847c;
+  --radius-lg:26px;
+  --radius-md:18px;
+  --shadow-soft:0 10px 28px rgba(27,74,56,.055);
+}
+body{
+  background:
+    radial-gradient(circle at 12% 8%,rgba(191,230,207,.28),transparent 28%),
+    linear-gradient(180deg,#f7fbf8 0%,#eef6f1 100%)!important;
+}
+.shell{background:transparent!important}
+.page{padding-top:13px!important}
+.home-v12{gap:12px!important}
+
+/* Typography hierarchy */
+.title{font-size:19px!important;letter-spacing:-.02em}
+.premium-section-title,.live-sanpo-title{color:var(--ink-2)!important}
+.sub,.ml,.goal-km-line,.daily-track-status{color:var(--muted-2)!important}
+
+/* Unified cards */
+.card,
+.premium-summary,
+.live-sanpo-card,
+.premium-food,
+.premium-route,
+.active-route-card-v27,
+.setting-card,
+.sum,
+.photo-area,
+.chart{
+  border-radius:var(--radius-lg)!important;
+  border:1px solid rgba(221,234,227,.92)!important;
+  box-shadow:var(--shadow-soft)!important;
+}
+.premium-summary,.live-sanpo-card,.premium-food,.premium-route{
+  background:rgba(255,255,255,.94)!important;
+}
+
+/* Main hero refinement */
+.hero-v12.hero-v39{
+  box-shadow:0 14px 34px rgba(24,70,50,.075)!important;
+}
+.hero-v39 .hero-bubble-v12{
+  font-family:"Hiragino Maru Gothic ProN","Yu Gothic UI","Hiragino Sans","Yu Gothic",sans-serif!important;
+  font-weight:600!important;
+  letter-spacing:.01em!important;
+  color:#35554a!important;
+}
+.phase-kicker-v53{
+  font-size:5.7px;
+  line-height:1;
+  letter-spacing:.08em;
+  color:#82938d;
+  font-weight:800;
+  margin-bottom:4px;
+}
+.character-phase-v46{
+  background:rgba(255,255,255,.97)!important;
+}
+
+/* Today's summary: quieter than the hero, but still useful. */
+.premium-summary{
+  padding:14px 15px 13px!important;
+}
+.sum-label{font-size:11px!important;margin-bottom:5px!important}
+.summary-steps{font-size:25px!important;line-height:1!important}
+.summary-steps small{font-size:10px!important}
+.goal-km-line{font-size:9.5px!important;margin-top:7px!important}
+.goal-km-line strong{font-size:12px!important}
+.ring{width:58px!important;height:58px!important;font-size:12px!important}
+.metric-grid.premium-metric-grid{margin-top:12px!important;padding-top:12px!important}
+.mini-icon-v12{width:27px!important;height:27px!important;margin-bottom:5px!important}
+.mini-icon-v12 svg{width:15px!important;height:15px!important}
+.mv{font-size:15px!important}.metric-unit{font-size:10px!important}
+.ml{font-size:7px!important}
+
+/* Live card becomes a compact status strip instead of a second dashboard. */
+.live-sanpo-card{
+  padding:11px 13px!important;
+}
+.live-sanpo-head{align-items:center!important}
+.live-sanpo-title{font-size:10.5px!important;margin-top:2px!important}
+.live-sanpo-kicker{font-size:7px!important}
+.live-sanpo-pct{height:25px!important;min-width:42px!important;font-size:9px!important}
+.live-sanpo-grid{display:none!important}
+.live-sanpo-message{
+  margin-top:7px!important;
+  padding:0!important;
+  background:transparent!important;
+  font-size:8.8px!important;
+  color:#63766e!important;
+}
+.live-sanpo-progress{margin-top:8px!important;height:5px!important}
+
+/* Food conversion: compact and warmer. */
+.premium-food{padding:13px!important}
+.premium-food .sub{font-size:8px!important;margin-bottom:8px}
+.food-row{gap:6px!important}
+.premium-food-item .food-box{
+  height:62px!important;
+  border-radius:15px!important;
+  background:linear-gradient(180deg,#fbfaf5,#f6f2e8)!important;
+  margin-bottom:5px!important;
+}
+.premium-food-item img{width:55px!important;height:48px!important}
+.food-item b{font-size:10.5px!important}
+.food-item small{font-size:7px!important}
+
+/* Active route: smaller map, more like a continuation of the home card. */
+.active-route-card-v27{
+  padding:12px!important;
+  background:rgba(255,255,255,.95)!important;
+}
+.active-route-kicker-v21{font-size:7px!important}
+.active-route-title-v21{font-size:13px!important}
+.active-route-card-v27 .home-nav-map-v21{height:150px!important;border-radius:16px!important}
+.route-companion-inline-v28{
+  min-height:66px!important;
+  margin-top:7px!important;
+  background:#f4faf6!important;
+}
+.route-companion-inline-v28 img{width:57px!important;height:64px!important;flex-basis:57px!important}
+.route-companion-inline-v28 .route-companion-bubble-v22{font-size:8.6px!important}
+.active-route-stats-v21{margin-top:8px!important}
+.active-route-stats-v21 small{font-size:7px!important}
+.active-route-stats-v21 b{font-size:12px!important}
+.active-route-open-v21{height:38px!important;border-radius:13px!important}
+
+/* Suggested-route card follows the same visual language. */
+.premium-route{
+  grid-template-columns:94px 1fr auto!important;
+  gap:10px!important;
+  padding:11px!important;
+}
+.premium-route img{width:94px!important;height:66px!important;border-radius:15px!important}
+.route-title{font-size:12px!important}
+.route-meta{font-size:8px!important;gap:8px!important}
+.route-badge{font-size:8px!important;padding:3px 8px!important}
+
+/* Bottom navigation: one icon family + clearer active state. */
+.navbar{
+  background:rgba(255,255,255,.97)!important;
+  backdrop-filter:blur(14px);
+  border-top-color:rgba(219,232,225,.9)!important;
+}
+.nav{
+  gap:4px!important;
+  font-size:7.5px!important;
+  position:relative;
+}
+.nav .ico{
+  width:34px;height:30px;
+  display:grid;place-items:center;
+  border-radius:14px;
+  transition:.2s ease;
+}
+.nav .ico svg{
+  width:19px;height:19px;
+  fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.nav.active .ico{
+  background:#eaf8f1;
+  transform:translateY(-1px);
+}
+.nav.active:after{
+  content:"";
+  position:absolute;
+  bottom:6px;
+  width:18px;height:2px;border-radius:99px;
+  background:var(--g);
+}
+
+/* Settings explains the body-phase system in human words. */
+.character-progress-card-v12 .sub{
+  line-height:1.55!important;
+}
+.stage-labels-v12{
+  font-size:7px!important;
+  color:#657a71!important;
+  font-weight:700;
+}
+
+/* Records page adopts the same system. */
+.summary-grid .sum{background:rgba(255,255,255,.94)!important}
+.sum small{font-size:8px!important}
+.sum b{font-size:18px!important}
+.period button{font-size:9px!important}
+
+/* Date/weather header hierarchy */
+.top-v41 .date{
+  color:#7b8d86!important;
+  font-weight:700;
+}
+.header-weather-v41{
+  background:#f6faf8!important;
+}
+.header-weather-v41 b{color:#29473c!important}
+.header-weather-v41 small{color:#758780!important}
+
+@media(max-width:390px){
+  .summary-steps{font-size:23px!important}
+  .active-route-card-v27 .home-nav-map-v21{height:140px!important}
+  .premium-route{grid-template-columns:86px 1fr auto!important}
+  .premium-route img{width:86px!important;height:62px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1436,6 +1649,7 @@ body{
       </div>
       <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
       <div class="character-phase-v46" aria-live="polite">
+        <div class="phase-kicker-v53">今日のコンディション</div>
         <div class="character-phase-top-v46">
           <span id="heroBodyPhaseV46" class="character-phase-name-v46">ぽっちゃり</span>
           <span id="heroNextPhaseV46" class="character-phase-next-v46">次のちょいぽちゃまで 1.3km</span>
@@ -1660,13 +1874,13 @@ body{
    <div class="settings-progress-head-v12">
      <div>
        <h3>体型変化プレビュー</h3>
-       <div class="sub">今日の距離 ÷ 目標距離で、Stage4からStage1へ変化します。各Stageをタップすると15秒プレビューできます</div>
+       <div class="sub">今日の目標距離に合わせて、ぽっちゃり → ちょいぽちゃ → 標準 → スリムへ変化します。目標距離を変えると変化のペースも自動で変わります。</div>
      </div>
      <div class="settings-current-v12"><span id="settingsPct">0%</span></div>
    </div>
 
    <div class="stage-labels-v12">
-     <span>0%</span><span>25%</span><span>50%</span><span>75%〜</span>
+     <span>ぽっちゃり</span><span>ちょいぽちゃ</span><span>標準</span><span>スリム</span>
    </div>
    <div id="settingsStageRow" class="settings-stages-v12"></div>
    <div class="stage-progress-line-v12"><div id="settingsStageBar"></div></div>
@@ -1684,10 +1898,10 @@ body{
 </section>
 
 <nav class="navbar">
- <button class="nav active" data-page="homePage"><span class="ico">⌂</span>ホーム</button>
- <button class="nav" data-page="mapPage"><span class="ico">⌖</span>マップ</button>
- <button class="nav" data-page="recordPage"><span class="ico">▥</span>記録</button>
- <button class="nav" data-page="settingsPage"><span class="ico">⚙</span>設定</button>
+ <button class="nav active" data-page="homePage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.2 12 4l9 7.2v8.3a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5Z"/><path d="M9 21v-6h6v6"/></svg></span>ホーム</button>
+ <button class="nav" data-page="mapPage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg></span>マップ</button>
+ <button class="nav" data-page="recordPage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span>記録</button>
+ <button class="nav" data-page="settingsPage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .35 2l.05.05-2.1 2.1-.05-.05a1.8 1.8 0 0 0-2-.35 1.8 1.8 0 0 0-1.1 1.65V20.5h-3v-.1a1.8 1.8 0 0 0-1.1-1.65 1.8 1.8 0 0 0-2 .35l-.05.05-2.1-2.1.05-.05a1.8 1.8 0 0 0 .35-2A1.8 1.8 0 0 0 5.05 14H5v-3h.05a1.8 1.8 0 0 0 1.65-1.1 1.8 1.8 0 0 0-.35-2l-.05-.05 2.1-2.1.05.05a1.8 1.8 0 0 0 2 .35A1.8 1.8 0 0 0 11.55 4.5v-.1h3v.1a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 2-.35l.05-.05 2.1 2.1-.05.05a1.8 1.8 0 0 0-.35 2A1.8 1.8 0 0 0 20.95 11H21v3h-.05A1.8 1.8 0 0 0 19.4 15Z"/></svg></span>設定</button>
 </nav>
 </div>
 
@@ -2261,7 +2475,16 @@ function homeTalkPool(){
  return pool
 }
 function showHomeTalk(){
- showTalkBubble('homeBubble',pickTalk(homeTalkPool(),'home'),7600,'homeTalkHint')
+ const p=profile(),t=today(),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100);
+ const route=getActiveRoute();
+ let line='';
+ if(route) line='今日のコース、すぐ開けるよ。';
+ else if(pct>=100) line='今日の目標、達成できたね。';
+ else if(pct>=75) line='もうひと息。いいところまで来てるね。';
+ else if(pct>=50) line='半分こえたね。この調子でいこう。';
+ else if(t.km>.1) line=`今日は${t.km.toFixed(1)}km。ちゃんと積み上がってるね。`;
+ else line=pickTalk(homeTalkPool(),'home');
+ showTalkBubble('homeBubble',line,7600,'homeTalkHint')
 }
 function trackContext(pct,kind='auto'){
  if(kind!=='auto')return kind;
@@ -2400,6 +2623,17 @@ if($('homeWalker')){
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
  if($('heroDistanceV39'))$('heroDistanceV39').textContent=t.km.toFixed(1);
  if($('heroCalV39'))$('heroCalV39').textContent=displayCal;
+
+ // v53: the primary action follows the user's actual state.
+ const activeRoute=getActiveRoute();
+ if($('heroRouteV39')){
+   $('heroRouteV39').textContent=activeRoute?'ナビを開く':'コースを作る';
+   $('heroRouteV39').onclick=()=>navTo(activeRoute?'routeNavPage':'mapPage');
+ }
+
+ // v53: avoid repeating the same goal information in two places.
+ if($('goalKmDisplay'))$('goalKmDisplay').closest('.goal-km-line').style.opacity='.78';
+
  if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
 function navTo(id){
@@ -2416,7 +2650,11 @@ $('openRouteMap').onclick=()=>navTo('routeNavPage');
 $('closeRouteNav').onclick=()=>navTo('homePage');
 $('routeNavRecenter').onclick=()=>renderRouteNavigation(true);
 $('finishRouteNav').onclick=()=>{if(confirm('このコースを終了しますか？')){clearActiveRoute();navTo('homePage')}};
-$('endActiveRoute').onclick=()=>{if(confirm('今日のコース表示を終了しますか？')){clearActiveRoute();renderHome(false)}};$('homeWalker').onclick=showHomeTalk;$('homeTalkHint').onclick=showHomeTalk;$('trackWalker').onclick=()=>showTrackTalk('auto');$('date').textContent=new Date().toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',weekday:'short'});
+$('endActiveRoute').onclick=()=>{if(confirm('今日のコース表示を終了しますか？')){clearActiveRoute();renderHome(false)}};$('homeWalker').onclick=showHomeTalk;$('homeTalkHint').onclick=showHomeTalk;$('trackWalker').onclick=()=>showTrackTalk('auto');{
+ const d=new Date();
+ const w=['日','月','火','水','木','金','土'][d.getDay()];
+ $('date').textContent=`${d.getMonth()+1}/${d.getDate()} ${w}`;
+}
 
 /* settings */
 function renderSettingsProgress(){
