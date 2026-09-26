@@ -689,6 +689,100 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 #settingsStageRow .settings-stage-v12:active{transform:scale(.96)}
 #settingsStageRow .stage-load-error-v30{outline:1px dashed #d97b7b;opacity:.55}
 
+
+
+/* ===== SANPO v39: compact hero + useful right-side dashboard ===== */
+.hero-v12.hero-v39{
+  height:286px;
+  background:#fff;
+  border-radius:28px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 12px 30px rgba(27,74,56,.06);
+}
+.hero-v39 .hero-scene-v39{
+  position:absolute;left:0;top:0;bottom:0;width:57%;overflow:hidden;
+  background:#dff2ea;
+}
+.hero-v39 .hero-bg-v12{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:46% center;opacity:.98;
+}
+.hero-v39:after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:57%;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0) 58%,rgba(20,60,45,.05));
+  pointer-events:none;z-index:2;
+}
+.hero-v39 .hero-person-v12{
+  left:2px;bottom:4px;width:205px;height:275px;z-index:4;
+}
+.hero-v39 .hero-bubble-v12{
+  left:105px!important;right:auto!important;top:18px!important;width:126px!important;
+  padding:9px 10px!important;border-radius:18px!important;font-size:9.8px!important;
+  line-height:1.55!important;z-index:7;
+}
+.hero-v39 .hero-bubble-v12:after{
+  left:-6px!important;bottom:17px!important;width:11px!important;height:11px!important;
+}
+.hero-v39 .hero-talk-hint-v16{left:198px;top:92px;z-index:8}
+.hero-v39 .hero-dog-v12{display:none!important}
+.hero-v39 .hero-stage-badge-v12{display:none!important}
+
+.hero-side-v39{
+  position:absolute;right:0;top:0;bottom:0;width:43%;z-index:6;
+  padding:12px 12px 11px 10px;background:#fff;
+  display:flex;flex-direction:column;gap:8px;
+}
+.hero-side-v39 .hero-weather-v12{
+  position:static!important;inset:auto!important;transform:none!important;
+  width:100%;max-width:none;min-width:0;padding:7px 9px!important;
+  border-radius:14px!important;background:#f5f9f7!important;border:1px solid var(--line)!important;
+  box-shadow:none!important;backdrop-filter:none!important;
+}
+.hero-side-v39 .hero-weather-v12 b{font-size:9px!important}
+.hero-side-v39 .hero-weather-v12 small{font-size:7px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:105px}
+.hero-stage-mini-v39{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  font-size:8px;color:#7a8984;font-weight:800;letter-spacing:.03em;
+}
+.hero-stage-mini-v39 strong{font-size:11px;color:var(--g);letter-spacing:0}
+.hero-remain-v39{
+  padding:10px 10px 9px;border-radius:16px;background:#eef8f3;border:1px solid #d9eee3;
+}
+.hero-remain-v39 small{display:block;font-size:7.5px;color:#6c7f77;margin-bottom:2px}
+.hero-remain-v39 b{display:block;font-size:22px;line-height:1.05;color:#17382e;letter-spacing:-.04em}
+.hero-remain-v39 b span:last-child{font-size:10px;margin-left:3px;color:#63766e;letter-spacing:0}
+.hero-mini-grid-v39{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hero-mini-stat-v39{
+  min-width:0;padding:8px 6px;border-radius:14px;background:#f8faf9;border:1px solid #edf1ef;text-align:center;
+}
+.hero-mini-stat-v39 small{display:block;font-size:7px;color:#82908b;margin-bottom:3px}
+.hero-mini-stat-v39 b{font-size:13px;color:#203a31;white-space:nowrap}
+.hero-mini-stat-v39 em{font-style:normal;font-size:7px;color:#7c8a85;margin-left:2px}
+.hero-route-btn-v39{
+  margin-top:auto;width:100%;height:38px;border:0;border-radius:13px;background:var(--g);color:#fff;
+  font-size:10px;font-weight:900;box-shadow:0 7px 16px rgba(16,168,100,.17);
+}
+.hero-route-btn-v39:active{transform:translateY(1px)}
+
+@media(max-width:390px){
+  .hero-v12.hero-v39{height:278px}
+  .hero-v39 .hero-scene-v39{width:56%}
+  .hero-v39:after{width:56%}
+  .hero-side-v39{width:44%;padding:10px 9px 10px 8px;gap:7px}
+  .hero-v39 .hero-person-v12{left:-5px;width:196px;height:266px}
+  .hero-v39 .hero-bubble-v12{left:96px!important;top:16px!important;width:119px!important;font-size:9.1px!important}
+  .hero-remain-v39 b{font-size:20px}
+  .hero-mini-stat-v39 b{font-size:12px}
+}
+@media(max-width:350px){
+  .hero-v12.hero-v39{height:270px}
+  .hero-v39 .hero-person-v12{left:-12px;width:190px;height:258px}
+  .hero-v39 .hero-bubble-v12{left:86px!important;width:112px!important;font-size:8.6px!important}
+  .hero-side-v39{padding-left:7px;padding-right:7px}
+  .hero-side-v39 .hero-weather-v12 small{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -703,17 +797,33 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 <section id="homePage" class="page active">
   <div class="home-v12">
 
-    <div class="card hero-v12">
-      <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
-      <div class="hero-weather-v12 hero-weather-v27" id="weatherCard">
-        <span class="weather-dot-v12" id="weatherDot"></span>
-        <div><b id="weatherTitle">天気を確認中</b><small id="weatherSub">現在地から取得</small></div>
+    <div class="card hero-v12 hero-v39">
+      <div class="hero-scene-v39">
+        <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
       </div>
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
       <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
-      <img id="homeDog" class="hero-dog-v12" src="assets/dog.png" alt="犬">
-      <div class="hero-stage-badge-v12"><span id="heroStagePct">0%</span> / 今日の目標</div>
+
+      <div class="hero-side-v39">
+        <div class="hero-weather-v12 hero-weather-v27" id="weatherCard">
+          <span class="weather-dot-v12" id="weatherDot"></span>
+          <div><b id="weatherTitle">天気を確認中</b><small id="weatherSub">現在地から取得</small></div>
+        </div>
+        <div class="hero-stage-mini-v39">
+          <span id="heroStageNameV39">STAGE 4</span>
+          <strong><span id="heroStagePct">0%</span></strong>
+        </div>
+        <div class="hero-remain-v39">
+          <small>目標まであと</small>
+          <b><span id="heroRemainKmV39">5.0</span><span>km</span></b>
+        </div>
+        <div class="hero-mini-grid-v39">
+          <div class="hero-mini-stat-v39"><small>今日の距離</small><b><span id="heroDistanceV39">0.0</span><em>km</em></b></div>
+          <div class="hero-mini-stat-v39"><small>消費</small><b><span id="heroCalV39">0</span><em>kcal</em></b></div>
+        </div>
+        <button id="heroRouteV39" class="hero-route-btn-v39" type="button">コースを見る</button>
+      </div>
     </div>
 
     <div id="activeRouteCard" class="card active-route-card-v21 active-route-card-v27" hidden>
@@ -1012,7 +1122,7 @@ function characterPoseAsset(gender,pose='normal',stageNum=null){
  const st=stageNum ?? currentBodyStage();
  // v34: 実ファイル名 stage_N_pose.png に合わせて読み込み。
  // 例: assets/characters/female/stage_1/stage_1_normal.png
- return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=38-posepack`;
+ return `assets/characters/${g}/stage_${st}/stage_${st}_${p}.png?v=39-posepack`;
 }
 function currentBodyStage(){
  if(manualStagePreview)return manualStagePreview;
@@ -1299,11 +1409,11 @@ function today(){
 // 0〜24% = Stage4 / 25〜49% = Stage3 / 50〜74% = Stage2 / 75〜100% = Stage1
 function stage(p){return p>=75?1:p>=50?2:p>=25?3:4}
 function stepGoal(p){return Math.round((+p.goalKm||5)*1400)}
-function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=38-stage4start`;}
+function asset(g,s){const gg=g==='male'?'male':'female';return `assets/${gg}_stage_${s}.png?v=39-stage4start`;}
 function stageNormalAsset(g,s){
  const gg=g==='male'?'male':'female';
  const st=Math.max(1,Math.min(4,+s||1));
- return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=38-home`;
+ return `assets/characters/${gg}/stage_${st}/stage_${st}_normal.png?v=39-home`;
 }
 function walkAsset(g,i){return `assets/walk_${g}_${i}.png`}
 function food(v,k){return v>0?(v/k).toFixed(1):'0.0'}
@@ -1638,6 +1748,10 @@ if($('homeWalker')){
  }
  if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';
  if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
+ if($('heroStageNameV39'))$('heroStageNameV39').textContent='STAGE '+st;
+ if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
+ if($('heroDistanceV39'))$('heroDistanceV39').textContent=t.km.toFixed(1);
+ if($('heroCalV39'))$('heroCalV39').textContent=displayCal;
  if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
 function navTo(id){
@@ -1649,7 +1763,7 @@ function navTo(id){
  if(id==='recordPage')renderRecords();
  if(id==='settingsPage')renderSettingsProgress()
 }
-qsa('.nav[data-page]').forEach(n=>n.onclick=()=>navTo(n.dataset.page));$('homeRoute').onclick=()=>navTo('mapPage');
+qsa('.nav[data-page]').forEach(n=>n.onclick=()=>navTo(n.dataset.page));$('homeRoute').onclick=()=>navTo('mapPage');if($('heroRouteV39'))$('heroRouteV39').onclick=()=>navTo('mapPage');
 $('openRouteMap').onclick=()=>navTo('routeNavPage');
 $('closeRouteNav').onclick=()=>navTo('homePage');
 $('routeNavRecenter').onclick=()=>renderRouteNavigation(true);
