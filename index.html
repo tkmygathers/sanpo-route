@@ -1072,6 +1072,129 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
   .character-phase-v46{width:126px!important;left:7px!important;padding-left:8px!important;padding-right:8px!important}
   .character-phase-next-v46{font-size:6.2px!important}
 }
+
+
+/* ===== SANPO v49: full park background + closer dashboard + footer phase ===== */
+body{
+  background:linear-gradient(180deg,#f5faf6 0%,#eef6f0 45%,#edf4ef 100%)!important;
+}
+.shell{
+  background:transparent!important;
+}
+.home-v12{gap:14px!important}
+.hero-v12.hero-v39{
+  height:332px!important;
+  background:#dff2ea!important;
+}
+.hero-v39 .hero-scene-v39,
+.hero-v39 .hero-bg-v12{
+  width:100%!important;
+  inset:0!important;
+}
+.hero-v39 .hero-bg-v12{
+  object-position:44% center!important;
+  opacity:1!important;
+}
+.hero-v39:after{
+  width:100%!important;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.00) 0%,
+    rgba(255,255,255,.04) 30%,
+    rgba(245,250,247,.18) 46%,
+    rgba(245,250,247,.34) 62%,
+    rgba(245,250,247,.50) 78%,
+    rgba(245,250,247,.62) 100%)!important;
+}
+/* Raise the character slightly to create a dedicated footer lane under her feet. */
+.hero-v39 .hero-person-v12{
+  left:-42px!important;
+  bottom:53px!important;
+  width:205px!important;
+  height:275px!important;
+}
+/* Use the park as the real card background; the dashboard is just a soft area on top. */
+.hero-side-v39{
+  width:60%!important;
+  padding:12px 10px 10px 6px!important;
+  background:linear-gradient(90deg,
+    rgba(247,252,249,.00) 0%,
+    rgba(247,252,249,.18) 8%,
+    rgba(247,252,249,.38) 18%,
+    rgba(247,252,249,.58) 32%,
+    rgba(247,252,249,.72) 52%,
+    rgba(247,252,249,.80) 100%)!important;
+  border-left:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.hero-v39 .hero-bubble-v12{
+  min-height:46px!important;
+  border-radius:18px!important;
+  background:rgba(255,255,255,.96)!important;
+}
+.hero-v39 .hero-bubble-v12:after{
+  background:rgba(255,255,255,.96)!important;
+}
+.hero-remain-v39,
+.hero-mini-stat-v39{
+  background:rgba(255,255,255,.90)!important;
+  border-color:rgba(220,234,226,.96)!important;
+}
+.hero-route-btn-v39{
+  height:40px!important;
+  border-radius:15px!important;
+}
+/* Footer phase box: 3 clear rows, sits below the character and never overlaps her legs. */
+.character-phase-v46{
+  left:12px!important;
+  bottom:11px!important;
+  width:142px!important;
+  padding:8px 10px 8px!important;
+  background:rgba(255,255,255,.96)!important;
+  border:1px solid rgba(222,235,228,.98)!important;
+  box-shadow:0 8px 18px rgba(29,72,53,.08)!important;
+}
+.character-phase-top-v46{
+  display:block!important;
+}
+.character-phase-name-v46{
+  display:block!important;
+  font-size:10.8px!important;
+  line-height:1.1!important;
+  margin-bottom:3px!important;
+}
+.character-phase-next-v46{
+  display:block!important;
+  width:100%!important;
+  font-size:7.0px!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  text-align:left!important;
+}
+.character-phase-bar-v46{
+  margin-top:6px!important;
+}
+/* Keep cards readable on phone widths. */
+@media(max-width:390px){
+  .hero-v12.hero-v39{height:324px!important}
+  .hero-v39 .hero-person-v12{bottom:50px!important;width:196px!important;height:266px!important}
+  .hero-side-v39{width:60.5%!important;padding-left:4px!important;padding-right:8px!important}
+  .character-phase-v46{left:10px!important;bottom:10px!important;width:136px!important;padding:7px 9px!important}
+  .character-phase-name-v46{font-size:10.2px!important}
+  .character-phase-next-v46{font-size:6.7px!important}
+}
+@media(max-width:350px){
+  .hero-v12.hero-v39{height:316px!important}
+  .hero-v39 .hero-person-v12{bottom:48px!important;width:190px!important;height:258px!important}
+  .hero-side-v39{width:61%!important;padding-left:3px!important;padding-right:7px!important}
+  .character-phase-v46{left:8px!important;bottom:9px!important;width:130px!important;padding:7px 8px!important}
+  .character-phase-name-v46{font-size:9.8px!important}
+  .character-phase-next-v46{font-size:6.4px!important}
+}
+
 </style>
 </head>
 <body>
@@ -2052,7 +2175,9 @@ if($('homeWalker')){
  const phaseProgress=Math.max(0,Math.min(100,(t.km-phaseStartKm)/phaseSpan*100));
  if($('heroBodyPhaseV46'))$('heroBodyPhaseV46').textContent=bodyPhaseNames[st]||'ぽっちゃり';
  if($('heroNextPhaseV46')){
-   $('heroNextPhaseV46').textContent=pct>=100?'今日の目標達成':`次の${nextPhaseNames[st]}まで ${nextPhaseKm.toFixed(1)}km`;
+   $('heroNextPhaseV46').innerHTML=pct>=100
+     ? '今日の目標達成'
+     : `次の${nextPhaseNames[st]}まで<br>${nextPhaseKm.toFixed(1)}km`;
  }
  if($('heroPhaseBarV46'))$('heroPhaseBarV46').style.width=(pct>=100?100:phaseProgress)+'%';
  if($('heroRemainKmV39'))$('heroRemainKmV39').textContent=Math.max(0,goalKm-t.km).toFixed(1);
