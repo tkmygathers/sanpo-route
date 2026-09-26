@@ -2521,6 +2521,180 @@ body{
   }
 }
 
+
+/* ===== SANPO v61: character safely left + one unified right card stack ===== */
+
+/* Character moves a little farther left to create a clean no-overlap gap.
+   Full-body contain remains mandatory. */
+#homePage .hero-v39 .hero-person-v12{
+  left:-54px!important;
+  bottom:54px!important;
+  width:244px!important;
+  height:330px!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  z-index:4!important;
+}
+
+/* The entire information area is one vertical stack.
+   No phase/CTA elements float independently anymore. */
+#homePage .hero-side-v39{
+  width:61%!important;
+  top:104px!important;
+  bottom:18px!important;
+  padding:8px 10px 8px 6px!important;
+  gap:5px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  background:linear-gradient(90deg,
+    rgba(247,252,249,0) 0%,
+    rgba(247,252,249,.10) 9%,
+    rgba(247,252,249,.32) 22%,
+    rgba(247,252,249,.58) 40%,
+    rgba(247,252,249,.76) 64%,
+    rgba(247,252,249,.88) 100%)!important;
+}
+
+/* Speech stays close to face height but never overlaps character. */
+#homePage .hero-v39 .hero-bubble-v12{
+  position:relative!important;
+  width:94%!important;
+  min-height:39px!important;
+  padding:8px 11px!important;
+  margin:0 0 0 0!important;
+  font-size:9px!important;
+  line-height:1.45!important;
+  border-radius:18px!important;
+  flex:0 0 auto!important;
+}
+#homePage .hero-v39 .hero-bubble-v12:after{
+  left:-9px!important;
+  top:20px!important;
+  width:12px!important;
+  height:12px!important;
+}
+
+/* Tight upper metrics so all sections fit as one continuous card column. */
+#homePage .hero-remain-v39{
+  padding:7px 10px 6px!important;
+  border-radius:14px!important;
+  flex:0 0 auto!important;
+}
+#homePage .hero-remain-v39 b{font-size:19px!important}
+#homePage .hero-mini-grid-v54{
+  gap:4px!important;
+  flex:0 0 auto!important;
+}
+#homePage .hero-mini-grid-v54 .hero-mini-stat-v39{
+  min-height:52px!important;
+  padding:5px 2px!important;
+}
+#homePage .hero-gps-v54{
+  min-height:12px!important;
+  margin:0!important;
+  padding-left:2px!important;
+  flex:0 0 auto!important;
+}
+
+/* Phase is now physically inside hero-side, directly attached to the metrics above. */
+#homePage .character-phase-v46{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  min-height:51px!important;
+  margin:0!important;
+  padding:7px 10px 7px!important;
+  border-radius:15px!important;
+  z-index:8!important;
+  flex:0 0 auto!important;
+}
+#homePage .phase-kicker-v53{
+  margin-bottom:2px!important;
+  font-size:5.8px!important;
+}
+#homePage .character-phase-name-v46{
+  font-size:10.2px!important;
+}
+#homePage .character-phase-next-v46{
+  font-size:6.8px!important;
+  line-height:1.18!important;
+}
+#homePage .character-phase-bar-v46{
+  margin-top:4px!important;
+}
+
+/* CTA is also part of the same stack — no absolute floating. */
+#homePage .hero-route-btn-v39{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  height:39px!important;
+  margin:0!important;
+  border-radius:14px!important;
+  flex:0 0 auto!important;
+}
+
+/* Use remaining vertical space naturally instead of creating visual gaps. */
+#homePage .hero-side-v39 > .character-phase-v46{
+  margin-top:auto!important;
+}
+#homePage .hero-side-v39 > .hero-route-btn-v39{
+  margin-top:5px!important;
+}
+
+@media(max-width:390px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-50px!important;
+    bottom:52px!important;
+    width:232px!important;
+    height:316px!important;
+  }
+  #homePage .hero-side-v39{
+    width:61.5%!important;
+    top:98px!important;
+    bottom:16px!important;
+    padding:8px 8px 7px 5px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    width:95%!important;
+    font-size:8.6px!important;
+  }
+  #homePage .character-phase-v46{
+    min-height:49px!important;
+    padding:7px 9px!important;
+  }
+  #homePage .hero-route-btn-v39{
+    height:38px!important;
+  }
+}
+@media(max-width:350px){
+  #homePage .hero-v39 .hero-person-v12{
+    left:-46px!important;
+    bottom:50px!important;
+    width:220px!important;
+    height:300px!important;
+  }
+  #homePage .hero-side-v39{
+    width:62%!important;
+    top:94px!important;
+    bottom:14px!important;
+    padding-right:7px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    font-size:8.1px!important;
+  }
+  #homePage .character-phase-v46{
+    min-height:47px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2550,14 +2724,6 @@ body{
         <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
       </div>
       <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
-      <div class="character-phase-v46" aria-live="polite">
-        <div class="phase-kicker-v53">今日のコンディション</div>
-        <div class="character-phase-top-v46">
-          <span id="heroBodyPhaseV46" class="character-phase-name-v46">ぽっちゃり</span>
-          <span id="heroNextPhaseV46" class="character-phase-next-v46">次のちょいぽちゃまで 1.3km</span>
-        </div>
-        <div class="character-phase-bar-v46"><div id="heroPhaseBarV46"></div></div>
-      </div>
 
       <div class="hero-side-v39">
         <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
@@ -2572,6 +2738,13 @@ body{
           <div class="hero-mini-stat-v39"><small>歩数</small><b><span id="heroStepsV54">0</span><em>歩</em></b></div>
         </div>
         <div id="heroGpsV54" class="hero-gps-v54"><span></span>GPSを準備中</div>
+        <div class="character-phase-v46" aria-live="polite">
+        <div class="phase-kicker-v53">今日のコンディション</div>
+        <div class="character-phase-top-v46">
+          <span id="heroBodyPhaseV46" class="character-phase-name-v46">ぽっちゃり</span>
+          <span id="heroNextPhaseV46" class="character-phase-next-v46">次のちょいぽちゃまで 1.3km</span>
+        </div>
+        <div class="character-phase-bar-v46"><div id="heroPhaseBarV46"></div></div>
         <button id="heroRouteV39" class="hero-route-btn-v39" type="button">コースを見る</button>
       </div>
     </div>
