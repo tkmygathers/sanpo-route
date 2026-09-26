@@ -701,7 +701,7 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
       </div>
       <div id="homeBubble" class="hero-bubble-v12">今日はどっち方面いく？</div>
       <button id="homeTalkHint" class="hero-talk-hint-v16" type="button" aria-label="キャラクターのひとこと">…</button>
-      <img id="homeWalker" class="hero-person-v12" src="assets/characters/female/normal.png" alt="今日のキャラクター">
+      <img id="homeWalker" class="hero-person-v12" src="assets/female_stage_1.png" alt="今日のキャラクター">
       <img id="homeDog" class="hero-dog-v12" src="assets/dog.png" alt="犬">
       <div class="hero-stage-badge-v12"><span id="heroStagePct">0%</span> / 今日の目標</div>
     </div>
@@ -945,10 +945,12 @@ button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:430px;mi
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
 const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
-/* ===== v23 character test mode =====
+/* ===== v29 character + body stage hybrid test =====
    テスト中はホームのキャラクターを7秒ごとに
    normal → guide → discover → cheer → think の順で確認できます。
-   本番化するときは false にするだけで停止できます。
+   normal のときだけ、その日の目標進捗に応じた Stage 1〜5 の体型画像を表示します。
+   guide / discover / cheer / think は現行ポーズ画像を使います。
+   本番化するときは false にすると、体型Stage画像を常時表示します。
 */
 const CHARACTER_TEST_MODE=true;
 const CHARACTER_TEST_INTERVAL=7000;
@@ -994,6 +996,15 @@ function characterPoseAsset(gender,pose='normal'){
  const p=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
  return `assets/characters/${g}/${p}.png`
 }
+function currentBodyStage(){
+ const p=profile(),goalKm=Math.max(.5,+p.goalKm||5);
+ const pct=Math.min(100,today().km/goalKm*100);
+ return stage(pct);
+}
+function characterDisplayAsset(gender,pose='normal',stageNum=null){
+ const st=stageNum||currentBodyStage();
+ return pose==='normal'?asset(gender,st):characterPoseAsset(gender,pose);
+}
 function setCharacterImage(img,src,animate=false){
  if(!img||!src)return;
  const current=img.getAttribute('src')||'';
@@ -1009,17 +1020,17 @@ function setCharacterImage(img,src,animate=false){
 function setHomeCharacterPose(pose='normal',speak=false){
  currentCharacterPose=CHARACTER_TEST_POSES.includes(pose)?pose:'normal';
  const p=profile();
- setCharacterImage($('homeWalker'),characterPoseAsset(p.gender,currentCharacterPose),true);
+ setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,currentCharacterPose),true);
  if(speak&&$('homePage')?.classList.contains('active')){
    showTalkBubble('homeBubble',CHARACTER_TEST_LINES[currentCharacterPose],5400,'homeTalkHint');
  }
 }
 function refreshCharacterGender(){
  const p=profile();
- setCharacterImage($('homeWalker'),characterPoseAsset(p.gender,currentCharacterPose),false);
+ setCharacterImage($('homeWalker'),characterDisplayAsset(p.gender,currentCharacterPose),false);
  setCharacterImage($('routeCompanion'),characterPoseAsset(p.gender,'guide'),false);
  setCharacterImage($('navCompanion'),characterPoseAsset(p.gender,'discover'),false);
- if(!tracking)setCharacterImage($('trackWalker'),characterPoseAsset(p.gender,'normal'),false);
+ if(!tracking)setCharacterImage($('trackWalker'),asset(p.gender,currentBodyStage()),false);
 }
 function startCharacterTestCycle(){
  if(!CHARACTER_TEST_MODE)return;
@@ -1541,7 +1552,7 @@ function renderHome(talk=true){
  $('rice').textContent=food(displayCal,FOOD.rice);$('banana').textContent=food(displayCal,FOOD.banana);$('cake').textContent=food(displayCal,FOOD.cake);$('ramen').textContent=food(displayCal,FOOD.ramen);
  renderLiveSanpo();
  renderActiveRouteCard();
-if($('homeWalker'))setCharacterImage($('homeWalker'),CHARACTER_TEST_MODE?characterPoseAsset(p.gender,currentCharacterPose):asset(p.gender,st),false);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
+if($('homeWalker'))setCharacterImage($('homeWalker'),CHARACTER_TEST_MODE?characterDisplayAsset(p.gender,currentCharacterPose,st):asset(p.gender,st),false);if($('homeDog'))$('homeDog').style.display=p.dog?'block':'none';if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
  if(talk&&$('homePage').classList.contains('active'))showHomeTalk();
 }
 function navTo(id){
@@ -1835,9 +1846,9 @@ $('useActiveRoute').onclick=()=>{
 function hav(a,b,c,d){const R=6371,to=x=>x*Math.PI/180,d1=to(c-a),d2=to(d-b),x=Math.sin(d1/2)**2+Math.cos(to(a))*Math.cos(to(c))*Math.sin(d2/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return[h,m,s].map(x=>String(x).padStart(2,'0')).join(':')}
 function elapsed(){if(!tracking)return 0;const end=paused?pauseAt:Date.now();return Math.max(0,Math.floor((end-startTime-pauseTotal)/1000))}
-function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=CHARACTER_TEST_MODE?characterPoseAsset(p.gender,paused?'think':'normal'):asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
+function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=CHARACTER_TEST_MODE?characterDisplayAsset(p.gender,paused?'think':'normal',st):asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
 function startTracking(){tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');timerInt=setInterval(liveRender,1000);if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{const c={lat:pos.coords.latitude,lng:pos.coords.longitude};if(lastPos&&!paused){const d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng);if(d<.2)trackKm+=d}lastPos=c;trackPath.push(c);liveRender()},()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:10000})}
-$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'normal'),true);showTrackTalk('resumed')}};
+$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),asset(profile().gender,currentBodyStage()),true);showTrackTalk('resumed')}};
 $('finishBtn').onclick=()=>{if(!tracking)return;const sec=elapsed(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5);tracking=false;clearInterval(timerInt);if(trackBubbleTimer)clearTimeout(trackBubbleTimer);if(watchId!=null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);const h=hist();if(trackKm>0.005||sec>10)h.unshift({date:new Date().toISOString(),km:trackKm,min:Math.max(1,Math.round(sec/60)),steps,cal,mode:'tracking'});saveHist(h);renderHome();renderRecords();navTo('recordPage')};
 $('photoBtn').onclick=()=>alert('散歩中の写真撮影は、ネイティブアプリ化時にカメラ連携できます。');
 
