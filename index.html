@@ -4003,6 +4003,96 @@ body{
   }
 }
 
+
+/* ===== SANPO v72: favorites are routes, records are actual walks only ===== */
+
+.map-start-switch-v72{
+  grid-template-columns:1fr 1fr 1fr!important;
+}
+.map-start-switch-v72 button{
+  padding:0 5px!important;
+  font-size:8.8px!important;
+}
+
+.favorites-card-v72{
+  max-height:min(78dvh,620px);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.favorite-route-list-v72{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  overflow:auto;
+  min-height:120px;
+  max-height:55dvh;
+  padding-right:2px;
+}
+.favorite-route-item-v72{
+  display:grid;
+  grid-template-columns:1fr 32px;
+  gap:6px;
+  align-items:stretch;
+}
+.favorite-open-v72{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  column-gap:8px;
+  align-items:center;
+  width:100%;
+  padding:9px 10px;
+  border:1px solid #e4ece8;
+  border-radius:13px;
+  background:#f8fbf9;
+  text-align:left;
+  color:#29463c;
+}
+.favorite-mode-v72{
+  grid-row:1 / 3;
+  min-width:38px;
+  height:34px;
+  padding:0 7px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#eaf8f1;
+  color:var(--gd);
+  font-size:7.5px;
+  font-weight:900;
+}
+.favorite-open-v72 strong{
+  font-size:11px;
+  line-height:1;
+}
+.favorite-open-v72 small{
+  font-size:7px;
+  color:#758780;
+}
+.favorite-delete-v72{
+  border:0;
+  border-radius:11px;
+  background:#f2f5f3;
+  color:#81918b;
+  font-size:17px;
+}
+.favorite-empty-v72{
+  min-height:120px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:#7f9089;
+  font-size:9px;
+  line-height:1.5;
+}
+
+@media(max-width:390px){
+  .map-start-switch-v72 button{
+    font-size:8.2px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4176,9 +4266,10 @@ body{
 </section>
 
 <section id="mapPage" class="page map-page-v67">
-  <div class="map-start-switch-v67" aria-label="スタート地点">
+  <div class="map-start-switch-v67 map-start-switch-v72" aria-label="スタート地点">
     <button id="startCurrentV67" class="active" type="button">現在地</button>
     <button id="startPinV67" type="button">ピンで選ぶ</button>
+    <button id="openFavoritesV72" type="button">お気に入り</button>
   </div>
 
   <div class="mapbox mapbox-v67">
@@ -4195,7 +4286,7 @@ body{
       <div id="poiText" class="poitext"></div>
       <div class="route-actions route-actions-v67">
         <button id="reroute">別コース</button>
-        <button id="recordRoute">記録</button>
+        <button id="recordRoute">お気に入り</button>
         <button id="useActiveRoute" class="primary">このコースで歩く</button>
       </div>
     </div>
@@ -4390,6 +4481,21 @@ body{
   </div>
 </div>
 
+
+<div id="favoritesModalV72" class="modal-v70" hidden>
+  <div class="modal-backdrop-v70" id="closeFavoritesBackdropV72"></div>
+  <div class="modal-card-v70 favorites-card-v72">
+    <div class="detail-head-v70">
+      <div>
+        <div class="modal-kicker-v70">FAVORITE ROUTES</div>
+        <h3>お気に入りコース</h3>
+      </div>
+      <button id="closeFavoritesV72" class="close-modal-v70" type="button" aria-label="閉じる">×</button>
+    </div>
+    <div id="favoriteRouteListV72" class="favorite-route-list-v72"></div>
+  </div>
+</div>
+
 <nav class="navbar navbar-v55">
  <button class="nav active" data-page="homePage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.2 12 4l9 7.2v8.3a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5Z"/><path d="M9 21v-6h6v6"/></svg></span>ホーム</button>
  <button class="nav" data-page="mapPage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg></span>マップ</button>
@@ -4401,7 +4507,7 @@ body{
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
-const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21'};
+const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21',favoriteRoutes:'sanpo_favorite_routes_v72'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
 /* ===== v36 Stage1〜4 × 10ポーズ =====
    ホームでは現在のStageを維持したまま、7秒ごとに10ポーズを切り替えます。
@@ -4436,6 +4542,14 @@ function json(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{retur
 function profile(){const saved={...json(KEY.profile,{})};delete saved.voice;return {...{age:'',height:'',weight:'',goalKm:5,gender:'female'},...saved}}
 function hist(){const h=json(KEY.history,[]);return Array.isArray(h)?h:[]}
 function saveHist(h){localStorage.setItem(KEY.history,JSON.stringify(h))}
+function favoriteRoutes(){
+ const a=json(KEY.favoriteRoutes,[]);
+ return Array.isArray(a)?a:[]
+}
+function saveFavoriteRoutes(a){
+ localStorage.setItem(KEY.favoriteRoutes,JSON.stringify(a))
+}
+
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
 function dayKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function dailyState(){
@@ -4736,9 +4850,15 @@ function renderLiveSanpo(){
 function weekStart(){const d=new Date(),x=new Date(d),day=x.getDay();x.setDate(x.getDate()+(day===0?-6:1-day));x.setHours(0,0,0,0);return x}
 function today(){
  const n=new Date(),o={km:0,steps:0,cal:0,min:0};
- hist().forEach(i=>{const d=new Date(i.date);if(sameDay(d,n)){o.km+=+i.km||0;o.steps+=+i.steps||0;o.cal+=+i.cal||0;o.min+=+i.min||0}});
+ // v72: generated routes are not exercise records.
+ // Only actual tracked walks contribute to today's totals.
+ hist().forEach(i=>{
+   if(!(i.savedWalk||i.mode==='tracking'))return;
+   const d=new Date(i.date);
+   if(sameDay(d,n)){o.km+=+i.km||0;o.steps+=+i.steps||0;o.cal+=+i.cal||0;o.min+=+i.min||0}
+ });
  const ds=dailyState();
- // daily GPS is the live day total. Use whichever is larger to prevent duplicate counting after a walk is saved.
+ // Daily GPS remains the live total. Use the larger value to avoid double counting after saving a walk.
  o.km=Math.max(o.km,ds.km);
  o.steps=Math.max(o.steps,ds.steps||dailyEstimatedSteps(ds.km));
  return o
@@ -5565,7 +5685,96 @@ async function buildRoute(){
 }
 $('buildRoute').onclick=buildRoute;
 $('reroute').onclick=buildRoute;
-$('recordRoute').onclick=()=>{if(!currentRoute)return;const h=hist();const safe={...currentRoute};delete safe.coords;h.unshift({date:new Date().toISOString(),...safe});saveHist(h);$('recordRoute').textContent='記録済み';renderHome();renderRecords()};
+function favoriteRouteModeNameV72(mode){
+ return({random:'気軽',green:'緑',water:'水辺',detour:'寄り道',workout:'しっかり'})[mode]||'コース'
+}
+function saveCurrentRouteFavoriteV72(){
+ if(!currentRoute||!Array.isArray(currentRoute.coords)||currentRoute.coords.length<2)return;
+ const list=favoriteRoutes();
+ const item={
+   id:'fav_'+Date.now(),
+   savedAt:new Date().toISOString(),
+   km:+currentRoute.km||0,
+   min:+currentRoute.min||0,
+   steps:+currentRoute.steps||0,
+   cal:+currentRoute.cal||0,
+   mode:currentRoute.mode||'random',
+   poi:currentRoute.poi||null,
+   targetKm:+currentRoute.targetKm||0,
+   featureText:currentRoute.featureText||'',
+   speed:+currentRoute.speed||4.5,
+   coords:currentRoute.coords
+ };
+ list.unshift(item);
+ saveFavoriteRoutes(list.slice(0,20));
+ $('recordRoute').textContent='保存済み';
+ setTimeout(()=>{if($('recordRoute'))$('recordRoute').textContent='お気に入り'},1200);
+ renderFavoriteRoutesV72();
+}
+$('recordRoute').onclick=saveCurrentRouteFavoriteV72;
+
+function drawFavoriteRouteV72(route){
+ if(!route||!Array.isArray(route.coords)||route.coords.length<2)return;
+ clearRoute();
+ currentRoute={...route};
+
+ routeShadow=L.polyline(route.coords,{color:'#fff',weight:10,opacity:.9}).addTo(map);
+ routeLine=L.polyline(route.coords,{color:'#10a864',weight:5}).addTo(map);
+ map.fitBounds(routeLine.getBounds(),{padding:[35,35]});
+
+ $('rKm').textContent=(+route.km||0).toFixed(1);
+ $('rMin').textContent=Math.round(+route.min||0);
+ $('rSteps').textContent=Math.round(+route.steps||0).toLocaleString();
+ $('rCal').textContent=Math.round(+route.cal||0);
+ $('poiText').textContent=`お気に入り｜${favoriteRouteModeNameV72(route.mode)}${route.poi?'｜'+route.poi:''}`;
+ $('mapResult').classList.add('show');
+ $('mapStatus').textContent='お気に入りコースを表示中';
+ $('recordRoute').textContent='お気に入り';
+}
+function renderFavoriteRoutesV72(){
+ const box=$('favoriteRouteListV72');
+ if(!box)return;
+ const list=favoriteRoutes();
+ box.innerHTML='';
+ if(!list.length){
+   box.innerHTML='<div class="favorite-empty-v72">まだお気に入りコースはありません。</div>';
+   return;
+ }
+ list.forEach(item=>{
+   const row=document.createElement('div');
+   row.className='favorite-route-item-v72';
+   const d=new Date(item.savedAt||Date.now());
+   row.innerHTML=`
+     <button type="button" class="favorite-open-v72">
+       <span class="favorite-mode-v72">${favoriteRouteModeNameV72(item.mode)}</span>
+       <strong>${(+item.km||0).toFixed(1)} km</strong>
+       <small>${Math.round(+item.min||0)}分 ・ ${d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})}</small>
+     </button>
+     <button type="button" class="favorite-delete-v72" aria-label="削除">×</button>
+   `;
+   row.querySelector('.favorite-open-v72').onclick=()=>{
+     $('favoritesModalV72').hidden=true;
+     drawFavoriteRouteV72(item);
+   };
+   row.querySelector('.favorite-delete-v72').onclick=()=>{
+     const next=favoriteRoutes().filter(x=>x.id!==item.id);
+     saveFavoriteRoutes(next);
+     renderFavoriteRoutesV72();
+   };
+   box.appendChild(row);
+ });
+}
+function openFavoritesV72(){
+ renderFavoriteRoutesV72();
+ $('favoritesModalV72').hidden=false;
+}
+function closeFavoritesV72(){
+ $('favoritesModalV72').hidden=true;
+}
+if($('openFavoritesV72'))$('openFavoritesV72').onclick=openFavoritesV72;
+if($('closeFavoritesV72'))$('closeFavoritesV72').onclick=closeFavoritesV72;
+if($('closeFavoritesBackdropV72'))$('closeFavoritesBackdropV72').onclick=closeFavoritesV72;
+
 $('useActiveRoute').onclick=()=>{
  if(!currentRoute||!Array.isArray(currentRoute.coords))return;
  saveActiveRoute(currentRoute);
@@ -5613,7 +5822,7 @@ $('discardWalkV70').onclick=()=>{closeWalkSaveModalV70();finishWalkNavigationV70
 $('photoBtn').onclick=()=>alert('散歩中の写真撮影は、ネイティブアプリ化時にカメラ連携できます。');
 
 /* records */
-function inPeriod(per){const n=new Date(),ws=weekStart();return hist().filter(i=>{const d=new Date(i.date);return per==='day'?sameDay(d,n):per==='week'?d>=ws:d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()})}
+function inPeriod(per){const n=new Date(),ws=weekStart();return hist().filter(i=>{if(!(i.savedWalk||i.mode==='tracking'))return false;const d=new Date(i.date);return per==='day'?sameDay(d,n):per==='week'?d>=ws:d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()})}
 qsa('.period button').forEach(b=>b.onclick=()=>{recordPeriod=b.dataset.period;qsa('.period button').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderRecords()});
 
 function renderSavedWalksV70(){
@@ -5653,7 +5862,7 @@ function renderRecords(){
  const a=inPeriod(recordPeriod),sum=a.reduce((o,i)=>(o.km+=+i.km||0,o.steps+=+i.steps||0,o.cal+=+i.cal||0,o.min+=+i.min||0,o),{km:0,steps:0,cal:0,min:0});
  $('sumSteps').textContent=Math.round(sum.steps).toLocaleString();$('sumKm').textContent=sum.km.toFixed(1);$('sumCal').textContent=Math.round(sum.cal);$('sumMin').textContent=Math.round(sum.min);
  const ch=$('chart');ch.innerHTML='';const days=[0,0,0,0,0,0,0],labels=['月','火','水','木','金','土','日'];
- hist().forEach(i=>{const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});
+ hist().forEach(i=>{if(!(i.savedWalk||i.mode==='tracking'))return;const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});
  const max=Math.max(...days,1);
  days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(10+v/max*48)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});
  renderSavedWalksV70()
