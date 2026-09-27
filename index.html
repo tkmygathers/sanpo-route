@@ -5542,6 +5542,149 @@ body:not(:has(#homePage.active)) .top-v70{
   }
 }
 
+
+/* ===== SANPO v88: simplified header layout =====
+   - Logo hidden
+   - Weather moved to the left edge
+   - Date/settings made clearer
+   - Header/hero separator lines removed
+   - Background-through glass look preserved
+*/
+#homePage .brand-v70{
+  display:none!important;
+}
+
+.top-v70{
+  border-bottom:none!important;
+  box-shadow:none!important;
+}
+
+/* Remove visible seams around the home hero/header transition */
+#homePage,
+#homePage .hero-v39,
+#homePage .hero-scene-v39{
+  border-top:none!important;
+  outline:none!important;
+  box-shadow:none!important;
+}
+
+#homePage .top-v70::after,
+#homePage .hero-v39::before{
+  border-top:none!important;
+}
+
+/* Rebuild header spacing after removing the logo */
+#homePage .top-inner-v70{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto auto!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding-left:12px!important;
+  padding-right:10px!important;
+}
+
+/* Weather: use the left side efficiently */
+#homePage .weather-v70{
+  justify-self:start!important;
+  margin:0!important;
+  width:auto!important;
+  max-width:100%!important;
+  min-width:0!important;
+  padding:7px 11px!important;
+  border-radius:16px!important;
+  background:rgba(255,255,255,.68)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  box-shadow:0 4px 14px rgba(32,66,53,.08)!important;
+  backdrop-filter:blur(10px) saturate(1.04)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(1.04)!important;
+}
+
+/* Date: more like a real control, not floating text */
+#homePage .date-v70{
+  justify-self:end!important;
+  margin:0!important;
+  padding:8px 10px!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.74)!important;
+  border:1px solid rgba(255,255,255,.78)!important;
+  box-shadow:0 4px 14px rgba(32,66,53,.08)!important;
+  color:#27483d!important;
+  font-size:15px!important;
+  font-weight:750!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+  text-shadow:none!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+  white-space:nowrap!important;
+}
+
+/* Settings: deliberately more visible */
+#homePage .header-settings-v70{
+  justify-self:end!important;
+  width:48px!important;
+  height:48px!important;
+  min-width:48px!important;
+  border-radius:50%!important;
+  background:rgba(255,255,255,.80)!important;
+  border:1px solid rgba(255,255,255,.84)!important;
+  color:#315d4e!important;
+  box-shadow:0 5px 16px rgba(27,64,49,.11)!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+}
+
+/* Slightly stronger icon rendering if the button contains SVG/icon text */
+#homePage .header-settings-v70 svg{
+  opacity:1!important;
+  stroke:#315d4e!important;
+}
+#homePage .header-settings-v70 i,
+#homePage .header-settings-v70 span{
+  color:#315d4e!important;
+}
+
+/* Keep all three controls readable on narrower phones */
+@media(max-width:390px){
+  #homePage .top-inner-v70{
+    gap:6px!important;
+    padding-left:10px!important;
+    padding-right:8px!important;
+  }
+  #homePage .weather-v70{
+    padding:6px 9px!important;
+  }
+  #homePage .date-v70{
+    padding:7px 8px!important;
+    font-size:14px!important;
+  }
+  #homePage .header-settings-v70{
+    width:46px!important;
+    height:46px!important;
+    min-width:46px!important;
+  }
+}
+
+@media(max-width:350px){
+  #homePage .top-inner-v70{
+    gap:5px!important;
+    padding-left:8px!important;
+    padding-right:7px!important;
+  }
+  #homePage .weather-v70{
+    padding:6px 8px!important;
+  }
+  #homePage .date-v70{
+    padding:7px!important;
+    font-size:13px!important;
+  }
+  #homePage .header-settings-v70{
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+  }
+}
+
 </style>
 </head>
 <body>
