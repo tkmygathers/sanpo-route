@@ -5441,6 +5441,107 @@ body{
   }
 }
 
+
+/* ===== SANPO v87: background-through glass header =====
+   The home scene visually continues into the header.
+   Character/card positions are intentionally NOT changed.
+*/
+.top-v70{
+  --header-scene:none;
+  position:sticky!important;
+  top:0!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background-color:rgba(247,251,249,.50)!important;
+  background-image:
+    linear-gradient(90deg,
+      rgba(255,255,255,.70) 0%,
+      rgba(255,255,255,.54) 36%,
+      rgba(255,255,255,.46) 67%,
+      rgba(255,255,255,.58) 100%),
+    var(--header-scene)!important;
+  background-size:100% auto!important;
+  background-position:center -45px!important;
+  background-repeat:no-repeat!important;
+  border-bottom:1px solid rgba(255,255,255,.48)!important;
+  box-shadow:0 5px 18px rgba(27,67,51,.055)!important;
+  backdrop-filter:blur(9px) saturate(1.05)!important;
+  -webkit-backdrop-filter:blur(9px) saturate(1.05)!important;
+}
+
+/* Soft glass pieces, not a solid white header strip. */
+.brand-v70{
+  background:rgba(255,255,255,.58)!important;
+  border:1px solid rgba(255,255,255,.54)!important;
+  box-shadow:0 4px 14px rgba(33,70,55,.055)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+.weather-v70{
+  width:max-content!important;
+  max-width:100%!important;
+  padding:7px 10px!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.52)!important;
+  border:1px solid rgba(255,255,255,.46)!important;
+  box-shadow:0 4px 14px rgba(33,70,55,.045)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+.weather-copy-v70 b{
+  color:#24483b!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.52);
+}
+.weather-copy-v70 small{
+  color:#637b71!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.45);
+}
+.date-v70{
+  color:#415f54!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.48);
+}
+.header-settings-v70{
+  background:rgba(255,255,255,.58)!important;
+  border-color:rgba(255,255,255,.52)!important;
+  color:#47695d!important;
+  box-shadow:0 4px 14px rgba(33,70,55,.055)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+
+/* Different light levels stay readable without breaking the common design. */
+body:has(#homePage.active) .top-v70{
+  background-image:
+    linear-gradient(90deg,
+      rgba(255,255,255,.68) 0%,
+      rgba(255,255,255,.50) 38%,
+      rgba(255,255,255,.42) 68%,
+      rgba(255,255,255,.56) 100%),
+    var(--header-scene)!important;
+}
+
+/* Other tabs keep a calm translucent header instead of inheriting the scene. */
+body:not(:has(#homePage.active)) .top-v70{
+  --header-scene:none!important;
+  background-image:linear-gradient(180deg,rgba(255,255,255,.96),rgba(249,252,250,.92))!important;
+  background-position:center!important;
+  border-bottom-color:rgba(224,235,229,.86)!important;
+}
+
+@media(max-width:390px){
+  .top-v70{
+    background-position:center -34px!important;
+  }
+  .weather-v70{
+    padding:6px 8px!important;
+  }
+}
+@media(max-width:350px){
+  .top-v70{
+    background-position:center -28px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6761,6 +6862,11 @@ function applyHomeSceneV73(){
    'scene-night-v73'
  );
  hero.classList.add(`scene-${scene}-v73`);
+
+ const header=document.querySelector('.top-v70');
+ if(header){
+   header.style.setProperty('--header-scene', `url("${file}")`);
+ }
 
  if(bg.dataset.sceneFile!==file){
    bg.dataset.sceneFile=file;
