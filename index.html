@@ -5301,6 +5301,146 @@ body{
   }
 }
 
+
+
+/* ===== SANPO v84: character time-of-day blend + stronger grounding + bubble micro-adjust =====
+   - character color temperature matches morning / day / evening / night scenes
+   - foot contact shadow becomes clearer without looking fake
+   - speech bubble shifts a little closer to the partner
+*/
+
+/* Keep scene changes smooth when the time band updates. */
+#homePage .hero-v39 .hero-person-v12,
+#homePage .hero-v39 .hero-bubble-v12,
+#homePage .hero-v39 .hero-scene-v39::before,
+#homePage .hero-v39 .hero-scene-v39::after{
+  transition:filter .35s ease, box-shadow .35s ease, opacity .35s ease;
+}
+
+/* Character: blend subtly into the current time-of-day background. */
+#homePage .hero-v39.scene-morning-v73 .hero-person-v12{
+  filter:
+    drop-shadow(0 14px 20px rgba(28,66,51,.14))
+    sepia(.08)
+    saturate(1.03)
+    hue-rotate(-6deg)
+    brightness(1.03)
+    contrast(1.01)!important;
+}
+#homePage .hero-v39.scene-day-v73 .hero-person-v12{
+  filter:
+    drop-shadow(0 14px 20px rgba(28,66,51,.15))
+    saturate(1.02)
+    brightness(1.00)
+    contrast(1.01)!important;
+}
+#homePage .hero-v39.scene-evening-v73 .hero-person-v12{
+  filter:
+    drop-shadow(0 14px 20px rgba(28,66,51,.16))
+    sepia(.16)
+    saturate(1.06)
+    hue-rotate(-11deg)
+    brightness(.99)
+    contrast(1.03)!important;
+}
+#homePage .hero-v39.scene-night-v73 .hero-person-v12{
+  filter:
+    drop-shadow(0 12px 18px rgba(22,45,42,.22))
+    saturate(.94)
+    brightness(.90)
+    contrast(1.03)
+    hue-rotate(5deg)!important;
+}
+
+/* Grounding: a broader soft shadow + a tighter shoe-contact shadow. */
+#homePage .hero-v39 .hero-scene-v39::before{
+  content:"";
+  position:absolute;
+  left:52px;
+  bottom:45px;
+  width:130px;
+  height:26px;
+  border-radius:50%;
+  z-index:2;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,
+    rgba(30,54,46,.24) 0%,
+    rgba(30,54,46,.14) 45%,
+    rgba(30,54,46,0) 76%);
+  filter:blur(7px);
+}
+#homePage .hero-v39 .hero-scene-v39::after{
+  content:"";
+  position:absolute;
+  left:79px;
+  bottom:51px;
+  width:66px;
+  height:12px;
+  border-radius:50%;
+  z-index:2;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,
+    rgba(23,42,37,.22) 0%,
+    rgba(23,42,37,.10) 55%,
+    rgba(23,42,37,0) 85%);
+  filter:blur(3px);
+}
+
+/* Bubble: pull slightly toward the character and make the tail feel attached. */
+#homePage .hero-v39 .hero-bubble-v12{
+  width:calc(100% - 6px)!important;
+  margin-left:-6px!important;
+  padding:10px 13px 10px 14px!important;
+  border-radius:20px!important;
+  box-shadow:0 7px 18px rgba(34,72,57,.085)!important;
+}
+#homePage .hero-v39 .hero-bubble-v12:after{
+  left:-9px!important;
+  top:18px!important;
+  width:15px!important;
+  height:15px!important;
+}
+
+@media(max-width:390px){
+  #homePage .hero-v39 .hero-scene-v39::before{
+    left:48px;
+    bottom:41px;
+    width:122px;
+    height:24px;
+  }
+  #homePage .hero-v39 .hero-scene-v39::after{
+    left:72px;
+    bottom:47px;
+    width:62px;
+    height:11px;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    width:calc(100% - 5px)!important;
+    margin-left:-5px!important;
+    padding:9px 11px 9px 13px!important;
+  }
+}
+
+@media(max-width:350px){
+  #homePage .hero-v39 .hero-scene-v39::before{
+    left:44px;
+    bottom:38px;
+    width:114px;
+    height:22px;
+  }
+  #homePage .hero-v39 .hero-scene-v39::after{
+    left:67px;
+    bottom:43px;
+    width:56px;
+    height:10px;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    width:calc(100% - 4px)!important;
+    margin-left:-4px!important;
+    padding:8px 10px 8px 12px!important;
+  }
+}
+
 </style>
 </head>
 <body>
