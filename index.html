@@ -3900,6 +3900,109 @@ body{
 @media(max-width:390px){.top-v70{grid-template-columns:52px minmax(0,1fr) max-content!important;gap:6px!important;padding:0 8px!important}.brand-v70,.brand-v70 img{width:49px;height:49px;border-radius:14px}.weather-copy-v70 b{font-size:10px!important}.weather-copy-v70 small{font-size:7.3px!important}.date-v70{font-size:9.7px!important}.header-settings-v70{width:36px;height:36px}.header-settings-v70 svg{width:19px;height:19px}#recordPage.record-page-v70{padding:7px 9px 7px!important}#recordPage .summary-grid-v70 .sum{min-height:55px!important}#recordPage .summary-grid-v70 .sum b{font-size:15px!important}#recordPage .chart-v70{height:86px!important;min-height:86px!important}.record-bottom-grid-v70{gap:5px}.motivation-card-v70,.saved-walks-card-v70{padding:7px!important}}
 @media(max-width:350px){.top-v70{grid-template-columns:46px minmax(0,1fr) 36px!important}.brand-v70,.brand-v70 img{width:43px;height:43px}.date-v70{display:none!important}#recordPage .chart-v70{height:80px!important;min-height:80px!important}.record-card-head-v70 small{display:none}}
 
+
+/* ===== SANPO v71: record readability + chart containment ===== */
+
+/* 集計カード：縦に余白を使うのではなく、ラベルと数値を横並びにして大きく見せる */
+#recordPage .summary-grid-v70 .sum{
+  min-height:52px!important;
+  padding:7px 11px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  box-sizing:border-box!important;
+}
+#recordPage .summary-grid-v70 .sum small{
+  font-size:9.2px!important;
+  line-height:1.15!important;
+  margin:0!important;
+  color:#74857f!important;
+  white-space:nowrap!important;
+}
+#recordPage .summary-grid-v70 .sum b{
+  font-size:19px!important;
+  line-height:1!important;
+  margin:0!important;
+  font-weight:850!important;
+  color:#1f4035!important;
+  white-space:nowrap!important;
+  text-align:right!important;
+}
+
+/* 週グラフ：棒がカード外へ飛び出さないように内側で完全に管理 */
+#recordPage .chart-v70{
+  height:100px!important;
+  min-height:100px!important;
+  padding:9px 10px 19px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  align-items:flex-end!important;
+  gap:6px!important;
+}
+#recordPage .chart-v70 .bar{
+  max-height:58px!important;
+  min-height:8px!important;
+  border-radius:6px 6px 2px 2px!important;
+  box-sizing:border-box!important;
+}
+#recordPage .chart-v70 .bar span{
+  bottom:-16px!important;
+  font-size:8px!important;
+  line-height:1!important;
+  color:#6f817a!important;
+}
+
+/* 下段の見出しも少しだけ読みやすく */
+#recordPage .record-card-head-v70 b{
+  font-size:10.5px!important;
+}
+#recordPage .record-card-head-v70 small{
+  font-size:6.7px!important;
+}
+
+/* 保存済み散歩カードも数字が読みやすいように */
+#recordPage .saved-walk-item-v70 strong{
+  font-size:11px!important;
+}
+#recordPage .saved-walk-item-v70 small{
+  font-size:7.2px!important;
+}
+#recordPage .saved-date-v70{
+  font-size:8px!important;
+}
+
+/* 小さいスマホでも崩れないよう微調整 */
+@media(max-width:390px){
+  #recordPage .summary-grid-v70 .sum{
+    min-height:50px!important;
+    padding:6px 9px!important;
+  }
+  #recordPage .summary-grid-v70 .sum small{
+    font-size:8.6px!important;
+  }
+  #recordPage .summary-grid-v70 .sum b{
+    font-size:18px!important;
+  }
+  #recordPage .chart-v70{
+    height:96px!important;
+    min-height:96px!important;
+    padding:8px 9px 18px!important;
+  }
+}
+@media(max-width:350px){
+  #recordPage .summary-grid-v70 .sum{
+    padding:6px 8px!important;
+  }
+  #recordPage .summary-grid-v70 .sum small{
+    font-size:8px!important;
+  }
+  #recordPage .summary-grid-v70 .sum b{
+    font-size:16.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5552,7 +5655,7 @@ function renderRecords(){
  const ch=$('chart');ch.innerHTML='';const days=[0,0,0,0,0,0,0],labels=['月','火','水','木','金','土','日'];
  hist().forEach(i=>{const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});
  const max=Math.max(...days,1);
- days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(12+v/max*72)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});
+ days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(10+v/max*48)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});
  renderSavedWalksV70()
 }
 /* photo */
