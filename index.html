@@ -4093,9 +4093,190 @@ body{
   }
 }
 
+
+/* ===== SANPO v73: outdoor-use update ===== */
+
+/* Splash */
+.splash-v73{
+  position:fixed;inset:0;z-index:20000;
+  display:grid;place-items:center;
+  background:linear-gradient(180deg,#f7fbf9,#edf8f2);
+  transition:opacity .24s ease,visibility .24s ease;
+}
+.splash-v73.hide{opacity:0;visibility:hidden}
+.splash-mark-v73{
+  width:112px;height:112px;border-radius:30px;overflow:hidden;
+  box-shadow:0 12px 35px rgba(20,80,55,.09);
+  animation:splashInV73 .42s ease both;
+}
+.splash-mark-v73 img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes splashInV73{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+
+/* Time-based home background using the existing park asset */
+#homePage .hero-v39.scene-morning-v73 .hero-bg-v12{filter:saturate(.90) brightness(1.09) contrast(.94)}
+#homePage .hero-v39.scene-day-v73 .hero-bg-v12{filter:saturate(.96) brightness(1.02) contrast(.98)}
+#homePage .hero-v39.scene-evening-v73 .hero-bg-v12{filter:saturate(.90) sepia(.10) brightness(.96)}
+#homePage .hero-v39.scene-night-v73 .hero-bg-v12{filter:saturate(.72) brightness(.62) contrast(1.03)}
+#homePage .hero-v39.scene-morning-v73:after{background:linear-gradient(180deg,rgba(255,247,214,.14),rgba(255,255,255,0) 54%,rgba(20,60,45,.04))!important}
+#homePage .hero-v39.scene-evening-v73:after{background:linear-gradient(180deg,rgba(255,186,120,.10),rgba(255,255,255,0) 54%,rgba(80,50,40,.08))!important}
+#homePage .hero-v39.scene-night-v73:after{background:linear-gradient(180deg,rgba(31,57,72,.20),rgba(15,31,42,.12) 55%,rgba(5,18,24,.16))!important}
+
+/* Small affiliate surface: intentionally unobtrusive */
+.affiliate-v73{
+  position:absolute;left:8px;top:8px;z-index:3;
+  height:24px;display:flex;align-items:center;gap:5px;
+  padding:0 8px;border-radius:8px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.76);
+  color:#466158;text-decoration:none;
+  backdrop-filter:blur(8px);
+  font-size:7px;
+}
+.affiliate-v73 span{font-size:5.8px;letter-spacing:.08em;color:#758780}
+.affiliate-v73 b{font-size:7.2px}
+.affiliate-v73 em{font-size:11px;font-style:normal;color:#789087}
+
+/* Home goal progress inside existing card */
+.hero-goal-progress-v73{height:3px;background:#e8efeb;border-radius:99px;overflow:hidden;margin-top:7px}
+.hero-goal-progress-v73>div{height:100%;width:0;background:var(--g);border-radius:inherit}
+.hero-goal-pct-v73{font-size:6.5px;color:#73857e;margin-top:3px}
+
+/* Map direction */
+.route-direction-v73{
+  display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;
+  margin-top:7px;padding:7px 8px;border-top:1px solid #e9efec;
+}
+.route-direction-v73>span{font-size:8px;color:#73857e;font-weight:750}
+.route-direction-v73>div{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.route-direction-v73 button,
+.confirm-direction-v73 button{
+  height:29px;border:1px solid #dfe9e4;border-radius:10px;background:#fff;
+  color:#6a7e75;font-size:8px;font-weight:800;
+}
+.route-direction-v73 button.active,
+.confirm-direction-v73 button.active{
+  color:var(--gd);background:#eaf8f1;border-color:#cde9db;
+}
+#mapPage .time-range-v28{accent-color:var(--g)}
+
+/* Record page */
+.record-bottom-grid-v73{grid-template-columns:.92fr 1.08fr!important}
+.weekly-achievement-v73{
+  padding:8px!important;border-radius:15px!important;min-width:0;overflow:hidden;
+  display:flex;flex-direction:column;align-items:stretch;
+}
+.week-ring-v73{
+  --week:0%;
+  width:72px;height:72px;border-radius:50%;margin:2px auto 5px;
+  display:grid;place-items:center;
+  background:conic-gradient(var(--g) var(--week),#eaf0ed 0);
+  position:relative;
+}
+.week-ring-v73:after{content:"";position:absolute;inset:7px;background:#fff;border-radius:50%}
+.week-ring-v73>div{position:relative;z-index:2;text-align:center}
+.week-ring-v73 strong{display:block;font-size:15px;line-height:1;color:#244238}
+.week-ring-v73 span{display:block;font-size:6px;color:#83928c;margin-top:2px}
+.week-distance-v73{text-align:center;line-height:1.1}
+.week-distance-v73 b{font-size:12px}.week-distance-v73 small{font-size:6.5px;color:#82918b}
+.week-bar-v73{height:4px;border-radius:99px;background:#e9efec;overflow:hidden;margin:7px 3px 0}
+.week-bar-v73 div{height:100%;width:0;background:var(--g);border-radius:inherit}
+.week-message-v73{font-size:6.7px;line-height:1.35;color:#75867f;text-align:center;margin-top:5px}
+.saved-walks-card-v73{border-radius:15px!important}
+
+/* Settings compact */
+.settings-page-v73{
+  padding:9px 11px 10px!important;
+  overflow:auto!important;
+}
+.settings-basic-v73,.settings-partner-v73,.character-progress-v73{
+  padding:10px!important;margin-bottom:7px!important;border-radius:15px!important;
+  box-shadow:0 2px 10px rgba(23,61,47,.035)!important;
+}
+.settings-section-title-v73{font-size:10px;font-weight:850;color:#29463c;margin-bottom:7px}
+.settings-grid-v73{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.settings-grid-v73 label{
+  min-width:0;padding:7px 8px;border:1px solid #e7eeea;border-radius:11px;background:#fafcfb;
+}
+.settings-grid-v73 label>span{display:block;font-size:6.6px;color:#7a8b84;margin-bottom:3px}
+.settings-grid-v73 label>div{display:flex;align-items:baseline;gap:3px}
+.settings-grid-v73 input{
+  min-width:0;width:100%;border:0;background:transparent;outline:none;
+  padding:0;font-size:14px;font-weight:800;color:#244238;
+}
+.settings-grid-v73 em{font-style:normal;font-size:6.5px;color:#809089}
+.gender-v73{gap:6px!important}
+.gender-v73 button{
+  height:48px!important;border-radius:11px!important;justify-content:flex-start!important;
+  padding:4px 10px!important;gap:7px!important;
+}
+.gender-v73 img{width:36px!important;height:36px!important}
+.gender-v73 span{font-size:9px;font-weight:800}
+.settings-progress-head-v73 h3{font-size:10px!important;margin-bottom:2px!important}
+.settings-progress-head-v73 .sub{font-size:7px!important}
+.settings-stages-v73{gap:4px!important}
+.settings-stages-v73 .settings-stage-v12{height:68px!important;border-radius:10px!important}
+.settings-stages-v73 .settings-stage-v12 img{max-height:64px!important}
+.stage-labels-v73{font-size:6px!important}
+.stage-message-v73{font-size:7px!important;margin-top:5px!important}
+.settings-save-v73{width:100%!important;height:39px!important;border-radius:12px!important}
+.settings-saved-v73{text-align:center;margin-top:5px!important;font-size:7px!important}
+
+/* Confirmation + naming */
+.compact-modal-v73{width:min(100%,330px)}
+.favorite-name-field-v73 span{display:block;font-size:8px;color:#73857e;margin-bottom:5px}
+.favorite-name-field-v73 input{
+  width:100%;box-sizing:border-box;height:42px;border:1px solid #dfe8e3;
+  border-radius:12px;padding:0 11px;outline:none;font-size:11px;color:#29463c;background:#fbfdfc;
+}
+.walk-confirm-head-v73 small{font-size:7px;color:#7d8e87}
+.walk-confirm-head-v73 h3{margin-top:3px!important}
+.walk-confirm-summary-v73{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.walk-confirm-summary-v73>div{padding:10px;border:1px solid #e7eeea;background:#f7faf8;border-radius:13px}
+.walk-confirm-summary-v73 small{display:block;font-size:7px;color:#7e8e88}
+.walk-confirm-summary-v73 b{display:block;font-size:15px;margin-top:3px}
+.confirm-direction-v73{margin-top:10px}
+.confirm-direction-v73>span{display:block;font-size:8px;color:#74867e;margin-bottom:5px}
+.confirm-direction-v73>div{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+
+/* Finish result */
+.finish-check-v73{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  background:#eaf8f1;color:var(--g);font-size:20px;font-weight:900;margin-bottom:8px;
+}
+.finish-save-copy-v73{font-size:8px;color:#7b8c85;margin:-6px 0 10px}
+.detail-repeat-v73{
+  width:100%;height:40px;margin-top:9px;border:0;border-radius:12px;
+  background:#eaf8f1;color:var(--gd);font-size:9px;font-weight:850;
+}
+.detail-repeat-v73:disabled{opacity:.4}
+
+/* GPS debug line: readable, not loud */
+#homePage .hero-gps-v54{font-size:7px!important;line-height:1.2!important;color:#60766d!important}
+
+/* Less template-ish finishing without changing layout/colors */
+.card{box-shadow:0 2px 10px rgba(23,61,47,.035)}
+#homePage .hero-remain-v68,
+#homePage .hero-mini-stat-v39,
+#homePage .character-phase-v46{border-radius:12px!important}
+#homePage .hero-route-btn-v39{border-radius:11px!important}
+
+@media(max-width:390px){
+  .week-ring-v73{width:64px;height:64px}
+  .week-ring-v73 strong{font-size:14px}
+  .settings-page-v73{padding:8px 9px!important}
+  .settings-grid-v73 label{padding:6px 7px}
+  .settings-stages-v73 .settings-stage-v12{height:62px!important}
+}
+
 </style>
 </head>
 <body>
+<div id="splashV73" class="splash-v73" aria-hidden="true">
+  <div class="splash-mark-v73">
+    <img src="assets/sanpo-logo.png" alt="">
+  </div>
+</div>
+
 <div class="shell">
 <header class="top top-v70">
   <div class="brand-v70">
@@ -4129,6 +4310,9 @@ body{
     <div class="card hero-v12 hero-v39">
       <div class="hero-scene-v39">
         <img class="hero-bg-v12" src="assets/hero_scene_bg.jpg" alt="">
+        <a id="affiliateV73" class="affiliate-v73" href="#" aria-label="PR 散歩ギア">
+          <span>PR</span><b>散歩ギア</b><em>›</em>
+        </a>
       </div>
       <img id="homeWalker" class="hero-person-v12" alt="今日のキャラクター">
 
@@ -4139,6 +4323,8 @@ body{
           <div class="hero-remain-main-v68">
             <small>目標まであと</small>
             <b><span id="heroRemainKmV39">5.0</span><span>km</span></b>
+            <div class="hero-goal-progress-v73"><div id="heroGoalProgressV73"></div></div>
+            <div class="hero-goal-pct-v73"><span id="heroGoalPctV73">0%</span> 達成</div>
           </div>
           <div class="hero-today-distance-v68">
             <small>今日の距離</small>
@@ -4314,6 +4500,14 @@ body{
       <div class="time-preview-v67"><span id="timeDistancePreview">2.3 km</span></div>
     </div>
 
+    <div class="route-direction-v73">
+      <span>まわる向き</span>
+      <div>
+        <button id="directionCwV73" class="active" type="button">時計回り</button>
+        <button id="directionCcwV73" type="button">反時計回り</button>
+      </div>
+    </div>
+
     <div class="map-controls map-controls-v67">
       <select id="paceSelect" aria-label="歩くペース">
         <option value="3.5">ゆっくり</option>
@@ -4366,91 +4560,93 @@ body{
  <div class="track-actions"><button class="round" id="photoBtn">📷</button><button class="round pause" id="pauseBtn">Ⅱ</button><button class="round" id="finishBtn">✓</button></div>
 </section>
 
-<section id="recordPage" class="page record-page-v70">
-  <div class="period period-v70">
+<section id="recordPage" class="page record-page-v70 record-page-v73">
+  <div class="period period-v70 period-v73">
     <button data-period="day">日</button>
     <button class="active" data-period="week">週</button>
     <button data-period="month">月</button>
   </div>
 
-  <div class="summary-grid summary-grid-v70">
+  <div class="summary-grid summary-grid-v70 summary-grid-v73">
     <div class="card sum"><small>総歩数</small><b id="sumSteps">0</b></div>
     <div class="card sum"><small>総距離</small><b><span id="sumKm">0.0</span> km</b></div>
     <div class="card sum"><small>総カロリー</small><b><span id="sumCal">0</span> kcal</b></div>
     <div class="card sum"><small>歩行時間</small><b><span id="sumMin">0</span> 分</b></div>
   </div>
 
-  <div id="chart" class="card chart chart-v70"></div>
+  <div id="chart" class="card chart chart-v70 chart-v73"></div>
 
-  <div class="record-bottom-grid-v70">
-    <div class="card motivation-card-v70">
-      <div class="record-card-head-v70"><b>モチベ</b><small>目標の写真</small></div>
-      <div id="photoBox" class="photo photo-v70"><img id="motivationImg"><span>写真を設定</span></div>
-      <input id="photoInput" type="file" accept="image/*">
-      <div class="photo-buttons photo-buttons-v70">
-        <button id="selectPhoto">変更</button>
-        <button id="deletePhoto">削除</button>
+  <div class="record-bottom-grid-v70 record-bottom-grid-v73">
+    <div class="card weekly-achievement-v73">
+      <div class="record-card-head-v70">
+        <b>今週の達成度</b>
+        <small><span id="weekDaysV73">0</span>日歩いた</small>
       </div>
+      <div class="week-ring-v73" id="weekRingV73">
+        <div><strong id="weekPctV73">0%</strong><span>今週</span></div>
+      </div>
+      <div class="week-distance-v73">
+        <b><span id="weekKmV73">0.0</span> km</b>
+        <small>/ <span id="weekGoalKmV73">0.0</span> km</small>
+      </div>
+      <div class="week-bar-v73"><div id="weekBarV73"></div></div>
+      <div id="weekMessageV73" class="week-message-v73">今週の歩きをここに積み上げます。</div>
     </div>
 
-    <div class="card saved-walks-card-v70">
+    <div class="card saved-walks-card-v70 saved-walks-card-v73">
       <div class="record-card-head-v70"><b>保存した散歩</b><small>タップで詳細</small></div>
       <div id="savedWalkListV70" class="saved-walk-list-v70"></div>
     </div>
   </div>
 </section>
 
-<section id="settingsPage" class="page">
- <div class="titlebar"><div class="title">設定</div><div class="sub">PROFILE</div></div>
+<section id="settingsPage" class="page settings-page-v73">
+  <div class="card settings-basic-v73">
+    <div class="settings-section-title-v73">基本情報</div>
+    <div class="settings-grid-v73">
+      <label><span>年齢</span><div><input id="age" type="number" placeholder="30"><em>歳</em></div></label>
+      <label><span>身長</span><div><input id="height" type="number" placeholder="170"><em>cm</em></div></label>
+      <label><span>体重</span><div><input id="weight" type="number" step=".1" placeholder="65"><em>kg</em></div></label>
+      <label><span>1日の目標</span><div><input id="goalKm" type="number" step=".5" value="5"><em>km</em></div></label>
+    </div>
+  </div>
 
- <div class="card setting-card">
-   <h3>プロフィール</h3>
-   <div class="setting-row"><label>年齢</label><input id="age" type="number" placeholder="30"></div>
-   <div class="setting-row"><label>身長（cm）</label><input id="height" type="number" placeholder="170"></div>
-   <div class="setting-row"><label>体重（kg）</label><input id="weight" type="number" step=".1" placeholder="65"></div>
-   <div class="setting-row"><label>1日の目標距離</label><div class="unit-input"><input id="goalKm" type="number" step=".5" value="5"><span>km</span></div></div>
- </div>
+  <div class="card settings-partner-v73">
+    <div class="settings-section-title-v73">散歩パートナー性別</div>
+    <div class="gender gender-v73">
+      <button id="femaleBtn" type="button"><img src="assets/female_portrait.png" alt=""><span>女性</span></button>
+      <button id="maleBtn" type="button"><img src="assets/male_portrait.png" alt=""><span>男性</span></button>
+    </div>
+  </div>
 
- <div class="card setting-card">
-   <h3>キャラクター</h3>
-   <div class="gender">
-     <button id="femaleBtn"><img src="assets/female_portrait.png">女性</button>
-     <button id="maleBtn"><img src="assets/male_portrait.png">男性</button>
-   </div>
- </div>
+  <div class="card character-progress-card-v12 character-progress-v73">
+    <div class="settings-progress-head-v12 settings-progress-head-v73">
+      <div>
+        <h3>体型変化</h3>
+        <div class="sub">目標距離に応じて4段階で変化します。</div>
+      </div>
+      <div class="settings-current-v12"><span id="settingsPct">0%</span></div>
+    </div>
+    <div class="stage-labels-v12 stage-labels-v73">
+      <span>ぽっちゃり</span><span>ちょいぽちゃ</span><span>標準</span><span>スリム</span>
+    </div>
+    <div id="settingsStageRow" class="settings-stages-v12 settings-stages-v73"></div>
+    <div class="stage-progress-line-v12"><div id="settingsStageBar"></div></div>
+    <div id="settingsStageMessage" class="stage-message-v12 stage-message-v73">スタート</div>
+  </div>
 
- <div class="card setting-card character-progress-card-v12">
-   <div class="settings-progress-head-v12">
-     <div>
-       <h3>体型変化プレビュー</h3>
-       <div class="sub">今日の目標距離に合わせて、ぽっちゃり → ちょいぽちゃ → 標準 → スリムへ変化します。目標距離を変えると変化のペースも自動で変わります。</div>
-     </div>
-     <div class="settings-current-v12"><span id="settingsPct">0%</span></div>
-   </div>
-
-   <div class="stage-labels-v12">
-     <span>ぽっちゃり</span><span>ちょいぽちゃ</span><span>標準</span><span>スリム</span>
-   </div>
-   <div id="settingsStageRow" class="settings-stages-v12"></div>
-   <div class="stage-progress-line-v12"><div id="settingsStageBar"></div></div>
-   <div id="settingsStageMessage" class="stage-message-v12">スタート</div>
- </div>
-
- <div class="card setting-card">
-   <h3>アプリ</h3>
-   <div class="toggle-row">日次リセット<span>毎日 0:00</span></div>
- </div>
-
- <button id="saveSettings" class="primary" style="width:100%">設定を保存</button>
- <div id="saved" class="sub" style="margin-top:7px;text-align:center"></div>
+  <button id="saveSettings" class="primary settings-save-v73">設定を保存</button>
+  <div id="saved" class="sub settings-saved-v73"></div>
 </section>
 
 
 <div id="walkSaveModalV70" class="modal-v70" hidden>
   <div class="modal-backdrop-v70"></div>
   <div class="modal-card-v70">
-    <div class="modal-kicker-v70">SANPO COMPLETE</div>
-    <h3>この散歩を保存する？</h3>
+    <div class="finish-check-v73">✓</div>
+    <div class="modal-kicker-v70">今日の散歩</div>
+    <h3>いい散歩だったね。</h3>
+    <div class="finish-save-copy-v73">この記録を保存しますか？</div>
     <div class="finish-summary-v70">
       <div><small>距離</small><b><span id="finishKmV70">0.0</span> km</b></div>
       <div><small>時間</small><b><span id="finishMinV70">0</span> 分</b></div>
@@ -4478,6 +4674,7 @@ body{
       <div><small>歩数</small><b id="detailStepsV70">0</b></div>
       <div><small>消費</small><b><span id="detailCalV70">0</span> kcal</b></div>
     </div>
+    <button id="repeatWalkV73" class="detail-repeat-v73" type="button">この道をもう一度歩く</button>
   </div>
 </div>
 
@@ -4496,6 +4693,47 @@ body{
   </div>
 </div>
 
+
+<div id="favoriteNameModalV73" class="modal-v70" hidden>
+  <div class="modal-backdrop-v70" id="favoriteNameBackdropV73"></div>
+  <div class="modal-card-v70 compact-modal-v73">
+    <h3>お気に入りに保存</h3>
+    <label class="favorite-name-field-v73">
+      <span>コース名</span>
+      <input id="favoriteNameInputV73" type="text" maxlength="28" placeholder="いつもの散歩コース">
+    </label>
+    <div class="modal-actions-v70">
+      <button id="cancelFavoriteNameV73" class="ghost-v70" type="button">キャンセル</button>
+      <button id="confirmFavoriteNameV73" class="primary" type="button">保存する</button>
+    </div>
+  </div>
+</div>
+
+<div id="walkConfirmModalV73" class="modal-v70" hidden>
+  <div class="modal-backdrop-v70" id="walkConfirmBackdropV73"></div>
+  <div class="modal-card-v70 walk-confirm-card-v73">
+    <div class="walk-confirm-head-v73">
+      <small>散歩をはじめる前に</small>
+      <h3>このコースで歩く</h3>
+    </div>
+    <div class="walk-confirm-summary-v73">
+      <div><small>距離</small><b><span id="confirmKmV73">0.0</span> km</b></div>
+      <div><small>目安</small><b><span id="confirmMinV73">0</span> 分</b></div>
+    </div>
+    <div class="confirm-direction-v73">
+      <span>まわる向き</span>
+      <div>
+        <button id="confirmCwV73" class="active" type="button">時計回り</button>
+        <button id="confirmCcwV73" type="button">反時計回り</button>
+      </div>
+    </div>
+    <div class="modal-actions-v70">
+      <button id="cancelWalkConfirmV73" class="ghost-v70" type="button">戻る</button>
+      <button id="startWalkConfirmV73" class="primary" type="button">スタート</button>
+    </div>
+  </div>
+</div>
+
 <nav class="navbar navbar-v55">
  <button class="nav active" data-page="homePage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.2 12 4l9 7.2v8.3a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5Z"/><path d="M9 21v-6h6v6"/></svg></span>ホーム</button>
  <button class="nav" data-page="mapPage"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg></span>マップ</button>
@@ -4507,7 +4745,7 @@ body{
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), qsa=s=>[...document.querySelectorAll(s)];
-const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',photo:'sanpo_photo_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21',favoriteRoutes:'sanpo_favorite_routes_v72'};
+const KEY={profile:'sanpo_profile_v9',history:'sanpo_history_v9',daily:'sanpo_daily_v18',weather:'sanpo_weather_v18',activeRoute:'sanpo_active_route_v21',favoriteRoutes:'sanpo_favorite_routes_v72'};
 const FOOD={rice:180,banana:90,cake:350,ramen:600};
 /* ===== v36 Stage1〜4 × 10ポーズ =====
    ホームでは現在のStageを維持したまま、7秒ごとに10ポーズを切り替えます。
@@ -4533,7 +4771,7 @@ const CHARACTER_TEST_LINES={
 let currentCharacterPose='normal',characterTestIndex=0,characterTestTimer=null,characterSwitchTimer=null;
 let manualStagePreview=null,manualStagePreviewTimer=null;
 
-let mode='random',recordPeriod='week',map,startPoint,startMarker,poiMarker,routeLine,routeShadow,currentRoute=null;
+let mode='random',recordPeriod='week',map,startPoint,startMarker,poiMarker,routeLine,routeShadow,currentRoute=null,routeDirectionV73='cw',pendingFavoriteRouteV73=null,currentDetailWalkV73=null;
 let walkFrame=1,walkTimer=null,tracking=false,paused=false,startTime=0,pauseAt=0,pauseTotal=0,timerInt=null,watchId=null,trackKm=0,lastPos=null,trackPath=[];
 let dailyWatchId=null,dailyLastPos=null,dailyWeatherCoords=null;
 let homeNavMap=null,homeNavLine=null,homeNavMarker=null,homeNavFinish=null;
@@ -4688,20 +4926,80 @@ function clearActiveRoute(){
  if(routeNavMap){routeNavMap.remove();routeNavMap=null;routeNavLine=routeNavMarker=routeNavFinish=null}
  if($('activeRouteCard'))$('activeRouteCard').hidden=true
 }
-function routeProgress(coords,lat,lng){
- if(!Array.isArray(coords)||coords.length<2)return{progress:0,remainKm:0,totalKm:0,nearest:0};
+function routeOrientationV73(coords){
+ if(!Array.isArray(coords)||coords.length<3)return'cw';
+ let a=0;
+ for(let i=0;i<coords.length-1;i++){
+   const [y1,x1]=coords[i],[y2,x2]=coords[i+1];
+   a+=(x2-x1)*(y2+y1);
+ }
+ return a>0?'cw':'ccw'
+}
+function orientLoopV73(coords,direction='cw'){
+ if(!Array.isArray(coords)||coords.length<2)return coords||[];
+ const src=coords.map(p=>[+p[0],+p[1]]);
+ const closed=hav(src[0][0],src[0][1],src[src.length-1][0],src[src.length-1][1])<.05;
+ const core=closed?src.slice(0,-1):src.slice();
+ const current=routeOrientationV73([...core,core[0]]);
+ if(current===direction)return closed?[...core,core[0]]:core;
+ const rev=[core[0],...core.slice(1).reverse()];
+ return closed?[...rev,rev[0]]:rev
+}
+function persistActiveRouteStateV73(route){
+ if(!route)return;
+ localStorage.setItem(KEY.activeRoute,JSON.stringify(route))
+}
+function routeProgress(coords,lat,lng,routeState=null){
+ if(!Array.isArray(coords)||coords.length<2)return{progress:0,remainKm:0,totalKm:0,nearest:0,index:0,leftStart:false,complete:false};
+ const lastIndex=Math.max(1,coords.length-2);
  const cum=[0];let total=0;
  for(let i=1;i<coords.length;i++){
    total+=hav(coords[i-1][0],coords[i-1][1],coords[i][0],coords[i][1]);
    cum.push(total)
  }
+ const state=routeState?.navState||{leftStart:false,index:0,maxProgress:0};
+ const startDist=hav(lat,lng,coords[0][0],coords[0][1]);
+
+ // Don't allow the same physical point to count as both start and goal.
+ if(!state.leftStart && startDist>=.06)state.leftStart=true;
+
  let bestI=0,bestD=Infinity;
- for(let i=0;i<coords.length;i++){
-   const d=hav(lat,lng,coords[i][0],coords[i][1]);
-   if(d<bestD){bestD=d;bestI=i}
+ if(state.leftStart){
+   const from=Math.max(0,(+state.index||0)-4);
+   const forward=Math.max(22,Math.round(coords.length*.16));
+   const to=Math.min(lastIndex,(+state.index||0)+forward);
+   for(let i=from;i<=to;i++){
+     const d=hav(lat,lng,coords[i][0],coords[i][1]);
+     if(d<bestD){bestD=d;bestI=i}
+   }
+ }else{
+   const to=Math.min(lastIndex,Math.max(18,Math.round(coords.length*.12)));
+   for(let i=0;i<=to;i++){
+     const d=hav(lat,lng,coords[i][0],coords[i][1]);
+     if(d<bestD){bestD=d;bestI=i}
+   }
  }
- const done=cum[bestI]||0,remain=Math.max(0,total-done);
- return{progress:total?Math.min(100,done/total*100):0,remainKm:remain,totalKm:total,nearest:bestD,index:bestI}
+
+ let progress=state.leftStart?(total?Math.min(99.5,(cum[bestI]||0)/total*100):0):0;
+ if(state.leftStart){
+   // Only mark the shared start/finish point as goal after most of the loop has been completed.
+   if((+state.maxProgress||0)>=72 && startDist<=.055){
+     progress=100;bestI=lastIndex;
+   }else{
+     progress=Math.max(+state.maxProgress||0,progress);
+   }
+   state.index=Math.max(+state.index||0,bestI);
+   state.maxProgress=Math.max(+state.maxProgress||0,progress);
+ }
+ if(routeState){
+   routeState.navState=state;
+   persistActiveRouteStateV73(routeState);
+ }
+ const remain=Math.max(0,total*(1-progress/100));
+ return{
+   progress,remainKm:remain,totalKm:total,nearest:bestD===Infinity?startDist:bestD,index:bestI,
+   leftStart:!!state.leftStart,complete:progress>=100,startDist
+ }
 }
 function activeRouteModeName(mode){
  return({random:'気軽に',green:'緑',water:'水辺',detour:'寄り道',workout:'しっかり'})[mode]||'今日'
@@ -4717,13 +5015,15 @@ function compassJP(deg){
  return dirs[Math.round(deg/45)%8]
 }
 function routeGuideText(route,p,pos){
+ if(!p.leftStart)return 'スタート地点から少し離れると、周回の進捗を計測します。';
+ if(p.complete)return 'ゴール！スタート地点まで戻ってきたね。';
  if(p.nearest>.12)return `コースから約${Math.round(p.nearest*1000)}m離れてる。緑の線に戻ろう。`;
- if(p.progress>=97)return 'もうすぐゴール。最後までこのままいこう。';
- const look=Math.min(route.coords.length-1,p.index+Math.max(6,Math.round(route.coords.length*.025)));
+ if(p.progress>=90)return 'もうすぐ一周。スタート地点まで戻ろう。';
+ const look=Math.min(route.coords.length-1,p.index+Math.max(5,Math.round(route.coords.length*.02)));
  const nxt=route.coords[look];
  const dir=compassJP(bearingDeg(pos.lat,pos.lng,nxt[0],nxt[1]));
- if(p.progress<5)return `スタート。まずは${dir}方向へ。緑の線をたどっていこう。`;
- return `いい感じ。次の目安は${dir}方向。残り約${p.remainKm.toFixed(1)}km。`
+ if(p.progress<5)return `スタート。まずは${dir}方向へ。`;
+ return `次は${dir}方向。残り約${p.remainKm.toFixed(1)}km。`
 }
 function routeCompanionImage(pose='guide'){
  const p=profile(),t=today(),goalKm=Math.max(.5,+p.goalKm||5),st=stage(Math.min(100,t.km/goalKm*100));
@@ -4753,7 +5053,7 @@ function renderActiveRouteCard(){
  if(!homeNavMap)initHomeNavMap(route);
  const pos=dailyLastPos;
  if(pos){
-   const p=routeProgress(route.coords,pos.lat,pos.lng);
+   const p=routeProgress(route.coords,pos.lat,pos.lng,route);
    const paceKmH=+(route.speed||4.5),remainMin=Math.max(0,Math.round(p.remainKm/Math.max(2.5,paceKmH)*60));
    $('activeRemainKm').textContent=p.remainKm.toFixed(1);
    $('activeProgressPct').textContent=Math.round(p.progress);
@@ -4795,7 +5095,7 @@ function initRouteNavMap(route){
 function renderRouteNavigation(recenter=false){
  const route=getActiveRoute();
  if(!route)return;
- if($('routeNavTitle'))$('routeNavTitle').textContent=`${activeRouteModeName(route.mode)}コース ・ ${(+route.km||0).toFixed(1)} km`;
+ if($('routeNavTitle'))$('routeNavTitle').textContent=`${route.name||activeRouteModeName(route.mode)+'コース'} ・ ${(+route.km||0).toFixed(1)} km ・ ${route.direction==='ccw'?'反時計回り':'時計回り'}`;
  if($('navCompanion'))$('navCompanion').src=routeCompanionImage('discover');
  if(!routeNavMap)initRouteNavMap(route);
  const pos=dailyLastPos;
@@ -4807,14 +5107,14 @@ function renderRouteNavigation(recenter=false){
   $('navRemainMin').textContent=Math.round(+route.min||0);
   return
  }
- const p=routeProgress(route.coords,pos.lat,pos.lng),
+ const p=routeProgress(route.coords,pos.lat,pos.lng,route),
  pace=+(route.speed||4.5),remainMin=Math.max(0,Math.round(p.remainKm/Math.max(2.5,pace)*60)),
  guide=routeGuideText(route,p,pos);
  $('navRemainKm').textContent=p.remainKm.toFixed(1);
  $('navProgressPct').textContent=Math.round(p.progress);
  $('navRemainMin').textContent=remainMin;
  $('routeNavGuide').textContent=guide;
- $('routeNavBadge').textContent=p.nearest>.12?`ルート外 約${Math.round(p.nearest*1000)}m`:`ルート上 ・ ${Math.round(p.progress)}%`;
+ $('routeNavBadge').textContent=!p.leftStart?'スタート離脱待ち':p.complete?'ゴール':p.nearest>.12?`ルート外 約${Math.round(p.nearest*1000)}m`:`ルート上 ・ ${Math.round(p.progress)}%`;
  if(routeNavMap){
   const icon=L.divIcon({html:'<div class="home-nav-current-v21"></div>',iconSize:[18,18],iconAnchor:[9,9]});
   if(routeNavMarker)routeNavMarker.setLatLng([pos.lat,pos.lng]);
@@ -5149,65 +5449,97 @@ async function updateWeather(lat,lng,force=false){
   else{title.textContent='天気を取得できません';sub.textContent='通信状況を確認してください';card.className='hero-weather-v12 hero-weather-v27 header-weather-v41 weather-cloud'}
  }
 }
-function updateDailyStatus(kind='live'){
- const el=$('dailyTrackStatus');
- const hero=$('heroGpsV54');
- const apply=(node)=>{
-   if(!node)return;
-   node.classList.remove('live','warn');
-   if(kind==='live'){node.classList.add('live');node.lastChild.textContent=' GPSで今日の距離を計測中'}
-   else if(kind==='permission'){node.classList.add('warn');node.lastChild.textContent=' 位置情報を許可すると距離を記録'}
-   else{node.classList.add('warn');node.lastChild.textContent=' GPS計測を利用できません'}
- };
- if(el){
-   el.classList.remove('live','warn');
-   if(kind==='live'){el.classList.add('live');el.textContent='今日のGPS距離を計測中'}
-   else if(kind==='permission'){el.classList.add('warn');el.textContent='位置情報を許可すると今日の距離を記録'}
-   else{el.classList.add('warn');el.textContent='GPS計測を利用できません'}
+let gpsDebugV73={acc:null,lastAt:0,status:'waiting'};
+function updateDailyStatus(kind='live',pos=null){
+ const el=$('dailyTrackStatus'),hero=$('heroGpsV54');
+ if(pos){
+   gpsDebugV73.acc=Math.round(pos.coords?.accuracy||0);
+   gpsDebugV73.lastAt=Date.now();
  }
- apply(hero);
+ gpsDebugV73.status=kind;
+ const age=()=>gpsDebugV73.lastAt?Math.max(0,Math.round((Date.now()-gpsDebugV73.lastAt)/1000)):null;
+ const label=()=>{
+   if(kind==='permission')return '位置情報を許可すると距離を記録';
+   if(kind==='error')return 'GPS計測を利用できません';
+   const a=gpsDebugV73.acc,sec=age();
+   return a?`GPS 精度 ${a}m ・ ${sec}秒前`:'GPSを確認中'
+ };
+ if(el){el.classList.toggle('live',kind==='live');el.classList.toggle('warn',kind!=='live');el.textContent=label()}
+ if(hero){
+   hero.classList.toggle('live',kind==='live');hero.classList.toggle('warn',kind!=='live');
+   const dot=hero.querySelector('span');
+   if(dot&&dot.nextSibling)dot.nextSibling.textContent=' '+label();
+   else hero.textContent=label()
+ }
+}
+function addDailyDistanceV73(d){
+ if(!(d>0))return;
+ const ds=dailyState();
+ ds.km=Math.max(0,(+ds.km||0)+d);
+ ds.steps=dailyEstimatedSteps(ds.km);
+ saveDailyState(ds);
+}
+function routeSessionAddV73(c,d){
+ const route=getActiveRoute();
+ if(!route||!route.session?.active)return;
+ const s=route.session;
+ s.walkedKm=(+s.walkedKm||0)+(d>0?d:0);
+ s.path=Array.isArray(s.path)?s.path:[];
+ if(!s.path.length||hav(s.path[s.path.length-1].lat,s.path[s.path.length-1].lng,c.lat,c.lng)>=.008){
+   s.path.push({lat:c.lat,lng:c.lng});
+   if(s.path.length>500)s.path=s.path.filter((_,i)=>i%2===0)
+ }
+ route.session=s;
+ persistActiveRouteStateV73(route);
 }
 function acceptDailyPosition(pos){
- const c={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy||999,t:Date.now()};
+ const c={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy||999,t:pos.timestamp||Date.now()};
  if(!dailyWeatherCoords||airKm(dailyWeatherCoords.lat,dailyWeatherCoords.lng,c.lat,c.lng)>.5){
-  dailyWeatherCoords=c;updateWeather(c.lat,c.lng)
+   dailyWeatherCoords=c;updateWeather(c.lat,c.lng)
+ }
+ updateDailyStatus('live',pos);
+
+ if(c.acc>120)return;
+
+ // While the free-walk tracker is active, that tracker owns distance accumulation.
+ // We still refresh the global position for maps/navigation.
+ if(tracking){
+   dailyLastPos=c;
+   renderActiveRouteCard();
+   if($('routeNavPage')?.classList.contains('active'))renderRouteNavigation(false);
+   return;
  }
 
- // v68: tolerate normal smartphone GPS variance better.
- // Very inaccurate fixes are ignored WITHOUT replacing the last good anchor.
- if(c.acc>100){
-  updateDailyStatus('live');
-  return;
+ if(!dailyLastPos){
+   dailyLastPos=c;
+   routeSessionAddV73(c,0);
+   return;
  }
 
- const ds=dailyState();
+ const seconds=Math.max(.1,(c.t-dailyLastPos.t)/1000);
+ const d=hav(dailyLastPos.lat,dailyLastPos.lng,c.lat,c.lng);
+ const speed=d*1000/seconds;
+ const avgAcc=(dailyLastPos.acc+c.acc)/2;
+ const minMove=Math.max(.004,Math.min(.014,avgAcc/1000*.16));
 
- if(dailyLastPos){
-  const seconds=Math.max(.1,(c.t-dailyLastPos.t)/1000);
-  const d=hav(dailyLastPos.lat,dailyLastPos.lng,c.lat,c.lng);
-  const speed=d*1000/seconds;
-
-  // Ignore tiny GPS wobble.
-  const minMove=Math.max(.0025,Math.min(.010,(dailyLastPos.acc+c.acc)/2/1000*.18));
-
-  // A phone can legitimately report the next walking fix hundreds of metres later
-  // when the browser throttles GPS. Accept that chunk when its average speed is human-scale.
-  const plausibleWalkingChunk =
-    d>=minMove &&
-    d<=.45 &&
-    speed<=4.8;
-
-  if(plausibleWalkingChunk){
-    ds.km=Math.max(0,(+ds.km||0)+d);
-    ds.steps=dailyEstimatedSteps(ds.km);
-    saveDailyState(ds);
-    renderHome(false);
-  }
+ // IMPORTANT: do not replace the anchor for tiny movements.
+ // Small GPS updates then accumulate until they form a real walking segment.
+ if(d<minMove){
+   routeSessionAddV73(c,0);
+   return;
  }
 
- // Only a usable fix becomes the next anchor.
- dailyLastPos=c;
- updateDailyStatus('live');
+ const plausible=d<=.65 && speed<=6.2;
+ if(plausible){
+   addDailyDistanceV73(d);
+   routeSessionAddV73(c,d);
+   dailyLastPos=c;
+   renderHome(false);
+ }else if(seconds>40 && d<1.2){
+   // Re-anchor stale GPS without counting an implausible jump.
+   dailyLastPos=c;
+ }
+
  renderActiveRouteCard();
  if($('routeNavPage')?.classList.contains('active'))renderRouteNavigation(false)
 }
@@ -5216,19 +5548,28 @@ function startDailyTracking(){
  if(dailyWatchId!=null)return;
  updateDailyStatus('permission');
  navigator.geolocation.getCurrentPosition(
-  p=>{acceptDailyPosition(p);updateWeather(p.coords.latitude,p.coords.longitude,true)},
-  ()=>updateDailyStatus('permission'),
-  {enableHighAccuracy:true,maximumAge:5000,timeout:12000}
+   p=>{acceptDailyPosition(p);updateWeather(p.coords.latitude,p.coords.longitude,true)},
+   ()=>updateDailyStatus('permission'),
+   {enableHighAccuracy:true,maximumAge:1500,timeout:15000}
  );
  dailyWatchId=navigator.geolocation.watchPosition(
-  acceptDailyPosition,
-  ()=>updateDailyStatus('permission'),
-  {enableHighAccuracy:true,maximumAge:1000,timeout:20000}
- )
+   acceptDailyPosition,
+   ()=>updateDailyStatus('permission'),
+   {enableHighAccuracy:true,maximumAge:0,timeout:25000}
+ );
+ setInterval(()=>{if(gpsDebugV73.status==='live')updateDailyStatus('live')},5000)
 }
 
+function applyHomeSceneV73(){
+ const hero=document.querySelector('#homePage .hero-v39');
+ if(!hero)return;
+ hero.classList.remove('scene-morning-v73','scene-day-v73','scene-evening-v73','scene-night-v73');
+ const h=new Date().getHours();
+ const cls=h>=5&&h<11?'scene-morning-v73':h>=11&&h<16?'scene-day-v73':h>=16&&h<19?'scene-evening-v73':'scene-night-v73';
+ hero.classList.add(cls)
+}
 function renderHome(talk=true){
- const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=manualStagePreview||stage(pct);
+ const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=manualStagePreview||stage(pct);applyHomeSceneV73();
  const displayCal=Math.max(Math.round(t.cal||0),dailyEstimatedCal(t.km));
  $('todaySteps').textContent=Math.round(t.steps).toLocaleString();$('goalSteps').textContent=gsteps.toLocaleString();$('goalKmDisplay').textContent=(+p.goalKm||5).toFixed(1)+' km';$('goalPct').textContent=Math.round(pct)+'%';$('goalRing').style.setProperty('--p',pct+'%');$('goalBar').style.width=pct+'%';$('todayCal').textContent=displayCal;$('todayMin').textContent=Math.round(t.min);$('todayKm').textContent=t.km.toFixed(1);
  $('rice').textContent=food(displayCal,FOOD.rice);$('banana').textContent=food(displayCal,FOOD.banana);$('cake').textContent=food(displayCal,FOOD.cake);$('ramen').textContent=food(displayCal,FOOD.ramen);
@@ -5243,6 +5584,8 @@ if($('homeWalker')){
   );
  }
  if($('heroStagePct'))$('heroStagePct').textContent=Math.round(pct)+'%';
+ if($('heroGoalProgressV73'))$('heroGoalProgressV73').style.width=pct+'%';
+ if($('heroGoalPctV73'))$('heroGoalPctV73').textContent=Math.round(pct)+'%';
  // v46: show human-readable body phase under the character instead of internal Stage numbers.
  const bodyPhaseNames={4:'ぽっちゃり',3:'ちょいぽちゃ',2:'標準',1:'スリム'};
  const nextPhaseNames={4:'ちょいぽちゃ',3:'標準',2:'スリム',1:'目標達成'};
@@ -5293,7 +5636,20 @@ qsa('.nav[data-page]').forEach(n=>n.onclick=()=>navTo(n.dataset.page));if($('hea
 $('openRouteMap').onclick=()=>navTo('routeNavPage');
 $('closeRouteNav').onclick=()=>navTo('homePage');
 $('routeNavRecenter').onclick=()=>renderRouteNavigation(true);
-$('finishRouteNav').onclick=()=>{if(confirm('このコースを終了しますか？')){clearActiveRoute();navTo('homePage')}};
+$('finishRouteNav').onclick=()=>{
+ const route=getActiveRoute();
+ if(!route)return navTo('homePage');
+ const s=route.session||{};
+ const sec=Math.max(1,Math.round((Date.now()-(+s.startedAt||Date.now()))/1000));
+ const km=+s.walkedKm||0,steps=calcSteps(km),cal=calcCal(sec/60,+route.speed||4.5);
+ pendingWalkSaveV70={
+   id:'walk_'+Date.now(),date:new Date().toISOString(),km,
+   min:Math.max(1,Math.round(sec/60)),steps,cal,mode:'tracking',savedWalk:true,
+   routeSession:true,routeName:route.name||`${favoriteRouteModeNameV72(route.mode)}コース`,
+   path:Array.isArray(s.path)?s.path.slice(0,500):[]
+ };
+ openWalkSaveModalV70(pendingWalkSaveV70);
+};
 $('endActiveRoute').onclick=()=>{if(confirm('今日のコース表示を終了しますか？')){clearActiveRoute();renderHome(false)}};$('homeWalker').onclick=showHomeTalk;$('homeTalkHint').onclick=showHomeTalk;$('trackWalker').onclick=()=>showTrackTalk('auto');{
  const d=new Date();
  const w=['日','月','火','水','木','金','土'][d.getDay()];
@@ -5685,38 +6041,45 @@ async function buildRoute(){
 }
 $('buildRoute').onclick=buildRoute;
 $('reroute').onclick=buildRoute;
+$('directionCwV73').onclick=()=>{routeDirectionV73='cw';$('directionCwV73').classList.add('active');$('directionCcwV73').classList.remove('active')};
+$('directionCcwV73').onclick=()=>{routeDirectionV73='ccw';$('directionCcwV73').classList.add('active');$('directionCwV73').classList.remove('active')};
+
 function favoriteRouteModeNameV72(mode){
  return({random:'気軽',green:'緑',water:'水辺',detour:'寄り道',workout:'しっかり'})[mode]||'コース'
 }
 function saveCurrentRouteFavoriteV72(){
  if(!currentRoute||!Array.isArray(currentRoute.coords)||currentRoute.coords.length<2)return;
- const list=favoriteRoutes();
- const item={
-   id:'fav_'+Date.now(),
-   savedAt:new Date().toISOString(),
-   km:+currentRoute.km||0,
-   min:+currentRoute.min||0,
-   steps:+currentRoute.steps||0,
-   cal:+currentRoute.cal||0,
-   mode:currentRoute.mode||'random',
-   poi:currentRoute.poi||null,
-   targetKm:+currentRoute.targetKm||0,
-   featureText:currentRoute.featureText||'',
-   speed:+currentRoute.speed||4.5,
-   coords:currentRoute.coords
- };
- list.unshift(item);
- saveFavoriteRoutes(list.slice(0,20));
- $('recordRoute').textContent='保存済み';
- setTimeout(()=>{if($('recordRoute'))$('recordRoute').textContent='お気に入り'},1200);
- renderFavoriteRoutesV72();
+ pendingFavoriteRouteV73={...currentRoute};
+ const defaultName=`${favoriteRouteModeNameV72(currentRoute.mode)} ${(+currentRoute.km||0).toFixed(1)}km`;
+ $('favoriteNameInputV73').value=currentRoute.name||defaultName;
+ $('favoriteNameModalV73').hidden=false;
+ setTimeout(()=>$('favoriteNameInputV73')?.focus(),80)
 }
 $('recordRoute').onclick=saveCurrentRouteFavoriteV72;
+function closeFavoriteNameV73(){$('favoriteNameModalV73').hidden=true;pendingFavoriteRouteV73=null}
+$('cancelFavoriteNameV73').onclick=closeFavoriteNameV73;
+$('favoriteNameBackdropV73').onclick=closeFavoriteNameV73;
+$('confirmFavoriteNameV73').onclick=()=>{
+ if(!pendingFavoriteRouteV73)return closeFavoriteNameV73();
+ const list=favoriteRoutes(),name=($('favoriteNameInputV73').value||'お気に入りコース').trim().slice(0,28);
+ const r=pendingFavoriteRouteV73;
+ list.unshift({
+   id:'fav_'+Date.now(),name,savedAt:new Date().toISOString(),
+   km:+r.km||0,min:+r.min||0,steps:+r.steps||0,cal:+r.cal||0,
+   mode:r.mode||'random',poi:r.poi||null,targetKm:+r.targetKm||0,
+   featureText:r.featureText||'',speed:+r.speed||4.5,coords:r.coords
+ });
+ saveFavoriteRoutes(list.slice(0,20));
+ closeFavoriteNameV73();
+ $('recordRoute').textContent='保存済み';
+ setTimeout(()=>{if($('recordRoute'))$('recordRoute').textContent='お気に入り'},1200);
+ renderFavoriteRoutesV72()
+};
 
 function drawFavoriteRouteV72(route){
  if(!route||!Array.isArray(route.coords)||route.coords.length<2)return;
  clearRoute();
- currentRoute={...route};
+ currentRoute={...route,name:route.name||null};
 
  routeShadow=L.polyline(route.coords,{color:'#fff',weight:10,opacity:.9}).addTo(map);
  routeLine=L.polyline(route.coords,{color:'#10a864',weight:5}).addTo(map);
@@ -5747,8 +6110,8 @@ function renderFavoriteRoutesV72(){
    row.innerHTML=`
      <button type="button" class="favorite-open-v72">
        <span class="favorite-mode-v72">${favoriteRouteModeNameV72(item.mode)}</span>
-       <strong>${(+item.km||0).toFixed(1)} km</strong>
-       <small>${Math.round(+item.min||0)}分 ・ ${d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})}</small>
+       <strong>${item.name||((+item.km||0).toFixed(1)+' km')}</strong>
+       <small>${(+item.km||0).toFixed(1)}km ・ ${Math.round(+item.min||0)}分 ・ ${d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})}</small>
      </button>
      <button type="button" class="favorite-delete-v72" aria-label="削除">×</button>
    `;
@@ -5775,12 +6138,42 @@ if($('openFavoritesV72'))$('openFavoritesV72').onclick=openFavoritesV72;
 if($('closeFavoritesV72'))$('closeFavoritesV72').onclick=closeFavoritesV72;
 if($('closeFavoritesBackdropV72'))$('closeFavoritesBackdropV72').onclick=closeFavoritesV72;
 
+function setConfirmDirectionV73(dir){
+ routeDirectionV73=dir;
+ $('confirmCwV73').classList.toggle('active',dir==='cw');
+ $('confirmCcwV73').classList.toggle('active',dir==='ccw');
+ $('directionCwV73').classList.toggle('active',dir==='cw');
+ $('directionCcwV73').classList.toggle('active',dir==='ccw')
+}
+$('confirmCwV73').onclick=()=>setConfirmDirectionV73('cw');
+$('confirmCcwV73').onclick=()=>setConfirmDirectionV73('ccw');
+function closeWalkConfirmV73(){$('walkConfirmModalV73').hidden=true}
+$('cancelWalkConfirmV73').onclick=closeWalkConfirmV73;
+$('walkConfirmBackdropV73').onclick=closeWalkConfirmV73;
+
 $('useActiveRoute').onclick=()=>{
  if(!currentRoute||!Array.isArray(currentRoute.coords))return;
- saveActiveRoute(currentRoute);
+ $('confirmKmV73').textContent=(+currentRoute.km||0).toFixed(1);
+ $('confirmMinV73').textContent=Math.round(+currentRoute.min||0);
+ setConfirmDirectionV73(routeDirectionV73);
+ $('walkConfirmModalV73').hidden=false;
+};
+$('startWalkConfirmV73').onclick=()=>{
+ if(!currentRoute||!Array.isArray(currentRoute.coords))return;
+ const oriented=orientLoopV73(currentRoute.coords,routeDirectionV73);
+ const route={
+   ...currentRoute,
+   coords:oriented,
+   direction:routeDirectionV73,
+   navState:{leftStart:false,index:0,maxProgress:0},
+   session:{active:true,startedAt:Date.now(),walkedKm:0,path:[]}
+ };
+ saveActiveRoute(route);
+ currentRoute={...route};
+ closeWalkConfirmV73();
  if(homeNavMap){homeNavMap.remove();homeNavMap=null}
- navTo('homePage');
- setTimeout(()=>renderActiveRouteCard(),100);
+ if(routeNavMap){routeNavMap.remove();routeNavMap=null}
+ navTo('routeNavPage');
 };
 
 /* live tracking */
@@ -5788,19 +6181,37 @@ function hav(a,b,c,d){const R=6371,to=x=>x*Math.PI/180,d1=to(c-a),d2=to(d-b),x=M
 function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return[h,m,s].map(x=>String(x).padStart(2,'0')).join(':')}
 function elapsed(){if(!tracking)return 0;const end=paused?pauseAt:Date.now();return Math.max(0,Math.floor((end-startTime-pauseTotal)/1000))}
 function liveRender(){const sec=elapsed(),p=profile(),steps=calcSteps(trackKm),cal=calcCal(sec/60,4.5),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,(today().km+trackKm)/goalKm*100),st=stage(pct);$('timer').textContent=fmt(sec);$('liveKm').textContent=trackKm.toFixed(2);$('liveSteps').textContent=steps.toLocaleString();$('liveCal').textContent=cal;if($('trackWalker'))$('trackWalker').src=CHARACTER_TEST_MODE?characterDisplayAsset(p.gender,paused?'think':'normal',st):asset(p.gender,st);if(tracking&&!paused){if(st>lastTrackStage){lastTrackStage=st;showTrackTalk('auto')}else if(sec>=120&&sec-lastTrackTalkSec>=120)showTrackTalk('auto')}}
-function startTracking(){tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');timerInt=setInterval(liveRender,1000);if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{const c={lat:pos.coords.latitude,lng:pos.coords.longitude};if(lastPos&&!paused){const d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng);if(d<.2)trackKm+=d}lastPos=c;trackPath.push(c);liveRender()},()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:10000})}
-$('pauseBtn').onclick=()=>{if(!tracking)return;if(!paused){paused=true;pauseAt=Date.now();$('pauseBtn').textContent='▶';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterPoseAsset(profile().gender,'think'),true);showTrackTalk('paused')}else{paused=false;pauseTotal+=Date.now()-pauseAt;$('pauseBtn').textContent='Ⅱ';if(CHARACTER_TEST_MODE)setCharacterImage($('trackWalker'),characterDisplayAsset(profile().gender,'normal'),true);showTrackTalk('resumed')}};
-let pendingWalkSaveV70=null,detailMapInstanceV70=null;
-function openWalkSaveModalV70(data){
- pendingWalkSaveV70=data;
- $('finishKmV70').textContent=(+data.km||0).toFixed(2);
- $('finishMinV70').textContent=Math.max(1,Math.round(+data.min||0));
- $('finishStepsV70').textContent=Math.round(+data.steps||0).toLocaleString();
- $('finishCalV70').textContent=Math.round(+data.cal||0);
- $('walkSaveModalV70').hidden=false;
+function startTracking(){
+ tracking=true;paused=false;startTime=Date.now();pauseTotal=0;trackKm=0;lastPos=null;trackPath=[];lastTrackTalkSec=0;
+ const p=profile(),goalKm=Math.max(.5,+p.goalKm||5),initialPct=Math.min(100,today().km/goalKm*100);
+ lastTrackStage=stage(initialPct);navTo('trackingPage');liveRender();showTrackTalk('trackStart');
+ timerInt=setInterval(liveRender,1000);
+ if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(pos=>{
+   const c={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy||999,t:pos.timestamp||Date.now()};
+   updateDailyStatus('live',pos);
+   if(c.acc>120)return;
+   if(lastPos&&!paused){
+     const sec=Math.max(.1,(c.t-lastPos.t)/1000),d=hav(lastPos.lat,lastPos.lng,c.lat,c.lng),speed=d*1000/sec;
+     const minMove=Math.max(.004,Math.min(.014,(lastPos.acc+c.acc)/2/1000*.16));
+     if(d>=minMove&&d<=.65&&speed<=6.2){
+       trackKm+=d;
+       addDailyDistanceV73(d);
+       lastPos=c;dailyLastPos=c;
+     }else if(d>=minMove&&sec>40){
+       lastPos=c;dailyLastPos=c
+     }
+   }else if(!lastPos){lastPos=c;dailyLastPos=c}
+   if(!trackPath.length||hav(trackPath[trackPath.length-1].lat,trackPath[trackPath.length-1].lng,c.lat,c.lng)>=.008)trackPath.push(c);
+   liveRender();renderHome(false)
+ },()=>updateDailyStatus('permission'),{enableHighAccuracy:true,maximumAge:0,timeout:25000})
 }
 function closeWalkSaveModalV70(){$('walkSaveModalV70').hidden=true}
-function finishWalkNavigationV70(){pendingWalkSaveV70=null;renderHome();renderRecords();navTo('recordPage')}
+function finishWalkNavigationV70(){
+ const wasRoute=!!pendingWalkSaveV70?.routeSession;
+ pendingWalkSaveV70=null;
+ if(wasRoute)clearActiveRoute();
+ renderHome();renderRecords();navTo('recordPage')
+}
 
 $('finishBtn').onclick=()=>{
  if(!tracking)return;
@@ -5843,7 +6254,9 @@ function openWalkDetailV70(item){
  $('detailMinV70').textContent=Math.max(0,Math.round(+item.min||0));
  $('detailStepsV70').textContent=Math.round(+item.steps||0).toLocaleString();
  $('detailCalV70').textContent=Math.round(+item.cal||0);
+ currentDetailWalkV73=item;
  $('walkDetailModalV70').hidden=false;
+ if($('repeatWalkV73'))$('repeatWalkV73').disabled=!(Array.isArray(item.path)&&item.path.length>=2);
  setTimeout(()=>{
    const el=$('detailMapV70');if(detailMapInstanceV70){detailMapInstanceV70.remove();detailMapInstanceV70=null}
    const path=Array.isArray(item.path)?item.path.filter(p=>Number.isFinite(+p.lat)&&Number.isFinite(+p.lng)):[];
@@ -5857,19 +6270,67 @@ function openWalkDetailV70(item){
 function closeWalkDetailV70(){$('walkDetailModalV70').hidden=true;if(detailMapInstanceV70){detailMapInstanceV70.remove();detailMapInstanceV70=null}}
 if($('closeWalkDetailV70'))$('closeWalkDetailV70').onclick=closeWalkDetailV70;
 if($('closeWalkDetailBackdropV70'))$('closeWalkDetailBackdropV70').onclick=closeWalkDetailV70;
+$('repeatWalkV73').onclick=()=>{
+ const item=currentDetailWalkV73;
+ if(!item||!Array.isArray(item.path)||item.path.length<2)return;
+ const coords=item.path.map(p=>[+p.lat,+p.lng]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]));
+ if(coords.length<2)return;
+ currentRoute={
+   name:'保存した散歩',
+   km:+item.km||0,min:+item.min||0,steps:+item.steps||0,cal:+item.cal||0,
+   mode:'random',poi:null,targetKm:+item.km||0,featureText:'以前歩いたルート',speed:4.5,coords
+ };
+ closeWalkDetailV70();
+ navTo('mapPage');
+ setTimeout(()=>drawFavoriteRouteV72(currentRoute),120)
+};
+
 
 function renderRecords(){
  const a=inPeriod(recordPeriod),sum=a.reduce((o,i)=>(o.km+=+i.km||0,o.steps+=+i.steps||0,o.cal+=+i.cal||0,o.min+=+i.min||0,o),{km:0,steps:0,cal:0,min:0});
- $('sumSteps').textContent=Math.round(sum.steps).toLocaleString();$('sumKm').textContent=sum.km.toFixed(1);$('sumCal').textContent=Math.round(sum.cal);$('sumMin').textContent=Math.round(sum.min);
- const ch=$('chart');ch.innerHTML='';const days=[0,0,0,0,0,0,0],labels=['月','火','水','木','金','土','日'];
- hist().forEach(i=>{if(!(i.savedWalk||i.mode==='tracking'))return;const d=new Date(i.date),idx=(d.getDay()+6)%7;if(d>=weekStart())days[idx]+=+i.steps||0});
+ $('sumSteps').textContent=Math.round(sum.steps).toLocaleString();
+ $('sumKm').textContent=sum.km.toFixed(1);
+ $('sumCal').textContent=Math.round(sum.cal);
+ $('sumMin').textContent=Math.round(sum.min);
+
+ const ch=$('chart');ch.innerHTML='';
+ const days=[0,0,0,0,0,0,0],labels=['月','火','水','木','金','土','日'],walkDates=new Set();
+ hist().forEach(i=>{
+   if(!(i.savedWalk||i.mode==='tracking'))return;
+   const d=new Date(i.date),idx=(d.getDay()+6)%7;
+   if(d>=weekStart()){
+     days[idx]+=+i.steps||0;
+     if((+i.km||0)>.02)walkDates.add(dayKey(d))
+   }
+ });
  const max=Math.max(...days,1);
- days.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=(10+v/max*48)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)});
+ days.forEach((v,i)=>{
+   const b=document.createElement('div');b.className='bar';
+   b.style.height=(10+v/max*48)+'px';b.innerHTML='<span>'+labels[i]+'</span>';ch.appendChild(b)
+ });
+
+ const weekItems=inPeriod('week'),weekKm=weekItems.reduce((n,i)=>n+(+i.km||0),0),
+       weeklyGoal=Math.max(.5,+profile().goalKm||5)*7,pct=Math.min(100,weekKm/weeklyGoal*100);
+ if($('weekKmV73'))$('weekKmV73').textContent=weekKm.toFixed(1);
+ if($('weekGoalKmV73'))$('weekGoalKmV73').textContent=weeklyGoal.toFixed(1);
+ if($('weekPctV73'))$('weekPctV73').textContent=Math.round(pct)+'%';
+ if($('weekDaysV73'))$('weekDaysV73').textContent=walkDates.size;
+ if($('weekRingV73'))$('weekRingV73').style.setProperty('--week',pct+'%');
+ if($('weekBarV73'))$('weekBarV73').style.width=pct+'%';
+ if($('weekMessageV73')){
+   const left=Math.max(0,weeklyGoal-weekKm);
+   $('weekMessageV73').textContent=pct>=100?'今週の目標を達成。':`今週あと ${left.toFixed(1)} km`;
+ }
  renderSavedWalksV70()
 }
-/* photo */
-const stored=localStorage.getItem(KEY.photo);if(stored){$('motivationImg').src=stored;$('photoBox').classList.add('has')}$('selectPhoto').onclick=()=>$('photoInput').click();$('deletePhoto').onclick=()=>{localStorage.removeItem(KEY.photo);$('photoBox').classList.remove('has');$('motivationImg').removeAttribute('src')};$('photoInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height,max=900,s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);const d=c.toDataURL('image/jpeg',.75);try{localStorage.setItem(KEY.photo,d);$('motivationImg').src=d;$('photoBox').classList.add('has')}catch{alert('画像を保存できませんでした')}};im.src=ev.target.result};r.readAsDataURL(f)};
+/* record photo feature removed in v73 */
 loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress();renderRecords();initMap();startDailyTracking();startCharacterTestCycle();setTimeout(()=>renderActiveRouteCard(),150);
+if($('affiliateV73'))$('affiliateV73').onclick=e=>{
+ const url=$('affiliateV73').dataset.url||'';
+ if(!url){e.preventDefault();alert('PRリンクは公開前にアフィリエイトURLを設定します。')}
+};
+setTimeout(()=>$('splashV73')?.classList.add('hide'),980);
+setInterval(applyHomeSceneV73,5*60*1000);
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 })();
 </script>
