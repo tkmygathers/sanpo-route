@@ -4268,6 +4268,32 @@ body{
   .settings-stages-v73 .settings-stage-v12{height:62px!important}
 }
 
+
+/* ===== SANPO v74: real time-of-day background images ===== */
+#homePage .hero-v39.scene-morning-v73 .hero-bg-v12,
+#homePage .hero-v39.scene-day-v73 .hero-bg-v12,
+#homePage .hero-v39.scene-evening-v73 .hero-bg-v12,
+#homePage .hero-v39.scene-night-v73 .hero-bg-v12{
+  filter:none!important;
+  transition:opacity .24s ease!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+}
+
+/* Keep cards/character readable without hiding the new scenery. */
+#homePage .hero-v39.scene-morning-v73:after{
+  background:linear-gradient(90deg,rgba(255,255,255,.02),rgba(255,255,255,.13) 58%,rgba(255,255,255,.19))!important;
+}
+#homePage .hero-v39.scene-day-v73:after{
+  background:linear-gradient(90deg,rgba(255,255,255,.015),rgba(255,255,255,.11) 58%,rgba(255,255,255,.18))!important;
+}
+#homePage .hero-v39.scene-evening-v73:after{
+  background:linear-gradient(90deg,rgba(38,26,17,.03),rgba(255,248,239,.10) 58%,rgba(255,248,239,.17))!important;
+}
+#homePage .hero-v39.scene-night-v73:after{
+  background:linear-gradient(90deg,rgba(4,16,25,.05),rgba(12,30,38,.08) 58%,rgba(255,255,255,.11))!important;
+}
+
 </style>
 </head>
 <body>
@@ -5562,11 +5588,49 @@ function startDailyTracking(){
 
 function applyHomeSceneV73(){
  const hero=document.querySelector('#homePage .hero-v39');
- if(!hero)return;
- hero.classList.remove('scene-morning-v73','scene-day-v73','scene-evening-v73','scene-night-v73');
+ const bg=hero?.querySelector('.hero-bg-v12');
+ if(!hero||!bg)return;
+
  const h=new Date().getHours();
- const cls=h>=5&&h<11?'scene-morning-v73':h>=11&&h<16?'scene-day-v73':h>=16&&h<19?'scene-evening-v73':'scene-night-v73';
- hero.classList.add(cls)
+
+ let scene='night';
+ let file='assets/backgrounds/home_night.jpg';
+
+ if(h>=5&&h<11){
+   scene='morning';
+   file='assets/backgrounds/home_morning.jpg';
+ }else if(h>=11&&h<16){
+   scene='day';
+   file='assets/backgrounds/home_day.jpg';
+ }else if(h>=16&&h<19){
+   scene='evening';
+   file='assets/backgrounds/home_evening.jpg';
+ }
+
+ hero.classList.remove(
+   'scene-morning-v73',
+   'scene-day-v73',
+   'scene-evening-v73',
+   'scene-night-v73'
+ );
+ hero.classList.add(`scene-${scene}-v73`);
+
+ if(bg.dataset.sceneFile!==file){
+   bg.dataset.sceneFile=file;
+
+   const test=new Image();
+   test.onload=()=>{
+     bg.src=file;
+     bg.dataset.sceneFile=file;
+   };
+   test.onerror=()=>{
+     // If one of the new background files is missing,
+     // keep the current/old background instead of showing a broken image.
+     console.warn('SANPO background image not found:',file);
+     bg.dataset.sceneFile='';
+   };
+   test.src=file;
+ }
 }
 function renderHome(talk=true){
  const p=profile(),t=today(),gsteps=stepGoal(p),goalKm=Math.max(.5,+p.goalKm||5),pct=Math.min(100,t.km/goalKm*100),st=manualStagePreview||stage(pct);applyHomeSceneV73();
@@ -6324,6 +6388,13 @@ function renderRecords(){
  renderSavedWalksV70()
 }
 /* record photo feature removed in v73 */
+[
+ 'assets/backgrounds/home_morning.jpg',
+ 'assets/backgrounds/home_day.jpg',
+ 'assets/backgrounds/home_evening.jpg',
+ 'assets/backgrounds/home_night.jpg'
+].forEach(src=>{const i=new Image();i.src=src});
+
 loadSettings();refreshCharacterGender();renderHome(false);renderSettingsProgress();renderRecords();initMap();startDailyTracking();startCharacterTestCycle();setTimeout(()=>renderActiveRouteCard(),150);
 if($('affiliateV73'))$('affiliateV73').onclick=e=>{
  const url=$('affiliateV73').dataset.url||'';
@@ -6331,6 +6402,9 @@ if($('affiliateV73'))$('affiliateV73').onclick=e=>{
 };
 setTimeout(()=>$('splashV73')?.classList.add('hide'),980);
 setInterval(applyHomeSceneV73,5*60*1000);
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)applyHomeSceneV73();
+});
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 })();
 </script>
