@@ -4294,197 +4294,280 @@ body{
   background:linear-gradient(90deg,rgba(4,16,25,.05),rgba(12,30,38,.08) 58%,rgba(255,255,255,.11))!important;
 }
 
-</style>
 
-<style>
-/* ===== SANPO v78: ホーム一体感 改善版 ===== */
-/* 背景・キャラ・右カードを一枚の画面としてなじませる調整 */
+
+/* ===== SANPO v79: home scene continuity fix / full-body character / unified cards ===== */
 #homePage .hero-v12.hero-v39{
-  height:338px !important;
-  background:#eaf4ef !important;
-  border:1px solid #dfece5 !important;
-  box-shadow:0 14px 34px rgba(24,66,49,.08) !important;
+  position:relative!important;
+  min-height:508px!important;
+  overflow:hidden!important;
+  background:#eaf4ee!important;
+  border:1px solid #d7e8df!important;
 }
 #homePage .hero-v39 .hero-scene-v39{
-  width:53% !important;
-  background:#dcefe6 !important;
-  position:absolute !important;
-  overflow:hidden !important;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:0!important;
 }
 #homePage .hero-v39 .hero-bg-v12{
-  object-position:center center !important;
-  filter:saturate(.96) contrast(1.02) brightness(.97) !important;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  opacity:1!important;
+  filter:saturate(1.02)!important;
 }
-/* 全体の光と奥行き。右に行くほどUIが読みやすくなるようにする */
-#homePage .hero-v39::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
+#homePage .hero-v12.hero-v39:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0) 32%, rgba(31,72,56,.07) 100%),
-    linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 39%, rgba(247,251,249,.22) 53%, rgba(247,251,249,.48) 68%, rgba(247,251,249,.74) 100%);
+    linear-gradient(180deg,
+      rgba(255,255,255,.04) 0%,
+      rgba(255,255,255,.02) 18%,
+      rgba(247,251,248,.06) 100%) ,
+    linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0) 44%,
+      rgba(248,251,249,.16) 58%,
+      rgba(248,251,249,.36) 72%,
+      rgba(248,251,249,.56) 100%)!important;
 }
-/* 画面下側にやわらかい空気感を敷いて、貼り付け感を減らす */
-#homePage .hero-v39::after{
-  content:"";
-  position:absolute;
-  left:0; right:0; bottom:0;
-  height:40%;
-  z-index:2;
-  pointer-events:none;
-  background:linear-gradient(180deg, rgba(233,243,238,0), rgba(233,243,238,.16) 34%, rgba(233,243,238,.70));
+#homePage .affiliate-v73{
+  z-index:6!important;
 }
-/* キャラの足元の接地影 */
-#homePage .hero-v39 .hero-scene-v39::before{
-  content:"";
-  position:absolute;
-  left:14px;
-  bottom:16px;
-  width:214px;
-  height:50px;
-  border-radius:999px;
-  background:radial-gradient(ellipse at center, rgba(38,66,54,.26), rgba(38,66,54,.11) 45%, rgba(38,66,54,0) 72%);
-  filter:blur(11px);
-  z-index:3;
-  pointer-events:none;
-}
-/* キャラ後ろのごく薄いハイライト。背景との境目をやわらげる */
-#homePage .hero-v39 .hero-scene-v39::after{
-  content:"";
-  position:absolute;
-  left:-6px;
-  bottom:56px;
-  width:248px;
-  height:216px;
-  border-radius:50%;
-  background:radial-gradient(circle at 48% 42%, rgba(255,255,255,.26), rgba(255,255,255,.09) 44%, rgba(255,255,255,0) 74%);
-  z-index:3;
-  pointer-events:none;
-}
-/* キャラを少し大きく、少し左に。背景に立っている感じを出す */
 #homePage .hero-v39 .hero-person-v12{
-  left:-10px !important;
-  bottom:8px !important;
-  width:227px !important;
-  height:304px !important;
-  z-index:4 !important;
-  filter:drop-shadow(0 13px 18px rgba(26,56,45,.16)) drop-shadow(0 2px 4px rgba(255,255,255,.34)) !important;
+  z-index:3!important;
+  left:-16px!important;
+  bottom:16px!important;
+  width:228px!important;
+  height:318px!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  filter:drop-shadow(0 16px 24px rgba(32,74,57,.18))!important;
 }
-/* 右情報エリアを白ベタからガラス調のベース面に変える */
 #homePage .hero-side-v39{
-  width:52% !important;
-  background:transparent !important;
-  padding:12px 12px 12px 6px !important;
-  gap:7px !important;
-  z-index:6 !important;
+  position:absolute!important;
+  top:22px!important;
+  right:12px!important;
+  width:57%!important;
+  bottom:auto!important;
+  padding:0!important;
+  gap:8px!important;
+  z-index:4!important;
+  background:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
 }
-#homePage .hero-side-v39::before{
-  content:"";
-  position:absolute;
-  inset:12px 10px 12px 0;
-  z-index:0;
-  border-radius:28px;
-  background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.72));
-  border:1px solid rgba(236,243,239,.82);
-  box-shadow:0 12px 26px rgba(24,66,49,.06);
-  backdrop-filter:blur(12px);
-}
-#homePage .hero-side-v39 > *{position:relative;z-index:1}
-/* 吹き出しは顔の高さに合わせつつ、もう少し大きく */
 #homePage .hero-v39 .hero-bubble-v12{
-  margin-top:74px !important;
-  min-height:58px !important;
-  padding:12px 16px !important;
-  font-size:11.2px !important;
-  line-height:1.58 !important;
-  border-radius:24px !important;
-  box-shadow:0 8px 20px rgba(35,75,57,.08) !important;
+  width:100%!important;
+  min-height:62px!important;
+  padding:14px 16px 14px 18px!important;
+  border-radius:24px!important;
+  background:rgba(255,255,255,.94)!important;
+  box-shadow:0 10px 24px rgba(39,79,62,.10)!important;
+  font-size:11.2px!important;
+  line-height:1.55!important;
+  font-weight:600!important;
+  letter-spacing:.01em!important;
 }
 #homePage .hero-v39 .hero-bubble-v12:after{
-  left:-8px !important;
-  top:21px !important;
-  width:14px !important;
-  height:14px !important;
+  left:-8px!important;
+  top:22px!important;
+  width:15px!important;
+  height:15px!important;
+  background:rgba(255,255,255,.94)!important;
+  transform:rotate(45deg)!important;
 }
-/* メインカードは中身をしっかり使う */
+#homePage .hero-talk-hint-v16{
+  top:18px!important;
+  right:8px!important;
+}
+#homePage .hero-remain-v39,
+#homePage .hero-mini-stat-v39,
+#homePage .character-phase-v46{
+  background:rgba(255,255,255,.92)!important;
+  border:1px solid rgba(218,233,224,.96)!important;
+  box-shadow:0 10px 22px rgba(33,73,55,.08)!important;
+}
 #homePage .hero-remain-v39{
-  padding:10px 12px 9px !important;
-  border-radius:18px !important;
-  background:rgba(241,249,245,.92) !important;
-  border:1px solid rgba(214,233,223,.95) !important;
+  padding:10px 12px!important;
+  border-radius:18px!important;
 }
-#homePage .hero-remain-v39 small{
-  font-size:8.6px !important;
+#homePage .hero-remain-v68{
+  min-height:96px!important;
 }
-#homePage .hero-remain-v39 b{
-  font-size:24px !important;
-  letter-spacing:-.03em !important;
+#homePage .hero-remain-main-v68 small,
+#homePage .hero-today-distance-v68 small,
+#homePage .hero-mini-stat-v39 small,
+#homePage .phase-kicker-v53{
+  font-size:8.2px!important;
+  line-height:1.25!important;
+  color:#72867d!important;
+}
+#homePage .hero-remain-main-v68 b{
+  font-size:26px!important;
+  line-height:1.0!important;
+}
+#homePage .hero-today-distance-v68 b{
+  font-size:21px!important;
+  line-height:1.0!important;
 }
 #homePage .hero-goal-pct-v73{
-  font-size:7.4px !important;
+  font-size:8px!important;
 }
-/* 下の2カードも情報を少し大きく */
-#homePage .hero-mini-grid-v54 .hero-mini-stat-v39{
-  min-height:58px !important;
-  padding:8px 4px !important;
-  border-radius:14px !important;
-  background:rgba(249,251,250,.94) !important;
+#homePage .hero-mini-grid-v68{
+  gap:8px!important;
 }
-#homePage .hero-mini-grid-v54 .hero-mini-stat-v39 small{
-  font-size:7.6px !important;
-  margin-bottom:3px !important;
+#homePage .hero-mini-grid-v68 .hero-mini-stat-v39{
+  min-height:74px!important;
+  padding:10px 8px!important;
+  border-radius:16px!important;
 }
-#homePage .hero-mini-grid-v54 .hero-mini-stat-v39 b{
-  font-size:11.8px !important;
+#homePage .hero-mini-grid-v68 .hero-mini-stat-v39 b{
+  font-size:20px!important;
+  line-height:1.0!important;
+}
+#homePage .hero-mini-grid-v68 .hero-mini-stat-v39 em{
+  font-size:10px!important;
 }
 #homePage .hero-gps-v54{
-  font-size:7.3px !important;
-  min-height:14px !important;
+  margin-top:0!important;
+  padding-left:3px!important;
+  font-size:8.2px!important;
 }
-/* コンディションとボタンも同じ面の中で詰める */
 #homePage .character-phase-v46{
-  min-height:50px !important;
-  padding:7px 11px 7px !important;
-  border-radius:16px !important;
-  background:rgba(255,255,255,.88) !important;
-  border:1px solid rgba(229,238,233,.94) !important;
+  position:static!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  min-height:70px!important;
+  padding:10px 12px!important;
+  border-radius:16px!important;
+  z-index:auto!important;
 }
-#homePage .phase-kicker-v53{font-size:6.4px !important}
-#homePage .character-phase-name-v46{font-size:11.8px !important}
-#homePage .character-phase-next-v46{font-size:7.4px !important}
+#homePage .character-phase-top-v46{
+  align-items:flex-end!important;
+}
+#homePage .character-phase-name-v46{
+  font-size:12.2px!important;
+  line-height:1.05!important;
+}
+#homePage .character-phase-next-v46{
+  font-size:8.4px!important;
+  line-height:1.25!important;
+  text-align:right!important;
+}
+#homePage .character-phase-bar-v46{
+  margin-top:7px!important;
+}
 #homePage .hero-route-btn-v39{
-  height:39px !important;
-  font-size:12px !important;
-  border-radius:15px !important;
-  margin-top:2px !important;
-  box-shadow:0 8px 18px rgba(16,168,100,.18) !important;
+  position:static!important;
+  width:100%!important;
+  height:50px!important;
+  margin-top:0!important;
+  border-radius:16px!important;
+  box-shadow:0 10px 22px rgba(27,143,83,.18)!important;
 }
-/* 小さめ端末用 */
 @media(max-width:390px){
-  #homePage .hero-v12.hero-v39{height:328px !important}
+  #homePage .hero-v12.hero-v39{
+    min-height:496px!important;
+  }
   #homePage .hero-v39 .hero-person-v12{
-    left:-16px !important;
-    bottom:8px !important;
-    width:210px !important;
-    height:286px !important;
+    left:-18px!important;
+    bottom:15px!important;
+    width:216px!important;
+    height:302px!important;
   }
-  #homePage .hero-v39 .hero-scene-v39::before{width:196px;left:12px;bottom:14px}
-  #homePage .hero-v39 .hero-scene-v39::after{width:224px;height:198px;left:-8px;bottom:56px}
-  #homePage .hero-side-v39{width:53.5% !important;padding:10px 10px 10px 4px !important}
-  #homePage .hero-side-v39::before{inset:10px 8px 10px 0}
+  #homePage .hero-side-v39{
+    top:20px!important;
+    right:10px!important;
+    width:58%!important;
+    gap:7px!important;
+  }
   #homePage .hero-v39 .hero-bubble-v12{
-    margin-top:70px !important;
-    min-height:54px !important;
-    font-size:10.4px !important;
-    padding:10px 13px !important;
+    min-height:58px!important;
+    padding:13px 14px 13px 16px!important;
+    font-size:10.3px!important;
   }
-  #homePage .hero-remain-v39 b{font-size:22px !important}
-  #homePage .hero-mini-grid-v54 .hero-mini-stat-v39 b{font-size:11.2px !important}
+  #homePage .hero-remain-v39{
+    padding:9px 10px!important;
+  }
+  #homePage .hero-remain-main-v68 b{
+    font-size:23px!important;
+  }
+  #homePage .hero-today-distance-v68 b{
+    font-size:19px!important;
+  }
+  #homePage .hero-mini-grid-v68 .hero-mini-stat-v39{
+    min-height:68px!important;
+    padding:9px 6px!important;
+  }
+  #homePage .hero-mini-grid-v68 .hero-mini-stat-v39 b{
+    font-size:18px!important;
+  }
+  #homePage .character-phase-v46{
+    min-height:66px!important;
+    padding:9px 10px!important;
+  }
+  #homePage .character-phase-name-v46{
+    font-size:11.6px!important;
+  }
+  #homePage .character-phase-next-v46{
+    font-size:8px!important;
+  }
+  #homePage .hero-route-btn-v39{
+    height:48px!important;
+  }
 }
-</style>
+@media(max-width:350px){
+  #homePage .hero-v12.hero-v39{
+    min-height:482px!important;
+  }
+  #homePage .hero-v39 .hero-person-v12{
+    left:-18px!important;
+    bottom:14px!important;
+    width:205px!important;
+    height:288px!important;
+  }
+  #homePage .hero-side-v39{
+    top:18px!important;
+    right:8px!important;
+    width:58.5%!important;
+    gap:6px!important;
+  }
+  #homePage .hero-v39 .hero-bubble-v12{
+    min-height:54px!important;
+    padding:12px 12px 12px 14px!important;
+    font-size:9.4px!important;
+  }
+  #homePage .hero-remain-main-v68 b{
+    font-size:21px!important;
+  }
+  #homePage .hero-today-distance-v68 b{
+    font-size:17px!important;
+  }
+  #homePage .hero-mini-grid-v68 .hero-mini-stat-v39 b{
+    font-size:16px!important;
+  }
+  #homePage .character-phase-name-v46{
+    font-size:10.8px!important;
+  }
+  #homePage .character-phase-next-v46{
+    font-size:7.4px!important;
+  }
+}
 
+</style>
 </head>
 <body>
 <div id="splashV73" class="splash-v73" aria-hidden="true">
