@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v105 route-first full flow -->
+<!-- SANPO v106 real-theme-waypoints + Google Maps navigation handoff -->
 
 <link rel="preconnect" href="https://unpkg.com">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -1104,7 +1104,8 @@ body{overflow:hidden}
           <div class="spot-title"><b>立ち寄りスポット</b><span id="spotCaption">候補</span></div>
           <div class="spot-strip" id="spotStrip"></div>
 
-          <button class="primary-result" id="walkRouteBtn">このコースで歩く</button>
+          <button class="primary-result" id="walkRouteBtn">Google Mapsで歩く</button>
+          <div id="googleNavNote" style="font-size:9px;color:#71847d;text-align:center;margin:5px 0 2px;font-weight:750;">選んだ周回コースをGoogle Mapsへ渡します</div>
           <button class="recommend-btn" id="recommendBtn">おすすめコースを3件見る</button>
           <div class="secondary-actions">
             <button id="regenerateBtn">別の候補を作る</button>
@@ -1461,47 +1462,114 @@ function initLeafletMap(){
   $('mapProvider').textContent='無料マップ / デモ';
 }
 
-/* ===== Places ===== */
+/* ===== Places / theme waypoints ===== */
 function resolvedStopCount(){
   if(state.theme==='direct')return 0;
   if(state.stopCount==='auto')return effectiveTargetKmV102()>=6?3:effectiveTargetKmV102()>=3.5?2:1;
   return Math.max(0,Math.min(3,Number(state.stopCount)||0));
 }
+
+function themeSearchConfig(){
+  if(state.theme==='cafe'){
+    return {queries:['カフェ'],includedType:'cafe',strict:true,business:true,kind:'cafe'};
+  }
+  if(state.theme==='food'){
+    return {queries:['レストラン'],includedType:'restaurant',strict:true,business:true,kind:'food'};
+  }
+  if(state.theme==='green'){
+    return {queries:['公園 緑地','公園'],includedType:'park',strict:false,business:false,kind:'green'};
+  }
+  if(state.theme==='water'){
+    // Placesには「川」そのものの専用タイプがないため、
+    // 川沿い公園・河川敷・水辺スポットを実際の経由地点として探す。
+    return {queries:['川沿い 公園','河川敷 水辺 公園','運河 水辺'],includedType:undefined,strict:false,business:false,kind:'water'};
+  }
+  if(state.theme==='random'){
+    return {queries:['カフェ レストラン'],includedType:undefined,strict:false,business:true,kind:'random'};
+  }
+  return null;
+}
+
+async function onePlaceTextSearch(start,config,textQuery){
+  const {Place,SearchByTextRankPreference}=await google.maps.importLibrary('places');
+  const request={
+    textQuery,
+    fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus','types'],
+    locationBias:{
+      center:start,
+      radius:Math.min(6500,Math.max(1400,effectiveTargetKmV102()*850))
+    },
+    language:'ja',
+    region:'jp',
+    rankPreference:SearchByTextRankPreference.RELEVANCE,
+    maxResultCount:10
+  };
+
+  if(config.includedType)request.includedType=config.includedType;
+  if(config.includedType)request.useStrictTypeFiltering=config.strict;
+  if(config.business && state.openOnly)request.isOpenNow=true;
+
+  const {places}=await Place.searchByText(request);
+  bumpUsage('places',1);
+
+  return (places||[])
+    .filter(p=>p.location)
+    .map(p=>({
+      id:p.id,
+      name:p.displayName||'立ち寄りスポット',
+      loc:literal(p.location),
+      address:p.formattedAddress||'',
+      uri:p.googleMapsURI||'',
+      openFiltered:!!(config.business&&state.openOnly),
+      businessStatus:p.businessStatus||'',
+      types:p.types||[],
+      kind:config.kind,
+      query:textQuery
+    }));
+}
+
+function uniqueNearbyPlaces(start,places){
+  const seen=new Set();
+  return places
+    .filter(p=>{
+      const key=p.id||`${p.loc.lat.toFixed(5)},${p.loc.lng.toFixed(5)}`;
+      if(seen.has(key))return false;
+      seen.add(key);
+      // Very distant results make a bad round-trip route.
+      return hav(start,p.loc)<=Math.max(1.5,effectiveTargetKmV102()*0.8);
+    })
+    .sort((a,b)=>{
+      // Prefer useful points that are not right on top of the start.
+      const da=hav(start,a.loc),db=hav(start,b.loc);
+      const ideal=Math.max(.45,effectiveTargetKmV102()/3.2);
+      return Math.abs(da-ideal)-Math.abs(db-ideal);
+    });
+}
+
 async function searchPlaces(start){
   const wanted=resolvedStopCount();
-  if(wanted===0 || state.mapEngine!=='google')return [];
+  const config=themeSearchConfig();
+  if(wanted===0 || state.mapEngine!=='google' || !config)return [];
+
   try{
     markStep('stepPlaces','doing');
-    const {Place,SearchByTextRankPreference}=await google.maps.importLibrary('places');
-    let textQuery='カフェ';
-    let includedType='cafe';
-    let strict=true;
-    if(state.theme==='food'){textQuery='レストラン';includedType='restaurant'}
-    else if(state.theme==='cafe'){textQuery='カフェ';includedType='cafe'}
-    else if(state.theme==='random'){textQuery='カフェ レストラン';includedType=undefined;strict=false}
-    else { markStep('stepPlaces','done'); return []; }
+    let all=[];
 
-    const request={
-      textQuery,
-      fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus'],
-      locationBias:{center:start,radius:Math.min(5000,Math.max(1000,effectiveTargetKmV102()*700))},
-      isOpenNow:state.openOnly,
-      language:'ja',region:'jp',
-      rankPreference:SearchByTextRankPreference.RELEVANCE,
-      maxResultCount:10
-    };
-    if(includedType)request.includedType=includedType;
-    if(includedType)request.useStrictTypeFiltering=strict;
-    const {places}=await Place.searchByText(request);
-    bumpUsage('places',1);
+    // First query normally suffices. For green/water, only retry if too few
+    // useful theme points were found, to keep API calls under control.
+    for(let i=0;i<config.queries.length;i++){
+      const found=await onePlaceTextSearch(start,config,config.queries[i]);
+      all=uniqueNearbyPlaces(start,[...all,...found]);
+      if(all.length>=Math.max(3,wanted*2))break;
+      if(i>=1 && state.theme!=='water')break;
+    }
+
     markStep('stepPlaces','done');
-    return (places||[]).filter(p=>p.location).map(p=>({
-      id:p.id,name:p.displayName||'立ち寄りスポット',loc:literal(p.location),
-      address:p.formattedAddress||'',uri:p.googleMapsURI||'',
-      openFiltered:state.openOnly,businessStatus:p.businessStatus||''
-    }));
+    return all;
   }catch(e){
-    console.warn(e); markStep('stepPlaces','done'); return [];
+    console.warn('Theme place search failed',e);
+    markStep('stepPlaces','done');
+    return [];
   }
 }
 
@@ -1515,9 +1583,15 @@ function demoSpec(start,seed,spots=[]){
   const b=seedBearing(seed);
   const mids=[];
   const usedSpots=(spots||[]).filter(Boolean);
+
   if(usedSpots.length){
+    // These are real theme/place waypoints returned from Places.
     usedSpots.forEach(s=>mids.push(s.loc));
-    if(usedSpots.length<2)mids.push(pointFrom(start,(b+115)%360,r*.95));
+
+    // Keep the loop shape even when only one theme point is requested.
+    if(usedSpots.length===1){
+      mids.push(pointFrom(start,(b+125)%360,r*.88));
+    }
   }else{
     mids.push(
       pointFrom(start,b,r),
@@ -1525,47 +1599,103 @@ function demoSpec(start,seed,spots=[]){
       pointFrom(start,(b+225)%360,r*.88)
     );
   }
-  return{intermediates:mids,spots:usedSpots,spot:usedSpots[0]||null};
+  return{
+    intermediates:mids,
+    waypoints:mids.map(p=>({...p})),
+    spots:usedSpots,
+    spot:usedSpots[0]||null,
+    themeMatched:usedSpots.length>0
+  };
 }
+
 async function googleCandidate(start,spec){
   const {Route}=await google.maps.importLibrary('routes');
   const {routes}=await Route.computeRoutes({
-    origin:start,destination:start,travelMode:'WALKING',
+    origin:start,
+    destination:start,
+    travelMode:'WALKING',
     intermediates:spec.intermediates.map(p=>({location:p})),
     fields:['path']
   });
   bumpUsage('routes',1);
+
   if(!routes?.length||!routes[0].path?.length)throw new Error('route empty');
   const path=routes[0].path.map(literal);
-  return{path,km:pathKm(path),routeObj:routes[0],spots:spec.spots||[],spot:spec.spot,demo:false};
+
+  return{
+    path,
+    km:pathKm(path),
+    routeObj:routes[0],
+    spots:spec.spots||[],
+    spot:spec.spot,
+    waypoints:spec.waypoints||[],
+    themeMatched:!!spec.themeMatched,
+    demo:false
+  };
 }
+
+function pickCandidateSpots(places,wanted,seed){
+  if(!wanted || !places.length)return [];
+  const picked=[];
+  const n=places.length;
+
+  // Different seed -> different real POIs, creating visibly different candidates.
+  for(let j=0;j<wanted;j++){
+    const idx=(seed + j*2) % n;
+    const p=places[idx];
+    if(p && !picked.some(x=>(x.id&&x.id===p.id) || hav(x.loc,p.loc)<.05))picked.push(p);
+  }
+
+  // Fill if dedupe left us short.
+  for(const p of places){
+    if(picked.length>=wanted)break;
+    if(!picked.some(x=>(x.id&&x.id===p.id) || hav(x.loc,p.loc)<.05))picked.push(p);
+  }
+  return picked.slice(0,wanted);
+}
+
 async function buildGoogleRoutes(start,places){
   const wanted=resolvedStopCount();
   const specs=[];
+
   for(let i=0;i<3;i++){
-    let chosen=[];
-    if(wanted>0 && places.length){
-      for(let j=0;j<wanted;j++)chosen.push(places[(i*wanted+j)%places.length]);
-    }
+    const chosen=pickCandidateSpots(places,wanted,i);
     specs.push(demoSpec(start,i,chosen));
   }
+
   const results=[];
   for(const spec of specs){
     if(state.cancelled)break;
-    try{results.push(await googleCandidate(start,spec))}catch(e){console.warn(e)}
+    try{results.push(await googleCandidate(start,spec))}
+    catch(e){console.warn('Candidate route failed',e)}
   }
-  return results.sort((a,b)=>Math.abs(a.km-effectiveTargetKmV102())-Math.abs(b.km-effectiveTargetKmV102()));
+
+  return results.sort((a,b)=>{
+    const ad=Math.abs(a.km-effectiveTargetKmV102());
+    const bd=Math.abs(b.km-effectiveTargetKmV102());
+    // When a theme was explicitly chosen, prefer candidates that really pass a theme POI.
+    const am=(['green','water','cafe','food'].includes(state.theme)&&!a.themeMatched)?1:0;
+    const bm=(['green','water','cafe','food'].includes(state.theme)&&!b.themeMatched)?1:0;
+    return (am-bm)||ad-bd;
+  });
 }
+
 function buildDemoRoutes(start,places){
   const wanted=resolvedStopCount(),results=[];
   for(let i=0;i<3;i++){
-    let chosen=[];
-    if(wanted>0&&places.length){
-      for(let j=0;j<wanted;j++)chosen.push(places[(i*wanted+j)%places.length]);
-    }
+    const chosen=pickCandidateSpots(places,wanted,i);
     const spec=demoSpec(start,i,chosen);
     const path=[start,...spec.intermediates,start];
-    results.push({path,km:pathKm(path),routeObj:null,spots:spec.spots||[],spot:spec.spot,demo:true});
+    results.push({
+      path,
+      km:pathKm(path),
+      routeObj:null,
+      spots:spec.spots||[],
+      spot:spec.spot,
+      waypoints:spec.waypoints||[],
+      themeMatched:!!spec.themeMatched,
+      demo:true
+    });
   }
   return results.sort((a,b)=>Math.abs(a.km-effectiveTargetKmV102())-Math.abs(b.km-effectiveTargetKmV102()));
 }
@@ -1580,8 +1710,22 @@ function markStep(id,status){
   const num={stepPlaces:'1',stepRoute:'2',stepFinish:'3'}[id];
   $(id).querySelector('.progress-icon').textContent=status==='done'?'✓':num;
 }
+function updateGeneratingCopy(){
+  const placeLine=$('stepPlaces')?.querySelector('.progress-text');
+  if(placeLine){
+    placeLine.textContent=
+      state.theme==='water'?'水辺の実スポットを探しています':
+      state.theme==='green'?'公園・緑地を探しています':
+      state.theme==='cafe'?'カフェを探しています':
+      state.theme==='food'?'飲食店を探しています':
+      state.theme==='direct'?'寄り道なしで作成します':
+      '周辺の立ち寄り候補を探しています';
+  }
+}
+
 async function createRoute(){
   state.cancelled=false;
+  updateGeneratingCopy();
   resetProgress();
   showHomeState('generatingState');
 
@@ -1593,7 +1737,7 @@ async function createRoute(){
 
     let places=[];
     markStep('stepPlaces','doing');
-    if(googleOk && resolvedStopCount()>0 && ['cafe','food','random'].includes(state.theme)){
+    if(googleOk && resolvedStopCount()>0 && ['cafe','food','random','green','water'].includes(state.theme)){
       places=await searchPlaces(start);
     }else{
       await wait(420);
@@ -1667,8 +1811,12 @@ function drawCandidate(c){
         map:gmap,path:c.path,strokeColor:'#0a9a68',strokeWeight:7,strokeOpacity:.96
       })];
     }
-    gMarkers.push(new google.maps.Marker({map:gmap,position:c.path[0],title:'スタート'}));
-    if(c.spot)gMarkers.push(new google.maps.Marker({map:gmap,position:c.spot.loc,title:c.spot.name}));
+    gMarkers.push(new google.maps.Marker({map:gmap,position:c.path[0],title:'スタート / ゴール'}));
+    (c.spots||[]).forEach((s,i)=>{
+      gMarkers.push(new google.maps.Marker({
+        map:gmap,position:s.loc,title:`${i+1}. ${s.name}`,label:String(i+1)
+      }));
+    });
   }else{
     leafletRoute=L.polyline(c.path.map(p=>[p.lat,p.lng]),{
       color:'#0a9a68',weight:7,opacity:.96
@@ -1678,9 +1826,11 @@ function drawCandidate(c){
         radius:9,color:'#fff',weight:4,fillColor:'#2b82f6',fillOpacity:1
       }).addTo(leafletMap)
     );
-    if(c.spot){
-      leafletMarkers.push(L.marker([c.spot.loc.lat,c.spot.loc.lng]).addTo(leafletMap).bindPopup(c.spot.name));
-    }
+    (c.spots||[]).forEach((s,i)=>{
+      leafletMarkers.push(
+        L.marker([s.loc.lat,s.loc.lng]).addTo(leafletMap).bindPopup(`${i+1}. ${s.name}`)
+      );
+    });
   }
   fitPath(c.path);
 }
@@ -1692,16 +1842,28 @@ function showCandidate(index){
   const mins=Math.max(1,Math.round(c.km/state.paceKmh*60));
   const cal=Math.round(mins*4.2);
 
-  $('routeTitle').textContent=
-    state.theme==='cafe'?'カフェめぐりコース':
-    state.theme==='food'?'ごはん散歩コース':
-    state.theme==='green'?'緑を楽しむコース':
-    state.theme==='water'?'水辺を歩くコース':
-    `${themeLabel()}散歩コース`;
+  const explicitTheme=['cafe','food','green','water'].includes(state.theme);
+  const matched=!explicitTheme || c.themeMatched;
 
-  $('routeSummary').textContent=c.demo
-    ?'無料デモ表示です。Google MapsをONにすると、実際の徒歩道に沿って生成します。'
-    :'Googleの徒歩ルートから、希望条件に近いコースを作りました。';
+  $('routeTitle').textContent=
+    state.theme==='cafe'&&matched?'カフェめぐり周回コース':
+    state.theme==='food'&&matched?'ごはん散歩周回コース':
+    state.theme==='green'&&matched?'公園・緑地を通る周回コース':
+    state.theme==='water'&&matched?'水辺スポットを通る周回コース':
+    state.theme==='direct'?'寄り道なし周回コース':
+    matched?`${themeLabel()}周回コース`:'周回コース';
+
+  if(c.demo){
+    $('routeSummary').textContent='無料デモ表示です。Google MapsをONにすると、実際の徒歩道に沿って生成します。';
+  }else if(explicitTheme && !c.themeMatched){
+    $('routeSummary').textContent=`近くに「${themeLabel()}」の実スポットを十分取得できなかったため、テーマ名を付けず周回ルートとして表示しています。`;
+  }else if(state.theme==='water'){
+    $('routeSummary').textContent='Googleで取得した川沿い・河川敷・水辺周辺の実スポットを経由し、出発地点へ戻る徒歩ルートです。';
+  }else if(state.theme==='green'){
+    $('routeSummary').textContent='Googleで取得した公園・緑地の実スポットを経由し、出発地点へ戻る徒歩ルートです。';
+  }else{
+    $('routeSummary').textContent='Googleの実スポットと徒歩ルートを使い、出発地点へ戻る周回コースを作りました。';
+  }
 
   $('resultKm').textContent=c.km.toFixed(1);
   $('resultMin').textContent=mins;
@@ -1716,9 +1878,8 @@ function renderSpots(c){
   if(!list.length && c.spot)list.push(c.spot);
   if(!list.length){
     list.push({
-      name:state.theme==='green'?'緑の多いエリア':state.theme==='water'?'水辺を意識したルート':
-           state.theme==='direct'?'寄り道なし':'散歩スポット',
-      address:state.theme==='direct'?'出発地点へ戻る周回コースです':'コースの途中で楽しめるポイント',openFiltered:false
+      name:state.theme==='direct'?'寄り道なし':'テーマスポット未取得',
+      address:state.theme==='direct'?'出発地点へ戻る周回コースです':'この候補では実スポットを取得できませんでした',openFiltered:false
     });
   }
   $('spotStrip').innerHTML='';
@@ -1740,8 +1901,8 @@ function renderCandidateList(){
     el.type='button';
     const label=i===0?'条件にいちばん近い':i===1?'景色違いの候補':'もうひとつの候補';
     el.innerHTML=`<div class="candidate-thumb">${i===0?'🌿':i===1?'🏙':'🌊'}</div>
-      <div><b>${i+1}. ${escapeHtml(themeLabel())}周回コース</b><small>${c.km.toFixed(1)} km ・ 約 ${mins}分 ・ 出発地点に戻る</small>
-      <div class="candidate-tags"><span>${resolvedStopCount()}件寄り道</span><span>${label}</span></div></div><div>›</div>`;
+      <div><b>${i+1}. ${escapeHtml((['cafe','food','green','water'].includes(state.theme)&&!c.themeMatched)?'周回':themeLabel())}コース</b><small>${c.km.toFixed(1)} km ・ 約 ${mins}分 ・ 出発地点に戻る</small>
+      <div class="candidate-tags"><span>${(c.spots||[]).length}件寄り道</span><span>${c.themeMatched?'テーマ経由':'周回優先'}</span><span>${label}</span></div></div><div>›</div>`;
     el.onclick=()=>{ $('recommendModal').classList.remove('show'); showCandidate(i); };
     box.appendChild(el);
   });
@@ -1940,31 +2101,58 @@ $('spotDetailClose').onclick=()=>$('spotDetailModal').classList.remove('show');
 $('spotBackToRoute').onclick=()=>$('spotDetailModal').classList.remove('show');
 $('spotGoBtn').onclick=()=>$('spotDetailModal').classList.remove('show');
 
-function openWalkMode(){
-  const c=state.routes[state.selected];if(!c)return;
-  $('walkModal').classList.add('show');
-  $('walkRemainKm').textContent=`${c.km.toFixed(1)} km`;
-  $('walkRemainMin').textContent=`${Math.max(1,Math.round(c.km/state.paceKmh*60))} 分`;
-  const s=(c.spots||[])[0]||c.spot;
-  $('walkSpotName').textContent=s?s.name:'周回コース';
-  $('walkSpotMeta').textContent=s?(s.address||'立ち寄りスポット'):'出発地点に戻るコースです';
-  $('walkSpotIcon').textContent=themeEmoji();
-  setTimeout(()=>initWalkMap(c),80);
+function coordString(p){
+  return `${Number(p.lat).toFixed(6)},${Number(p.lng).toFixed(6)}`;
 }
-function initWalkMap(c){
-  if(!walkLMap){
-    walkLMap=L.map('walkMap',{zoomControl:false}).setView([c.path[0].lat,c.path[0].lng],15);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(walkLMap);
+
+function routeWaypointsForGoogleMaps(c){
+  const start=c.path?.[0];
+  if(!start)return [];
+
+  // Prefer the exact real POIs / route waypoints used when SANPO built this candidate.
+  let pts=(c.waypoints||[]).filter(Boolean).map(p=>({lat:+p.lat,lng:+p.lng}));
+
+  // On mobile, keeping this to 3 waypoints is reliable and matches SANPO's max stop count.
+  pts=pts.slice(0,3);
+
+  // Avoid sending a waypoint effectively identical to the start.
+  return pts.filter(p=>hav(start,p)>.03);
+}
+
+function buildGoogleMapsWalkUrl(c){
+  const start=c.path?.[0];
+  if(!start)return '';
+  const params=new URLSearchParams();
+  params.set('api','1');
+  params.set('origin',coordString(start));
+  params.set('destination',coordString(start));
+  params.set('travelmode','walking');
+  params.set('dir_action','navigate');
+
+  const waypoints=routeWaypointsForGoogleMaps(c);
+  if(waypoints.length){
+    params.set('waypoints',waypoints.map(coordString).join('|'));
   }
-  if(walkRouteLayer)walkLMap.removeLayer(walkRouteLayer);
-  if(walkStartMarker)walkLMap.removeLayer(walkStartMarker);
-  walkRouteLayer=L.polyline(c.path.map(p=>[p.lat,p.lng]),{color:'#0b6bd9',weight:7,opacity:.95}).addTo(walkLMap);
-  walkStartMarker=L.circleMarker([c.path[0].lat,c.path[0].lng],{radius:10,color:'#fff',weight:4,fillColor:'#1679ef',fillOpacity:1}).addTo(walkLMap);
-  walkLMap.fitBounds(c.path.map(p=>[p.lat,p.lng]),{padding:[50,50]});
-  setTimeout(()=>walkLMap.invalidateSize(),80);
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
-$('walkClose').onclick=()=>$('walkModal').classList.remove('show');
-$('walkEnd').onclick=()=>{$('walkModal').classList.remove('show');alert('散歩を終了しました。記録にコースを残しました。')};
+
+function openGoogleMapsNavigation(){
+  const c=state.routes[state.selected];
+  if(!c)return;
+
+  const url=buildGoogleMapsWalkUrl(c);
+  if(!url){
+    alert('Google Mapsへ渡すルートを作れませんでした。');
+    return;
+  }
+
+  saveHistory(c);
+
+  // On Android/iPhone this hands the walking route to Google Maps.
+  // If the selected start is not near the device's current position,
+  // Google Maps may show a route preview instead of immediate turn-by-turn navigation.
+  window.location.href=url;
+}
 
 $('createRouteBtn').onclick=createRoute;
 $('cancelGenerateBtn').onclick=()=>{
@@ -1985,7 +2173,7 @@ $('resultRecenter').onclick=async()=>{
   if(state.mapEngine==='google'&&gmap)gmap.panTo(p);
   if(state.mapEngine==='leaflet'&&leafletMap)leafletMap.panTo([p.lat,p.lng]);
 };
-$('walkRouteBtn').onclick=openWalkMode;
+$('walkRouteBtn').onclick=openGoogleMapsNavigation;
 
 /* ===== settings ===== */
 $('apiKeyInput').value=state.apiKey;
