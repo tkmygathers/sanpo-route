@@ -377,6 +377,93 @@ body{overflow:hidden}
   .create-btn{height:52px}.quick-suggest{display:none}
   .builder-state{padding-top:14px}
 }
+
+/* ===== SANPO v102: 時間指定 / ペース / 結果画面を2段構成 ===== */
+.amount-mode-v102{
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;
+  background:#f0f5f2;border-radius:13px;padding:4px;
+}
+.amount-mode-v102 button{
+  height:37px;border:0;border-radius:10px;background:transparent;
+  color:#71837b;font-size:8.5px;font-weight:850;
+}
+.amount-mode-v102 button.active{
+  background:#fff;color:#0b8359;box-shadow:0 3px 10px rgba(30,67,52,.07);
+}
+
+.pace-box-v102{
+  margin-top:11px;padding:10px;border:1px solid #e3ebe7;border-radius:14px;background:#f9fcfa;
+}
+.pace-head-v102{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;
+}
+.pace-head-v102 span{font-size:8.5px;font-weight:900;color:#315c4e}
+.pace-head-v102 small{font-size:6.5px;color:#81918a}
+.pace-seg-v102{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pace-seg-v102 button{
+  height:35px;border:1px solid #dde8e2;border-radius:10px;background:#fff;
+  color:#6b7e76;font-size:8px;font-weight:850;
+}
+.pace-seg-v102 button.active{
+  background:#e8f8f0;border-color:#bce5cf;color:#0a8158;
+}
+
+/* Result is no longer a full-screen map with a sheet on top.
+   Map gets its own upper card; details get their own lower panel. */
+.result-split-v102{
+  display:none!important;
+  padding:10px!important;
+  background:#f5faf7!important;
+  grid-template-rows:minmax(230px,42%) minmax(0,58%)!important;
+  gap:10px!important;
+}
+.result-split-v102.active{
+  display:grid!important;
+}
+.result-map-card-v102{
+  position:relative!important;
+  min-height:0!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  border:1px solid #dfe9e4!important;
+  box-shadow:0 8px 20px rgba(28,64,50,.08)!important;
+  background:#dfe8e3!important;
+}
+.result-map-card-v102 .result-map-wrap{
+  position:absolute!important;inset:0!important;
+}
+.result-panel-v102{
+  position:relative!important;
+  left:auto!important;right:auto!important;bottom:auto!important;
+  max-height:none!important;height:100%!important;
+  border-radius:20px!important;
+  padding:13px!important;
+  box-shadow:0 8px 20px rgba(28,62,49,.08)!important;
+  overflow:auto!important;
+  border:1px solid #e1eae5!important;
+}
+.result-panel-v102 .grip{display:none!important}
+.result-panel-v102 .result-head h2{font-size:16px!important}
+.result-panel-v102 .result-metrics{margin:9px 0!important}
+.result-panel-v102 .result-metrics>div{padding:8px 3px!important}
+.result-panel-v102 .spot-card{flex-basis:80%!important}
+.result-panel-v102 .primary-result{height:47px!important;margin-top:9px!important}
+.result-panel-v102 .secondary-actions button{height:39px!important}
+
+@media(max-width:390px){
+  .result-split-v102{
+    grid-template-rows:minmax(215px,40%) minmax(0,60%)!important;
+    gap:8px!important;padding:8px!important;
+  }
+  .result-map-card-v102,.result-panel-v102{border-radius:18px!important}
+}
+@media(max-height:720px){
+  .result-split-v102{
+    grid-template-rows:minmax(190px,38%) minmax(0,62%)!important;
+  }
+  .result-panel-v102 .spot-strip{margin-bottom:7px!important}
+}
+
 </style>
 </head>
 <body>
@@ -428,14 +515,34 @@ body{overflow:hidden}
         <div class="builder-card">
           <div class="field-title">
             <svg viewBox="0 0 24 24"><path d="M4 7h4v10H4zM16 7h4v10h-4zM8 12h8"/></svg>
-            歩く距離
+            どのくらい歩く？
           </div>
+
+          <div class="amount-mode-v102">
+            <button class="active" data-amount-mode="distance">距離で指定</button>
+            <button data-amount-mode="time">時間で指定</button>
+          </div>
+
           <div class="distance-box">
             <button id="distanceMinus">−</button>
-            <div class="distance-value"><b id="distanceValue">5.0</b><small>km</small></div>
+            <div class="distance-value">
+              <b id="distanceValue">5.0</b><small id="distanceUnit">km</small>
+            </div>
             <button id="distancePlus">＋</button>
           </div>
           <div class="distance-hint" id="distanceHint">目安：約 65〜75 分</div>
+
+          <div class="pace-box-v102">
+            <div class="pace-head-v102">
+              <span>歩くペース</span>
+              <small id="paceHintV102">普通ペース</small>
+            </div>
+            <div class="pace-seg-v102">
+              <button data-pace="slow">ゆっくり</button>
+              <button data-pace="normal" class="active">普通</button>
+              <button data-pace="fast">早歩き</button>
+            </div>
+          </div>
 
           <div class="field-title" style="margin-top:15px">
             <svg viewBox="0 0 24 24"><path d="M4 18V6m0 0h11l-2.5 3L15 12H4"/></svg>
@@ -508,20 +615,21 @@ body{overflow:hidden}
       </section>
 
       <!-- ③ 完成後：地図 -->
-      <section class="home-state result-state" id="resultState">
-        <div class="result-map-wrap">
-          <div id="resultMap"></div>
-          <div id="resultLeaflet"></div>
-          <div class="map-badge" id="mapProvider">無料マップ / デモ</div>
-          <div class="map-actions">
-            <button id="resultRecenter" aria-label="現在地へ">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-            </button>
+      <section class="home-state result-state result-split-v102" id="resultState">
+        <div class="result-map-card-v102">
+          <div class="result-map-wrap">
+            <div id="resultMap"></div>
+            <div id="resultLeaflet"></div>
+            <div class="map-badge" id="mapProvider">無料マップ / デモ</div>
+            <div class="map-actions">
+              <button id="resultRecenter" aria-label="現在地へ">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="result-sheet">
-          <div class="grip"></div>
+        <div class="result-sheet result-panel-v102">
           <div class="result-head">
             <div>
               <h2 id="routeTitle">おすすめ散歩コース</h2>
@@ -652,7 +760,11 @@ const KEY={
 
 const state={
   theme:'random',
+  amountMode:'distance',
   targetKm:5,
+  targetMin:60,
+  pace:'normal',
+  paceKmh:4.5,
   openOnly:true,
   current:null,
   center:{lat:35.681236,lng:139.767125},
@@ -843,7 +955,7 @@ async function searchPlaces(start){
       fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus'],
       includedType:cafe?'cafe':'restaurant',
       useStrictTypeFiltering:true,
-      locationBias:{center:start,radius:Math.min(5000,Math.max(900,state.targetKm*650))},
+      locationBias:{center:start,radius:Math.min(5000,Math.max(900,effectiveTargetKmV102()*650))},
       isOpenNow:state.openOnly,
       language:'ja',region:'jp',
       rankPreference:SearchByTextRankPreference.RELEVANCE,
@@ -872,7 +984,7 @@ function seedBearing(seed){
   return (65 + seed*103 + (new Date().getMinutes()*7))%360;
 }
 function demoSpec(start,seed,spot=null){
-  const r=Math.max(.35,state.targetKm/4.35);
+  const r=Math.max(.35,effectiveTargetKmV102()/4.35);
   const b=seedBearing(seed);
   if(spot){
     return{intermediates:[spot.loc,pointFrom(start,(b+115)%360,r*.95)],spot};
@@ -910,7 +1022,7 @@ async function buildGoogleRoutes(start,places){
     if(state.cancelled)break;
     try{results.push(await googleCandidate(start,spec))}catch(e){console.warn(e)}
   }
-  return results.sort((a,b)=>Math.abs(a.km-state.targetKm)-Math.abs(b.km-state.targetKm));
+  return results.sort((a,b)=>Math.abs(a.km-effectiveTargetKmV102())-Math.abs(b.km-effectiveTargetKmV102()));
 }
 function buildDemoRoutes(start,places){
   const results=[];
@@ -919,7 +1031,7 @@ function buildDemoRoutes(start,places){
     const path=[start,...spec.intermediates,start];
     results.push({path,km:pathKm(path),routeObj:null,spot:spec.spot,demo:true});
   }
-  return results.sort((a,b)=>Math.abs(a.km-state.targetKm)-Math.abs(b.km-state.targetKm));
+  return results.sort((a,b)=>Math.abs(a.km-effectiveTargetKmV102())-Math.abs(b.km-effectiveTargetKmV102()));
 }
 
 /* ===== progress ===== */
@@ -1041,7 +1153,7 @@ function showCandidate(index){
   state.selected=index;
   drawCandidate(c);
 
-  const mins=Math.max(1,Math.round(c.km/4.5*60));
+  const mins=Math.max(1,Math.round(c.km/state.paceKmh*60));
   const cal=Math.round(mins*4.2);
 
   $('routeTitle').textContent=
@@ -1100,7 +1212,8 @@ function saveHistory(c){
   h.unshift({
     id:Date.now(),date:new Date().toISOString(),
     theme:state.theme,km:+c.km.toFixed(2),
-    google:state.mapEngine==='google',spot:c.spot?.name||''
+    google:state.mapEngine==='google',spot:c.spot?.name||'',
+    amountMode:state.amountMode,pace:state.pace
   });
   localStorage.setItem(KEY.history,JSON.stringify(h.slice(0,30)));
   renderHistory();
@@ -1136,13 +1249,51 @@ $('headerSettings').onclick=()=>navTo('settingsPage');
 /* ===== builder controls ===== */
 $('currentLocationBtn').onclick=locate;
 
-function updateDistance(){
-  $('distanceValue').textContent=state.targetKm.toFixed(1);
-  const min=Math.round(state.targetKm/4.8*60),max=Math.round(state.targetKm/4.1*60);
-  $('distanceHint').textContent=`目安：約 ${min}〜${max} 分`;
+const PACE_V102={
+  slow:{label:'ゆっくり',kmh:3.5},
+  normal:{label:'普通',kmh:4.5},
+  fast:{label:'早歩き',kmh:5.5}
+};
+function effectiveTargetKmV102(){
+  return state.amountMode==='time'
+    ? Math.max(.8,state.targetMin/60*state.paceKmh)
+    : state.targetKm;
 }
-$('distanceMinus').onclick=()=>{state.targetKm=Math.max(1,state.targetKm-.5);updateDistance()};
-$('distancePlus').onclick=()=>{state.targetKm=Math.min(15,state.targetKm+.5);updateDistance()};
+function updateDistance(){
+  if(state.amountMode==='distance'){
+    $('distanceValue').textContent=state.targetKm.toFixed(1);
+    $('distanceUnit').textContent='km';
+    const min=Math.round(state.targetKm/state.paceKmh*60);
+    $('distanceHint').textContent=`このペースなら 約 ${min} 分`;
+  }else{
+    $('distanceValue').textContent=String(state.targetMin);
+    $('distanceUnit').textContent='分';
+    const km=state.targetMin/60*state.paceKmh;
+    $('distanceHint').textContent=`このペースなら 約 ${km.toFixed(1)} km`;
+  }
+  $('paceHintV102').textContent=`${PACE_V102[state.pace].label} ・ 約 ${state.paceKmh.toFixed(1)} km/h`;
+}
+qsa('[data-amount-mode]').forEach(btn=>btn.onclick=()=>{
+  state.amountMode=btn.dataset.amountMode;
+  qsa('[data-amount-mode]').forEach(x=>x.classList.toggle('active',x===btn));
+  updateDistance();
+});
+$('distanceMinus').onclick=()=>{
+  if(state.amountMode==='distance')state.targetKm=Math.max(1,state.targetKm-.5);
+  else state.targetMin=Math.max(15,state.targetMin-15);
+  updateDistance();
+};
+$('distancePlus').onclick=()=>{
+  if(state.amountMode==='distance')state.targetKm=Math.min(15,state.targetKm+.5);
+  else state.targetMin=Math.min(180,state.targetMin+15);
+  updateDistance();
+};
+qsa('[data-pace]').forEach(btn=>btn.onclick=()=>{
+  state.pace=btn.dataset.pace;
+  state.paceKmh=PACE_V102[state.pace].kmh;
+  qsa('[data-pace]').forEach(x=>x.classList.toggle('active',x===btn));
+  updateDistance();
+});
 
 qsa('.theme').forEach(btn=>btn.onclick=()=>{
   qsa('.theme').forEach(x=>x.classList.remove('active'));
@@ -1156,6 +1307,8 @@ $('openOnlyToggle').onclick=()=>{
 
 qsa('.suggest-chip').forEach(btn=>btn.onclick=()=>{
   const p=btn.dataset.preset;
+  state.amountMode='distance';
+  qsa('[data-amount-mode]').forEach(x=>x.classList.toggle('active',x.dataset.amountMode==='distance'));
   if(p==='cafe3'){state.targetKm=3;state.theme='cafe'}
   if(p==='green5'){state.targetKm=5;state.theme='green'}
   if(p==='food4'){state.targetKm=4;state.theme='food'}
