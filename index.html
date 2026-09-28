@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v106 real-theme-waypoints + Google Maps navigation handoff -->
+<!-- SANPO v107 two-step large-type compact-ui -->
 
 <link rel="preconnect" href="https://unpkg.com">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -907,6 +907,99 @@ body{overflow:hidden}
   .loop-note{padding:5px 7px}
 }
 
+
+/* ===== SANPO v107: 2-step / large type / tight spacing ===== */
+.quick-suggest{display:none!important}
+.builder-state{padding:8px 12px 12px!important;overflow:auto}
+.builder-step-v107{display:none;min-height:100%}
+.builder-step-v107.active{display:block}
+.step-progress-v107{
+  display:flex;align-items:center;justify-content:flex-end;gap:9px;
+  margin:1px 3px 5px;color:#213e35;font-size:11px;font-weight:900
+}
+.step-progress-v107 span{width:74px;height:5px;border-radius:999px;background:#e2e8e5;overflow:hidden}
+.step-progress-v107 i{display:block;width:50%;height:100%;background:#139b6c;border-radius:999px}
+.step-progress-v107.full i{width:100%}
+.builder-intro-v107{margin:0 3px 9px}
+.builder-intro-v107 h1{
+  margin:0;color:#101923;font-size:32px;line-height:1.08;letter-spacing:-.045em;font-weight:950
+}
+.builder-intro-v107.second{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px
+}
+.builder-intro-v107.second h1{font-size:28px;white-space:nowrap}
+.back-step-v107{
+  border:0;background:#eef5f1;width:34px;height:34px;border-radius:50%;
+  font-size:24px;color:#31564b;display:grid;place-items:center;flex:0 0 auto
+}
+.v107-card{
+  border-radius:18px!important;padding:11px!important;margin-bottom:7px!important;
+  box-shadow:0 6px 16px rgba(22,69,49,.06)!important
+}
+.v107-card.compact{padding:9px!important}
+.v107-title{
+  font-size:15px!important;margin-bottom:7px!important;color:#203d34!important;
+  gap:7px!important
+}
+.v107-title svg{width:19px!important;height:19px!important}
+.v107-location{gap:7px}
+.v107-location .location-mini{
+  min-height:58px!important;font-size:16px!important;border-radius:14px!important
+}
+.v107-location .location-mini svg{width:23px!important;height:23px!important}
+.start-label{
+  font-size:11px!important;margin-top:5px!important;padding:5px 7px!important
+}
+.v107-mode{margin:0 0 2px!important;padding:3px!important}
+.v107-mode button{height:42px!important;font-size:15px!important}
+.v107-readout{margin:4px 0 0!important}
+.v107-readout b{font-size:44px!important;letter-spacing:-.04em}
+.v107-readout small{font-size:17px!important}
+.v107-range{padding:2px 2px 0!important}
+.v107-range .range-main{height:31px!important}
+.v107-range .range-labels{font-size:10px!important}
+.v107-next,.v107-create{
+  width:100%;height:54px!important;margin-top:4px!important;border-radius:15px!important;
+  font-size:19px!important;font-weight:950!important
+}
+.v107-next{display:flex;align-items:center;justify-content:center;gap:10px}
+.v107-next span{font-size:31px;line-height:1}
+.small-theme-title{font-size:14px!important;margin-bottom:6px!important}
+.v107-theme-grid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
+.v107-theme-grid .theme{
+  height:46px!important;min-height:46px!important;border-radius:11px!important;
+  font-size:12px!important;font-weight:900!important;flex-direction:row!important;gap:5px!important
+}
+.v107-theme-grid .theme span{font-size:16px!important}
+.v107-stop-title{margin:0 0 6px!important}
+.v107-stop-title b{font-size:14px!important;color:#243f36}
+.v107-stops{gap:5px!important}
+.v107-stops button{height:39px!important;font-size:12px!important}
+.v107-pace{margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+.v107-pace .pace-head-v102{margin-bottom:5px!important}
+.v107-pace .pace-head-v102 span{font-size:14px!important}
+.v107-pace .pace-seg-v102 button{height:42px!important;font-size:12px!important}
+.v107-open{
+  min-height:46px!important;margin-top:0!important;padding:7px 10px!important;
+  border:1px solid #e2ebe6;border-radius:14px;background:#fff
+}
+.v107-open .open-copy b{font-size:13px!important}
+.v107-loop{
+  margin-top:6px!important;padding:6px 8px!important;font-size:10px!important
+}
+.v107-create{margin-top:7px!important}
+@media(max-height:740px){
+  .builder-intro-v107 h1{font-size:28px}
+  .builder-intro-v107.second h1{font-size:25px}
+  .v107-card{padding:9px!important}
+  .v107-location .location-mini{min-height:51px!important}
+  .v107-readout b{font-size:38px!important}
+  .v107-theme-grid .theme{height:41px!important;min-height:41px!important}
+  .v107-stops button{height:35px!important}
+  .v107-pace .pace-seg-v102 button{height:37px!important}
+  .v107-next,.v107-create{height:49px!important}
+}
+
 </style>
 </head>
 <body>
@@ -932,98 +1025,110 @@ body{overflow:hidden}
 
       <!-- ① 地図なし：条件設定 -->
       <section class="home-state builder-state active" id="builderState">
-        <div class="builder-intro">
-          <h1>今日はどんな散歩にする？</h1>
+        <div class="builder-step-v107 active" id="builderStep1">
+          <div class="step-progress-v107"><b>1 / 2</b><span><i></i></span></div>
+          <div class="builder-intro-v107">
+            <h1>どこから、<br>どのくらい歩く？</h1>
+          </div>
+
+          <div class="builder-card v107-card">
+            <div class="field-title v107-title">
+              <svg viewBox="0 0 24 24"><path d="M12 21s6-5.5 6-11a6 6 0 1 0-12 0c0 5.5 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+              出発地点
+            </div>
+            <div class="location-duo v107-location">
+              <button class="location-mini active" id="currentLocationBtn">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                現在地
+              </button>
+              <button class="location-mini" id="mapStartBtn">
+                <svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg>
+                地図から選ぶ
+              </button>
+            </div>
+            <div class="start-label" id="startLabel">現在地からスタート</div>
+            <span id="locationStatus" class="sr-only-v103">現在地を取得します</span>
+          </div>
+
+          <div class="builder-card v107-card">
+            <div class="field-title v107-title">
+              <svg viewBox="0 0 24 24"><path d="M4 7h4v10H4zM16 7h4v10h-4zM8 12h8"/></svg>
+              距離 / 時間
+            </div>
+
+            <div class="amount-mode-v102 v107-mode">
+              <button class="active" data-amount-mode="distance">距離</button>
+              <button data-amount-mode="time">時間</button>
+            </div>
+
+            <div class="amount-readout v107-readout">
+              <b id="distanceValue">5.0</b><small id="distanceUnit">km</small>
+            </div>
+            <div class="range-wrap v107-range">
+              <input class="range-main" id="amountRange" type="range" min="1" max="10" step="0.5" value="5">
+              <div class="range-labels" id="rangeLabels"><span>1</span><span>5</span><span>10 km</span></div>
+            </div>
+            <div class="distance-hint sr-only-v103" id="distanceHint">目安：約 65〜75 分</div>
+          </div>
+
+          <button class="create-btn v107-next" id="builderNextBtn">次へ <span>›</span></button>
         </div>
 
-        <div class="builder-card">
-          <div class="field-title">
-            <svg viewBox="0 0 24 24"><path d="M12 21s6-5.5 6-11a6 6 0 1 0-12 0c0 5.5 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
-            出発地点
-          </div>
-          <div class="location-duo">
-            <button class="location-mini active" id="currentLocationBtn">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-              現在地
-            </button>
-            <button class="location-mini" id="mapStartBtn">
-              <svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg>
-              地図から選ぶ
-            </button>
-          </div>
-          <div class="start-label" id="startLabel">現在地からスタート</div>
-          <span id="locationStatus" class="sr-only-v103">現在地を取得します</span>
-        </div>
-
-        <div class="builder-card">
-          <div class="field-title">
-            <svg viewBox="0 0 24 24"><path d="M4 7h4v10H4zM16 7h4v10h-4zM8 12h8"/></svg>
-            どのくらい歩く？
+        <div class="builder-step-v107" id="builderStep2">
+          <div class="step-progress-v107 full"><b>2 / 2</b><span><i></i></span></div>
+          <div class="builder-intro-v107 second">
+            <button class="back-step-v107" id="builderBackBtn">‹</button>
+            <h1>どんな散歩にする？</h1>
           </div>
 
-          <div class="amount-mode-v102">
-            <button class="active" data-amount-mode="distance">距離で指定</button>
-            <button data-amount-mode="time">時間で指定</button>
-          </div>
-
-          <div class="amount-readout">
-            <b id="distanceValue">5.0</b><small id="distanceUnit">km</small>
-          </div>
-          <div class="range-wrap">
-            <input class="range-main" id="amountRange" type="range" min="1" max="10" step="0.5" value="5">
-            <div class="range-labels" id="rangeLabels"><span>1</span><span>5</span><span>10 km</span></div>
-          </div>
-          <div class="distance-hint sr-only-v103" id="distanceHint">目安：約 65〜75 分</div>
-
-          <div class="pace-box-v102">
-            <div class="pace-head-v102">
-              <span>歩くペース</span>
-              <small id="paceHintV102" class="sr-only-v103">普通ペース</small>
+          <div class="builder-card v107-card compact">
+            <div class="field-title v107-title small-theme-title">
+              <svg viewBox="0 0 24 24"><path d="M4 18V6m0 0h11l-2.5 3L15 12H4"/></svg>
+              テーマ
             </div>
-            <div class="pace-seg-v102">
-              <button data-pace="slow">ゆっくり</button>
-              <button data-pace="normal" class="active">普通</button>
-              <button data-pace="fast">早歩き</button>
+            <div class="theme-grid v107-theme-grid">
+              <button class="theme active" data-theme="random"><span>✦</span>おまかせ</button>
+              <button class="theme" data-theme="cafe"><span>☕</span>カフェ</button>
+              <button class="theme" data-theme="food"><span>🍽</span>ごはん</button>
+              <button class="theme" data-theme="green"><span>🌳</span>緑</button>
+              <button class="theme" data-theme="water"><span>🌊</span>水辺</button>
+              <button class="theme" data-theme="direct"><span>◎</span>寄り道なし</button>
             </div>
           </div>
 
-          <div class="field-title" style="margin-top:15px">
-            <svg viewBox="0 0 24 24"><path d="M4 18V6m0 0h11l-2.5 3L15 12H4"/></svg>
-            コースのテーマ
-          </div>
-
-          <div class="theme-grid">
-            <button class="theme active" data-theme="random"><span>✦</span>おまかせ</button>
-            <button class="theme" data-theme="cafe"><span>☕</span>カフェ</button>
-            <button class="theme" data-theme="food"><span>🍽</span>ごはん</button>
-            <button class="theme" data-theme="green"><span>🌳</span>緑多め</button>
-            <button class="theme" data-theme="direct"><span>◎</span>寄り道なし</button>
-            <button class="theme" data-theme="water"><span>🌊</span>水辺</button>
-          </div>
-
-          <div class="stop-row-title"><b>寄り道の数</b></div>
-          <div class="stop-counts" id="stopCounts">
-            <button data-stops="0">なし</button>
-            <button data-stops="1">1件</button>
-            <button data-stops="2" class="active">2件</button>
-            <button data-stops="3">3件</button>
-            <button data-stops="auto">おまかせ</button>
-          </div>
-
-          <div class="loop-note">
-            <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2-5.3"/><path d="M4 4v5h5"/></svg>
-            基本は出発地点に戻る周回コースで作成
-          </div>
-
-          <div class="open-row">
-            <div class="open-copy">
-              <b>営業中のお店だけ</b>
-
+          <div class="builder-card v107-card compact">
+            <div class="stop-row-title v107-stop-title"><b>寄り道の数</b></div>
+            <div class="stop-counts v107-stops" id="stopCounts">
+              <button data-stops="0">なし</button>
+              <button data-stops="1">1件</button>
+              <button data-stops="2" class="active">2件</button>
+              <button data-stops="3">3件</button>
+              <button data-stops="auto">おまかせ</button>
             </div>
+          </div>
+
+          <div class="builder-card v107-card compact">
+            <div class="pace-box-v102 v107-pace">
+              <div class="pace-head-v102"><span>歩くペース</span><small id="paceHintV102" class="sr-only-v103">普通ペース</small></div>
+              <div class="pace-seg-v102">
+                <button data-pace="slow">ゆっくり</button>
+                <button data-pace="normal" class="active">普通</button>
+                <button data-pace="fast">早歩き</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="open-row v107-open">
+            <div class="open-copy"><b>営業中のお店だけ</b></div>
             <button class="switch on" id="openOnlyToggle" aria-label="営業中のお店だけ"></button>
           </div>
 
-          <button class="create-btn" id="createRouteBtn">
+          <div class="loop-note v107-loop">
+            <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2-5.3"/><path d="M4 4v5h5"/></svg>
+            出発地点に戻る周回コースで作成
+          </div>
+
+          <button class="create-btn v107-create" id="createRouteBtn">
             <svg viewBox="0 0 24 24"><circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><path d="M7 18c6 0 3-10 10-10"/></svg>
             コースを作る
           </button>
@@ -2153,6 +2258,18 @@ function openGoogleMapsNavigation(){
   // Google Maps may show a route preview instead of immediate turn-by-turn navigation.
   window.location.href=url;
 }
+
+
+function showBuilderStep(step){
+  const s1=$('builderStep1'),s2=$('builderStep2');
+  if(!s1||!s2)return;
+  const second=step===2;
+  s1.classList.toggle('active',!second);
+  s2.classList.toggle('active',second);
+  $('builderState').scrollTop=0;
+}
+$('builderNextBtn').onclick=()=>showBuilderStep(2);
+$('builderBackBtn').onclick=()=>showBuilderStep(1);
 
 $('createRouteBtn').onclick=createRoute;
 $('cancelGenerateBtn').onclick=()=>{
