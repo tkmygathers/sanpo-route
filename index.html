@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v107 two-step large-type compact-ui -->
+<!-- SANPO v108 integrated demo: 2-step + loop quality + community spots + arrows + readable UI -->
 
 <link rel="preconnect" href="https://unpkg.com">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -1000,6 +1000,82 @@ body{overflow:hidden}
   .v107-next,.v107-create{height:49px!important}
 }
 
+
+/* ===== SANPO v108: product-like visual system / community spots / readable results ===== */
+:root{--ink:#123c32;--muted:#61766f;--line:#dfe8e3;--soft:#f5f8f6;--deep:#0e6f50}
+body{background:#eef3f0}
+.app{background:linear-gradient(180deg,#fbfdfb 0%,#f4f8f5 100%)}
+.topbar{background:rgba(255,255,255,.96)}
+.brand-copy small{display:none!important}
+.builder-state{background:
+  radial-gradient(circle at 100% 0%,rgba(178,218,193,.18),transparent 34%),
+  linear-gradient(180deg,#fbfdfb,#f5f8f5)!important}
+.builder-card,.result-sheet,.panel{box-shadow:0 5px 16px rgba(21,67,50,.055)!important;border:1px solid rgba(218,231,224,.9)!important}
+.theme-svg{width:20px;height:20px;display:grid;place-items:center}
+.theme-svg svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v107-theme-grid .theme span.theme-svg{font-size:initial!important}
+
+/* Result typography: keep layout, improve legibility */
+.result-panel-v102 .result-head h2{font-size:20px!important;line-height:1.25!important;letter-spacing:-.02em}
+.result-panel-v102 .result-head p{font-size:12px!important;line-height:1.55!important;color:#526b63!important;margin-top:5px!important}
+.result-panel-v102 .candidate-count{font-size:11px!important;padding:5px 8px!important;margin-top:7px!important}
+.result-panel-v102 .candidate-btn{font-size:11.5px!important;padding:8px 10px!important}
+.result-panel-v102 .result-metrics b{font-size:19px!important}
+.result-panel-v102 .result-metrics small{font-size:10.5px!important;margin-top:4px!important}
+.result-panel-v102 .spot-title b{font-size:15px!important}
+.result-panel-v102 .spot-title span{font-size:11px!important}
+.result-panel-v102 .spot-card b{font-size:13px!important;line-height:1.4!important}
+.result-panel-v102 .spot-card small{font-size:10.5px!important;line-height:1.45!important;margin-top:3px!important}
+.result-panel-v102 #googleNavNote{font-size:10.5px!important;line-height:1.4!important}
+.bottom-nav .nav-btn{font-size:10.5px!important}
+
+/* community spots */
+.spots-inner-v108{padding-bottom:18px!important}
+.spots-page-head-v108{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.spots-page-head-v108 .section-title{font-size:23px!important;line-height:1.15!important;margin-bottom:4px!important}
+.spots-page-head-v108 .section-sub{font-size:11.5px!important;line-height:1.45!important;margin:0!important}
+.spot-post-btn-v108{border:0;background:#0e7f59;color:#fff;border-radius:12px;padding:10px 12px;font-weight:900;white-space:nowrap}
+.spot-filter-v108{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:9px}
+.spot-filter-v108 button{border:1px solid #d9e5df;background:#fff;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:850;color:#526b63;white-space:nowrap}
+.spot-filter-v108 button.active{background:#113f34;color:#fff;border-color:#113f34}
+.community-note-v108{display:flex;gap:8px;align-items:center;border:1px solid #dfe9e3;background:#f3f8f5;border-radius:13px;padding:9px 10px;margin-bottom:10px}
+.community-note-v108 svg{width:19px;height:19px;fill:none;stroke:#0e7f59;stroke-width:2;flex:0 0 auto}
+.community-note-v108 b{display:block;font-size:11.5px;color:#21483d}
+.community-note-v108 small{display:block;font-size:9.5px;color:#6c7f78;margin-top:2px;line-height:1.4}
+.community-card-v108{background:#fff;border:1px solid #dde8e2;border-radius:17px;padding:10px;margin-bottom:9px;box-shadow:0 4px 14px rgba(19,63,48,.045)}
+.community-card-top-v108{display:grid;grid-template-columns:88px 1fr;gap:10px}
+.community-photo-v108{height:88px;border-radius:13px;background:linear-gradient(145deg,#cfe8dc,#e7efe9);overflow:hidden;display:grid;place-items:center;color:#26634f;font-weight:950}
+.community-photo-v108 img{width:100%;height:100%;object-fit:cover}
+.community-kind-v108{font-size:10px;color:#0e7f59;font-weight:900;margin-bottom:3px}
+.community-card-v108 h3{font-size:15px;margin:0 0 4px;color:#173f35;line-height:1.25}
+.community-stars-v108{font-size:11px;color:#9a6e16;margin-bottom:4px}
+.community-review-v108{font-size:11.5px;line-height:1.55;color:#50675f;margin:0}
+.community-tags-v108{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.community-tags-v108 span{font-size:9.5px;padding:4px 7px;border-radius:999px;background:#edf5f1;color:#3f685a;font-weight:800}
+.community-meta-v108{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid #eef2f0;font-size:9.5px;color:#788a83}
+
+/* post modal */
+.community-post-modal-v108{position:absolute;inset:0;z-index:1900;background:rgba(20,42,35,.42);display:none;align-items:flex-end}
+.community-post-modal-v108.show{display:flex}
+.community-post-sheet-v108{width:100%;background:#fff;border-radius:23px 23px 0 0;padding:12px 14px 20px;max-height:84%;overflow:auto}
+.community-post-sheet-v108 h2{font-size:19px;margin:3px 0 4px;color:#153f34}
+.community-post-sheet-v108 p{font-size:10.5px;color:#6c7e77;margin:0 0 10px;line-height:1.5}
+.community-form-v108 label{display:block;font-size:11px;font-weight:850;color:#35574c;margin:8px 0 4px}
+.community-form-v108 input,.community-form-v108 select,.community-form-v108 textarea{width:100%;border:1px solid #dbe6e0;border-radius:11px;background:#fafcfb;padding:10px;font:inherit;font-size:12px;outline:none}
+.community-form-v108 textarea{min-height:84px;resize:vertical}
+.community-form-actions-v108{display:grid;grid-template-columns:1fr 2fr;gap:7px;margin-top:12px}
+.community-form-actions-v108 button{height:44px;border-radius:12px;font-weight:900}
+.community-cancel-v108{border:1px solid #dce6e1;background:#fff;color:#48635a}
+.community-submit-v108{border:0;background:#0d8059;color:#fff}
+
+/* profile */
+.profile-grid-v108{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+.profile-grid-v108 label{font-size:9.5px;color:#657871;font-weight:800}
+.profile-grid-v108 input,.profile-grid-v108 select{width:100%;margin-top:4px;border:1px solid #dce7e1;border-radius:10px;padding:9px;background:#fafcfb;font-size:11px}
+
+/* Leaflet direction arrow markers */
+.route-arrow-v108{width:22px;height:22px;border-radius:50%;background:#0a8b61;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.18);display:grid;place-items:center;color:#fff;font-size:13px;font-weight:900;line-height:1}
+
 </style>
 </head>
 <body>
@@ -1087,12 +1163,12 @@ body{overflow:hidden}
               テーマ
             </div>
             <div class="theme-grid v107-theme-grid">
-              <button class="theme active" data-theme="random"><span>✦</span>おまかせ</button>
-              <button class="theme" data-theme="cafe"><span>☕</span>カフェ</button>
-              <button class="theme" data-theme="food"><span>🍽</span>ごはん</button>
-              <button class="theme" data-theme="green"><span>🌳</span>緑</button>
-              <button class="theme" data-theme="water"><span>🌊</span>水辺</button>
-              <button class="theme" data-theme="direct"><span>◎</span>寄り道なし</button>
+              <button class="theme active" data-theme="random"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="m12 3 1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8Z"/></svg></span>おまかせ</button>
+              <button class="theme" data-theme="cafe"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M5 8h11v7a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z"/><path d="M16 10h2a3 3 0 0 1 0 6h-2M7 4v2M11 4v2M15 4v2"/></svg></span>カフェ</button>
+              <button class="theme" data-theme="food"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M6 3v8M3 3v5a3 3 0 0 0 6 0V3M6 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/></svg></span>ごはん</button>
+              <button class="theme" data-theme="green"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 10v11M8 15l4-2 4 2"/></svg></span>緑</button>
+              <button class="theme" data-theme="water"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M3 8c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 2 2M3 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 2 2"/></svg></span>水辺</button>
+              <button class="theme" data-theme="direct"><span class="theme-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m7 17 10-10"/></svg></span>寄り道なし</button>
             </div>
           </div>
 
@@ -1233,6 +1309,33 @@ body{overflow:hidden}
     </div>
   </section>
 
+  <section class="page" id="spotsPage">
+    <div class="inner spots-inner-v108">
+      <div class="spots-page-head-v108">
+        <div>
+          <h1 class="section-title">みんなのおすすめスポット</h1>
+          <p class="section-sub">散歩の途中で見つけた「ここ良かった」を、場所単位で共有。</p>
+        </div>
+        <button class="spot-post-btn-v108" id="openSpotPostBtn">＋ 投稿</button>
+      </div>
+
+      <div class="spot-filter-v108" id="communitySpotFilter">
+        <button class="active" data-community-filter="all">すべて</button>
+        <button data-community-filter="park">公園</button>
+        <button data-community-filter="cafe">カフェ</button>
+        <button data-community-filter="view">景色</button>
+        <button data-community-filter="rest">休憩</button>
+      </div>
+
+      <div class="community-note-v108">
+        <svg viewBox="0 0 24 24"><path d="M12 21s6-5.5 6-11a6 6 0 1 0-12 0c0 5.5 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+        <div><b>ルートではなく“おすすめポイント”を共有</b><small>自宅など生活拠点につながる軌跡は公開しません。</small></div>
+      </div>
+
+      <div id="communitySpotList"></div>
+    </div>
+  </section>
+
   <section class="page" id="settingsPage">
     <div class="inner">
       <h1 class="section-title">設定</h1>
@@ -1259,6 +1362,21 @@ body{overflow:hidden}
             <div><b id="usagePlaces">0</b><small>Places</small></div>
           </div>
         </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">プロフィール（任意）</div>
+        <div class="setting-copy" style="margin-bottom:10px">
+          <b>カロリー表示の目安にだけ使用</b>
+          <small>SANPOはダイエットアプリではないので、入力しなくてもコース作成は使えます。</small>
+        </div>
+        <div class="profile-grid-v108">
+          <label>性別<select id="profileSex"><option value="">未設定</option><option value="female">女性</option><option value="male">男性</option><option value="other">その他</option></select></label>
+          <label>年齢<input id="profileAge" type="number" min="10" max="100" placeholder="例 30"></label>
+          <label>身長<input id="profileHeight" type="number" min="100" max="220" placeholder="cm"></label>
+          <label>体重<input id="profileWeight" type="number" min="30" max="200" step="0.1" placeholder="kg"></label>
+        </div>
+        <button class="save-key" id="saveProfileBtn">プロフィールを保存</button>
       </div>
 
       <div class="panel">
@@ -1291,11 +1409,26 @@ body{overflow:hidden}
     <button class="nav-btn" data-page="historyPage">
       <svg viewBox="0 0 24 24"><path d="M4 19V9m6 10V5m6 14v-7m4 7V3"/></svg>記録
     </button>
-    <button class="nav-btn" data-page="settingsPage">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7-.5-1.2.9-1.9-2.1-2.1-1.9.9-1.2-.5L11.5 3h-3l-.7 2-1.2.5-1.9-.9-2.1 2.1.9 1.9L3 9.8l-2 .7v3l2 .7.5 1.2-.9 1.9 2.1 2.1 1.9-.9 1.2.5.7 2h3l.7-2 1.2-.5 1.9.9 2.1-2.1-.9-1.9.5-1.2Z"/></svg>設定
+    <button class="nav-btn" data-page="spotsPage">
+      <svg viewBox="0 0 24 24"><path d="M12 21s6-5.5 6-11a6 6 0 1 0-12 0c0 5.5 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>スポット
     </button>
   </nav>
 
+
+  <div class="community-post-modal-v108" id="communityPostModal">
+    <div class="community-post-sheet-v108">
+      <div class="sheet-handle"></div>
+      <h2>おすすめスポットを投稿</h2>
+      <p>ルート全体ではなく、「景色が良かった」「休憩しやすかった」など場所単位で共有します。デモ版ではこの端末だけに保存します。</p>
+      <div class="community-form-v108">
+        <label>スポット名</label><input id="communityPostName" maxlength="40" placeholder="例：運河沿いのベンチ">
+        <label>カテゴリ</label><select id="communityPostKind"><option value="park">公園</option><option value="cafe">カフェ</option><option value="view">景色</option><option value="rest">休憩</option></select>
+        <label>ひとことレビュー</label><textarea id="communityPostReview" maxlength="180" placeholder="どんなところが良かった？"></textarea>
+        <label>タグ（カンマ区切り）</label><input id="communityPostTags" maxlength="80" placeholder="水辺, ベンチあり, 静か">
+        <div class="community-form-actions-v108"><button class="community-cancel-v108" id="communityPostCancel">戻る</button><button class="community-submit-v108" id="communityPostSubmit">この端末に投稿</button></div>
+      </div>
+    </div>
+  </div>
 
   <div class="start-map-modal" id="startMapModal">
     <div class="start-map-top">
@@ -1735,6 +1868,7 @@ async function googleCandidate(start,spec){
     spot:spec.spot,
     waypoints:spec.waypoints||[],
     themeMatched:!!spec.themeMatched,
+    overlapRatio:routeOverlapRatioV108(path),
     demo:false
   };
 }
@@ -1759,6 +1893,20 @@ function pickCandidateSpots(places,wanted,seed){
   return picked.slice(0,wanted);
 }
 
+function quantPointV108(p){return `${(+p.lat).toFixed(4)},${(+p.lng).toFixed(4)}`}
+function routeOverlapRatioV108(path){
+  if(!path||path.length<5)return 0;
+  const edges=new Map();let dup=0,total=0;
+  for(let i=1;i<path.length;i++){
+    const a=quantPointV108(path[i-1]),b=quantPointV108(path[i]);
+    if(a===b)continue;
+    total++;
+    const key=[a,b].sort().join('|');
+    const n=(edges.get(key)||0)+1;edges.set(key,n);if(n>1)dup++;
+  }
+  return total?dup/total:0;
+}
+
 async function buildGoogleRoutes(start,places){
   const wanted=resolvedStopCount();
   const specs=[];
@@ -1775,14 +1923,16 @@ async function buildGoogleRoutes(start,places){
     catch(e){console.warn('Candidate route failed',e)}
   }
 
-  return results.sort((a,b)=>{
+  const sorted=results.sort((a,b)=>{
     const ad=Math.abs(a.km-effectiveTargetKmV102());
     const bd=Math.abs(b.km-effectiveTargetKmV102());
-    // When a theme was explicitly chosen, prefer candidates that really pass a theme POI.
     const am=(['green','water','cafe','food'].includes(state.theme)&&!a.themeMatched)?1:0;
     const bm=(['green','water','cafe','food'].includes(state.theme)&&!b.themeMatched)?1:0;
-    return (am-bm)||ad-bd;
+    return (am-bm)||((a.overlapRatio||0)-(b.overlapRatio||0))||(ad-bd);
   });
+  // 同じ道路を往復する比率が高い候補は原則除外。全滅時だけ最良候補を残す。
+  const loopLike=sorted.filter(x=>(x.overlapRatio||0)<0.24);
+  return loopLike.length?loopLike:sorted.slice(0,1);
 }
 
 function buildDemoRoutes(start,places){
@@ -1799,6 +1949,7 @@ function buildDemoRoutes(start,places){
       spot:spec.spot,
       waypoints:spec.waypoints||[],
       themeMatched:!!spec.themeMatched,
+      overlapRatio:routeOverlapRatioV108(path),
       demo:true
     });
   }
@@ -1844,6 +1995,8 @@ async function createRoute(){
     markStep('stepPlaces','doing');
     if(googleOk && resolvedStopCount()>0 && ['cafe','food','random','green','water'].includes(state.theme)){
       places=await searchPlaces(start);
+      const communityNearby=getCommunitySpots().filter(s=>s.lat&&s.lng&&hav(start,{lat:s.lat,lng:s.lng})<=Math.max(2,effectiveTargetKmV102()*.8)).map(s=>({id:'community-'+s.id,name:s.name,loc:{lat:s.lat,lng:s.lng},address:'みんなのおすすめスポット',uri:'',openFiltered:false,businessStatus:'',types:[],kind:s.kind,community:true}));
+      places=[...communityNearby,...places];
     }else{
       await wait(420);
       markStep('stepPlaces','done');
@@ -1908,12 +2061,12 @@ function drawCandidate(c){
     if(c.routeObj){
       gPolylines=c.routeObj.createPolylines();
       gPolylines.forEach(p=>{
-        p.setOptions({strokeColor:'#0a9a68',strokeWeight:7,strokeOpacity:.96});
+        p.setOptions({strokeColor:'#0a8b61',strokeWeight:7,strokeOpacity:.96,icons:[{icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:3,strokeColor:'#ffffff',strokeWeight:1.8,fillColor:'#ffffff',fillOpacity:1},offset:'8%',repeat:'16%'}]});
         p.setMap(gmap);
       });
     }else{
       gPolylines=[new google.maps.Polyline({
-        map:gmap,path:c.path,strokeColor:'#0a9a68',strokeWeight:7,strokeOpacity:.96
+        map:gmap,path:c.path,strokeColor:'#0a8b61',strokeWeight:7,strokeOpacity:.96,icons:[{icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:3,strokeColor:'#ffffff',strokeWeight:1.8,fillColor:'#ffffff',fillOpacity:1},offset:'8%',repeat:'16%'}]
       })];
     }
     gMarkers.push(new google.maps.Marker({map:gmap,position:c.path[0],title:'スタート / ゴール'}));
@@ -1924,8 +2077,15 @@ function drawCandidate(c){
     });
   }else{
     leafletRoute=L.polyline(c.path.map(p=>[p.lat,p.lng]),{
-      color:'#0a9a68',weight:7,opacity:.96
+      color:'#0a8b61',weight:7,opacity:.96
     }).addTo(leafletMap);
+    const arrowStep=Math.max(1,Math.floor(c.path.length/6));
+    for(let ai=arrowStep;ai<c.path.length-1;ai+=arrowStep){
+      const a=c.path[ai-1],b=c.path[ai];
+      const deg=Math.atan2(b.lng-a.lng,b.lat-a.lat)*180/Math.PI;
+      const icon=L.divIcon({className:'',html:`<div class="route-arrow-v108" style="transform:rotate(${deg}deg)">↑</div>`,iconSize:[22,22],iconAnchor:[11,11]});
+      leafletMarkers.push(L.marker([b.lat,b.lng],{icon,interactive:false}).addTo(leafletMap));
+    }
     leafletMarkers.push(
       L.circleMarker([c.path[0].lat,c.path[0].lng],{
         radius:9,color:'#fff',weight:4,fillColor:'#2b82f6',fillOpacity:1
@@ -1945,7 +2105,7 @@ function showCandidate(index){
   drawCandidate(c);
 
   const mins=Math.max(1,Math.round(c.km/state.paceKmh*60));
-  const cal=Math.round(mins*4.2);
+  const cal=calorieEstimateV108(mins,state.paceKmh);
 
   const explicitTheme=['cafe','food','green','water'].includes(state.theme);
   const matched=!explicitTheme || c.themeMatched;
@@ -2007,7 +2167,7 @@ function renderCandidateList(){
     const label=i===0?'条件にいちばん近い':i===1?'景色違いの候補':'もうひとつの候補';
     el.innerHTML=`<div class="candidate-thumb">${i===0?'🌿':i===1?'🏙':'🌊'}</div>
       <div><b>${i+1}. ${escapeHtml((['cafe','food','green','water'].includes(state.theme)&&!c.themeMatched)?'周回':themeLabel())}コース</b><small>${c.km.toFixed(1)} km ・ 約 ${mins}分 ・ 出発地点に戻る</small>
-      <div class="candidate-tags"><span>${(c.spots||[]).length}件寄り道</span><span>${c.themeMatched?'テーマ経由':'周回優先'}</span><span>${label}</span></div></div><div>›</div>`;
+      <div class="candidate-tags"><span>${(c.spots||[]).length}件寄り道</span><span>${c.themeMatched?'テーマ経由':'周回優先'}</span><span>${(c.overlapRatio||0)<.12?'往復少なめ':'周回'}</span><span>${label}</span></div></div><div>›</div>`;
     el.onclick=()=>{ $('recommendModal').classList.remove('show'); showCandidate(i); };
     box.appendChild(el);
   });
@@ -2048,8 +2208,74 @@ function renderHistory(){
     </div>`).join('');
 }
 
+/* ===== community spots demo ===== */
+const COMMUNITY_DEMO=[
+  {id:'demo1',kind:'park',name:'運河沿いの小さな公園',review:'水辺が近く、ベンチで少し休むのにちょうどいい場所。風が気持ちよくて散歩途中に寄りやすい。',tags:['水辺','ベンチあり','静か'],rating:4.8,reviews:32,author:'SANPOデモ',lat:35.6548,lng:139.7968},
+  {id:'demo2',kind:'cafe',name:'散歩途中のテラスカフェ',review:'外席があって、歩いたあとにひと休みしやすい。水辺ルートとの相性がいい。',tags:['テラス','休憩','コーヒー'],rating:4.6,reviews:18,author:'SANPOデモ',lat:35.6562,lng:139.7947},
+  {id:'demo3',kind:'view',name:'夕方がきれいな水辺スポット',review:'夕方は空と水面がきれい。短い散歩でも景色を楽しみたい日におすすめ。',tags:['夕景','写真','水辺'],rating:4.9,reviews:24,author:'SANPOデモ',lat:35.6534,lng:139.7991}
+];
+let communityFilter='all';
+function communityKindLabel(k){return ({park:'公園',cafe:'カフェ',view:'景色',rest:'休憩'})[k]||'スポット'}
+function getCommunitySpots(){
+  let mine=[];try{mine=JSON.parse(localStorage.getItem(KEY.community)||'[]')}catch(e){}
+  return [...mine,...COMMUNITY_DEMO];
+}
+function renderCommunitySpots(){
+  const box=$('communitySpotList');if(!box)return;
+  const items=getCommunitySpots().filter(x=>communityFilter==='all'||x.kind===communityFilter);
+  box.innerHTML=items.map(x=>`<article class="community-card-v108">
+    <div class="community-card-top-v108">
+      <div class="community-photo-v108">${x.photo?`<img src="${escapeHtml(x.photo)}" alt="">`:`<span>${communityKindLabel(x.kind)}</span>`}</div>
+      <div><div class="community-kind-v108">${communityKindLabel(x.kind)}</div><h3>${escapeHtml(x.name)}</h3>
+      <div class="community-stars-v108">★ ${Number(x.rating||4.7).toFixed(1)} ・ ${x.reviews||'デモ'}件</div>
+      <p class="community-review-v108">${escapeHtml(x.review||'')}</p></div>
+    </div>
+    <div class="community-tags-v108">${(x.tags||[]).map(t=>`<span>${escapeHtml(t)}</span>`).join('')}</div>
+    <div class="community-meta-v108"><span>${escapeHtml(x.author||'匿名')}</span><span>場所だけを共有</span></div>
+  </article>`).join('') || '<div class="history-empty">このカテゴリの投稿はまだありません。</div>';
+}
+qsa('[data-community-filter]').forEach(btn=>btn.onclick=()=>{
+  communityFilter=btn.dataset.communityFilter;
+  qsa('[data-community-filter]').forEach(x=>x.classList.toggle('active',x===btn));
+  renderCommunitySpots();
+});
+$('openSpotPostBtn').onclick=()=>$('communityPostModal').classList.add('show');
+$('communityPostCancel').onclick=()=>$('communityPostModal').classList.remove('show');
+$('communityPostModal').onclick=e=>{if(e.target===$('communityPostModal'))$('communityPostModal').classList.remove('show')};
+$('communityPostSubmit').onclick=()=>{
+  const name=$('communityPostName').value.trim(),review=$('communityPostReview').value.trim();
+  if(!name||!review){alert('スポット名とレビューを入力してください。');return}
+  let mine=[];try{mine=JSON.parse(localStorage.getItem(KEY.community)||'[]')}catch(e){}
+  mine.unshift({id:'mine'+Date.now(),kind:$('communityPostKind').value,name,review,tags:$('communityPostTags').value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5),rating:5,reviews:1,author:'あなた',lat:state.current?.lat||null,lng:state.current?.lng||null});
+  localStorage.setItem(KEY.community,JSON.stringify(mine.slice(0,30)));
+  $('communityPostName').value='';$('communityPostReview').value='';$('communityPostTags').value='';
+  $('communityPostModal').classList.remove('show');renderCommunitySpots();
+};
+
+/* ===== optional profile / calorie helper ===== */
+function loadProfileV108(){
+  let p={};try{p=JSON.parse(localStorage.getItem(KEY.profile)||'{}')}catch(e){}
+  if($('profileSex'))$('profileSex').value=p.sex||'';
+  if($('profileAge'))$('profileAge').value=p.age||'';
+  if($('profileHeight'))$('profileHeight').value=p.height||'';
+  if($('profileWeight'))$('profileWeight').value=p.weight||'';
+  return p;
+}
+function calorieEstimateV108(minutes,paceKmh){
+  const p=loadProfileV108();
+  const weight=Number(p.weight)||60; // 未設定時は一般的な目安として60kg
+  const met=paceKmh>=5.2?4.8:paceKmh<=3.8?2.8:3.5;
+  return Math.round(met*weight*(minutes/60));
+}
+$('saveProfileBtn').onclick=()=>{
+  localStorage.setItem(KEY.profile,JSON.stringify({sex:$('profileSex').value,age:$('profileAge').value,height:$('profileHeight').value,weight:$('profileWeight').value}));
+  alert('プロフィールを保存しました。カロリーはあくまで目安として表示します。');
+};
+loadProfileV108();renderCommunitySpots();
+
 /* ===== navigation ===== */
 function navTo(id){
+  if(id==='spotsPage')renderCommunitySpots();
   qsa('.page').forEach(p=>p.classList.toggle('active',p.id===id));
   qsa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
   if(id==='homePage' && $('resultState').classList.contains('active')){
