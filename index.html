@@ -7,7 +7,12 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v108 integrated demo: 2-step + loop quality + community spots + arrows + readable UI -->
+<!-- SANPO v109 integrated polish: route accuracy + extension choice + history album + settings + photos + Google reviews -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
 <link rel="preconnect" href="https://unpkg.com">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -1076,6 +1081,138 @@ body{background:#eef3f0}
 /* Leaflet direction arrow markers */
 .route-arrow-v108{width:22px;height:22px;border-radius:50%;background:#0a8b61;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.18);display:grid;place-items:center;color:#fff;font-size:13px;font-weight:900;line-height:1}
 
+
+/* ===== SANPO v109 ===== */
+html,body{font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+h1,h2,h3,.builder-intro-v107 h1,.section-title,.create-btn,.primary-result,.recommend-btn,
+.v107-next,.v107-create,.brand-copy b{font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif!important}
+button,input,select,textarea{font-family:"Noto Sans JP",sans-serif!important}
+body{letter-spacing:.005em}
+.builder-intro-v107 h1,.section-title{letter-spacing:-.035em!important}
+.theme,.nav-btn,.field-title{letter-spacing:0!important}
+
+/* less "card generated" feel */
+.builder-card{box-shadow:none!important;border:1px solid #dfe8e3!important}
+.v107-card{background:rgba(255,255,255,.86)!important}
+.result-sheet{box-shadow:0 -8px 28px rgba(21,63,48,.07)!important}
+.result-panel-v102 .result-head p{font-size:13px!important;line-height:1.65!important}
+.result-panel-v102 .spot-card small{font-size:11.5px!important}
+.result-panel-v102 .spot-card b{font-size:14px!important}
+.result-panel-v102 #googleNavNote{font-size:11px!important}
+.bottom-nav .nav-btn{font-size:11px!important;font-weight:800!important}
+
+/* generation */
+.generating-state{background:linear-gradient(180deg,#f8fbf9 0%,#eef6f1 100%)}
+.generating-v109{height:100%;display:flex;flex-direction:column;justify-content:center;padding:22px 24px 34px}
+.generating-route-mark-v109{width:220px;max-width:78%;margin:0 auto 18px}
+.generating-route-mark-v109 svg{width:100%;overflow:visible}
+.route-shadow-v109{fill:none;stroke:#dbe8e1;stroke-width:11;stroke-linecap:round}
+.route-line-v109{fill:none;stroke:#15956b;stroke-width:5;stroke-linecap:round;stroke-dasharray:8 7}
+.generating-route-mark-v109 circle{fill:#15956b}
+.moving-dot-v109{animation:pulseV109 1.15s ease-in-out infinite;transform-origin:center}
+@keyframes pulseV109{50%{r:9;opacity:.45}}
+.generating-v109 h2{margin:0;text-align:center;font-size:25px;line-height:1.25;color:#183f35}
+.generating-main-copy-v109{text-align:center;margin:8px 0 14px;font-size:14px;font-weight:800;color:#567168}
+.generation-bar-v109{height:7px;background:#dde9e2;border-radius:999px;overflow:hidden;margin:0 auto 18px;width:100%}
+.generation-bar-v109 i{display:block;width:12%;height:100%;border-radius:inherit;background:#15956b;transition:width .35s ease}
+.progress-list-v109{display:grid;gap:7px}
+.progress-item-v109{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:9px;padding:9px 4px;border-bottom:1px solid #e4ece7;opacity:.52}
+.progress-item-v109.doing,.progress-item-v109.done{opacity:1}
+.progress-item-v109 .progress-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#edf4f0;color:#507066;font-weight:900}
+.progress-item-v109.doing .progress-icon{background:#dff3e9;color:#087f59}
+.progress-item-v109.done .progress-icon{background:#0e8a61;color:#fff}
+.progress-item-v109 b{display:block;font-size:14px;color:#27483e}
+.progress-item-v109 small{display:block;font-size:10.5px;color:#7b8d86;margin-top:2px}
+.v109-cancel{margin:16px auto 0!important;border:0!important;background:transparent!important;color:#70827b!important;font-size:11px!important}
+
+/* history */
+.history-head-v109{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.history-month-v109{border:1px solid #dce7e1;background:#fff;border-radius:999px;padding:8px 11px;font-weight:800;color:#4d695f;font-size:10px}
+.weekly-summary-v109{background:#153f35;color:#fff;border-radius:18px;padding:13px;margin-bottom:12px}
+.weekly-title-v109{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.weekly-title-v109 b{font-size:15px}.weekly-title-v109 span{font-size:9.5px;opacity:.7}
+.weekly-grid-v109{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.weekly-grid-v109>div{text-align:center}
+.weekly-grid-v109 b{font-size:20px}.weekly-grid-v109 small{font-size:9px;margin-left:1px}.weekly-grid-v109 span{display:block;font-size:8.5px;opacity:.7;margin-top:2px}
+.week-chart-v109{height:66px;display:grid;grid-template-columns:repeat(7,1fr);align-items:end;gap:5px;margin-top:12px}
+.week-bar-v109{display:flex;height:100%;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.week-bar-v109 i{width:70%;min-height:3px;background:#77cba9;border-radius:5px 5px 2px 2px}
+.week-bar-v109 span{font-size:8px;opacity:.65}
+.history-section-title-v109{display:flex;justify-content:space-between;align-items:center;margin:3px 2px 8px}
+.history-section-title-v109 b{font-size:16px}.history-section-title-v109 span{font-size:9.5px;color:#74867f}
+.history-card-v109{background:#fff;border:1px solid #dfe8e3;border-radius:16px;padding:11px;margin-bottom:8px}
+.history-card-top-v109{display:flex;justify-content:space-between;gap:8px}
+.history-card-v109 h3{margin:0;font-size:14px;color:#183f35}
+.history-card-v109 .date{font-size:9.5px;color:#7a8b85;white-space:nowrap}
+.history-metrics-v109{display:flex;gap:13px;margin:8px 0 7px}
+.history-metrics-v109 b{font-size:14px}.history-metrics-v109 small{font-size:9px;color:#71837c;margin-left:2px}
+.history-tags-v109{display:flex;gap:5px;flex-wrap:wrap}
+.history-tags-v109 span{font-size:9px;padding:4px 7px;border-radius:999px;background:#edf5f1;color:#46695d}
+.history-note-v109{margin-top:8px;width:100%;border:0;border-top:1px solid #eef2f0;padding:8px 0 0;background:transparent;color:#5e756d;text-align:left;font-size:10px}
+
+/* settings */
+.settings-inner-v109{padding-bottom:18px!important}
+.settings-head-v109{margin-bottom:9px}
+.settings-section-v109{background:#fff;border:1px solid #dfe8e3;border-radius:14px;margin-bottom:8px;overflow:hidden}
+.settings-section-v109 summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 13px;cursor:pointer}
+.settings-section-v109 summary::-webkit-details-marker{display:none}
+.settings-section-v109 summary b{font-size:14px;color:#203f36;display:block}
+.settings-section-v109 summary small{font-size:9.5px;color:#7b8c86;display:block;margin-top:2px}
+.settings-section-v109 summary>span{font-size:23px;color:#80918b;transform:rotate(0deg);transition:.2s}
+.settings-section-v109[open] summary>span{transform:rotate(90deg)}
+.settings-body-v109{border-top:1px solid #edf2ef;padding:10px 12px 12px}
+.setting-row-v109{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0}
+.setting-row-v109+ .setting-row-v109{border-top:1px solid #eef3f0}
+.setting-row-v109 b{font-size:11.5px;display:block}.setting-row-v109 small{font-size:9px;display:block;color:#788a83;margin-top:2px}
+.column-v109{display:block}.column-v109 .seg{margin-top:8px}
+.mini-v109{width:185px}.mini-v109 button{font-size:9px!important;padding:6px 4px!important}
+.usage-grid-v109{margin:8px 0!important}
+.compact-v109{margin-bottom:7px}
+.settings-link-v109{padding:10px 0;border-bottom:1px solid #eef3f0;display:flex;justify-content:space-between;gap:10px}
+.settings-link-v109:last-child{border-bottom:0}
+.settings-link-v109 b{font-size:11px}.settings-link-v109 span{font-size:9.5px;color:#788a83}
+
+/* extension */
+.extension-modal-v109{position:absolute;inset:0;z-index:2100;background:rgba(16,38,31,.42);display:none;align-items:center;padding:16px}
+.extension-modal-v109.show{display:flex}
+.extension-card-v109{width:100%;background:#fff;border-radius:20px;padding:18px;box-shadow:0 22px 60px rgba(0,0,0,.2)}
+.extension-eyebrow-v109{font-size:10px;color:#0c8d62;font-weight:900}
+.extension-card-v109 h2{font-size:20px;line-height:1.3;margin:5px 0 7px;color:#183f35}
+.extension-card-v109 p{font-size:11px;line-height:1.6;color:#62776f;margin:0 0 12px}
+.extension-compare-v109{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.extension-compare-v109 button{border:1px solid #dce7e1;background:#fff;border-radius:13px;padding:11px 8px;color:#34564b}
+.extension-compare-v109 button.recommended{background:#0e855e;border-color:#0e855e;color:#fff}
+.extension-compare-v109 small{display:block;font-size:9px;margin-bottom:3px}.extension-compare-v109 b{font-size:15px}
+
+/* photos */
+.photo-preview-v109{display:flex;gap:6px;overflow-x:auto;margin-top:7px}
+.photo-preview-v109 img{width:70px;height:70px;border-radius:10px;object-fit:cover;border:1px solid #dce6e1}
+.community-photo-v108{background:#edf4f0!important}
+.community-photo-v108 img{object-fit:cover}
+.community-photo-strip-v109{display:flex;gap:4px;overflow:hidden}
+.community-photo-strip-v109 img{width:100%;height:88px;object-fit:cover}
+
+/* google place reviews */
+.google-place-summary-v109{margin:9px 0 0;padding:9px 10px;border-radius:12px;background:#f4f8f6;display:none}
+.google-place-summary-v109.show{display:block}
+.google-place-summary-v109 b{font-size:13px}.google-place-summary-v109 small{font-size:10px;color:#647870;margin-left:4px}
+.google-reviews-v109{display:grid;gap:6px;margin-top:8px}
+.google-review-v109{border:1px solid #e1e9e5;border-radius:11px;padding:9px;background:#fff}
+.google-review-head-v109{display:flex;justify-content:space-between;gap:8px;font-size:9.5px;color:#647870}
+.google-review-head-v109 a{color:#305c4e;text-decoration:none;font-weight:800}
+.google-review-v109 p{font-size:10.5px!important;line-height:1.55!important;color:#4c625b!important;margin:5px 0 0!important}
+
+/* route quality badge */
+.route-quality-v109{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.route-quality-v109 span{font-size:9.5px;padding:4px 7px;border-radius:999px;background:#eef6f2;color:#3e6659;font-weight:800}
+
+@media(max-height:740px){
+  .generating-v109{padding-top:14px;padding-bottom:20px}
+  .generating-route-mark-v109{margin-bottom:10px}
+  .generating-v109 h2{font-size:22px}
+  .progress-item-v109{padding:7px 4px}
+}
+
 </style>
 </head>
 <body>
@@ -1223,32 +1360,35 @@ body{background:#eef3f0}
 
       <!-- ② 生成中 -->
       <section class="home-state generating-state" id="generatingState">
-        <div class="generating-wrap">
-          <div class="walk-illustration">
-            <div class="walk-ground"></div>
-            <div class="tree t1"></div>
-            <div class="tree t2"></div>
-            <div class="walker">
-              <div class="hair"></div><div class="head"></div><div class="body"></div>
-              <div class="arm a1"></div><div class="arm a2"></div>
-              <div class="leg l1"></div><div class="leg l2"></div>
+        <div class="generating-v109">
+          <div class="generating-route-mark-v109">
+            <svg viewBox="0 0 220 100" aria-hidden="true">
+              <path class="route-shadow-v109" d="M18 72 C58 18, 100 86, 142 34 S198 28, 202 64"/>
+              <path class="route-line-v109" d="M18 72 C58 18, 100 86, 142 34 S198 28, 202 64"/>
+              <circle cx="18" cy="72" r="6"/>
+              <circle class="moving-dot-v109" cx="18" cy="72" r="5"/>
+            </svg>
+          </div>
+          <h2>散歩コースを作っています</h2>
+          <p class="generating-main-copy-v109" id="generatingMainCopy">歩きやすい道を探しています</p>
+          <div class="generation-bar-v109"><i id="generationBarV109"></i></div>
+
+          <div class="progress-list-v109">
+            <div class="progress-item-v109" id="stepPlaces">
+              <span class="progress-icon">1</span>
+              <div><b class="progress-text">立ち寄り候補を確認</b><small>近くのスポットを探します</small></div>
+            </div>
+            <div class="progress-item-v109" id="stepRoute">
+              <span class="progress-icon">2</span>
+              <div><b>周回ルートを調整</b><small>距離と往復の少なさを整えます</small></div>
+            </div>
+            <div class="progress-item-v109" id="stepFinish">
+              <span class="progress-icon">3</span>
+              <div><b>仕上げ</b><small>おすすめ候補をまとめます</small></div>
             </div>
           </div>
-          <h2>あなただけの散歩コースを<br>作成しています…</h2>
 
-          <div class="progress-list">
-            <div class="progress-item" id="stepPlaces">
-              <span class="progress-icon">1</span><b>周辺のスポットを探しています</b><small>カフェ・ごはん・公園などを確認</small>
-            </div>
-            <div class="progress-item" id="stepRoute">
-              <span class="progress-icon">2</span><b>歩きやすいルートを計算しています</b><small>希望距離に近い候補を作成</small>
-            </div>
-            <div class="progress-item" id="stepFinish">
-              <span class="progress-icon">3</span><b>コースを仕上げています</b><small>距離と寄り道先を調整</small>
-            </div>
-          </div>
-
-          <button class="cancel-generate" id="cancelGenerateBtn">キャンセル</button>
+          <button class="cancel-generate v109-cancel" id="cancelGenerateBtn">やめる</button>
         </div>
       </section>
 
@@ -1299,13 +1439,28 @@ body{background:#eef3f0}
   </section>
 
   <section class="page" id="historyPage">
-    <div class="inner">
-      <h1 class="section-title">記録</h1>
-      <p class="section-sub">この端末で作った散歩コースを残します。</p>
-      <div class="panel">
-        <div class="panel-title">最近のコース</div>
-        <div id="historyList"></div>
+    <div class="inner history-inner-v109">
+      <div class="history-head-v109">
+        <div>
+          <h1 class="section-title">記録</h1>
+          <p class="section-sub">歩いた時間を、あとから見返せる場所。</p>
+        </div>
+        <button class="history-month-v109" id="historyMonthLabel">今月</button>
       </div>
+
+      <div class="weekly-summary-v109">
+        <div class="weekly-title-v109"><b>今週のさんぽ</b><span id="weeklyRangeV109"></span></div>
+        <div class="weekly-grid-v109">
+          <div><b id="weekWalksV109">0</b><small>回</small><span>散歩</span></div>
+          <div><b id="weekKmV109">0.0</b><small>km</small><span>距離</span></div>
+          <div><b id="weekMinV109">0</b><small>分</small><span>時間</span></div>
+          <div><b id="weekStopsV109">0</b><small>件</small><span>寄り道</span></div>
+        </div>
+        <div class="week-chart-v109" id="weekChartV109"></div>
+      </div>
+
+      <div class="history-section-title-v109"><b>最近の散歩</b><span>新しい順</span></div>
+      <div id="historyList"></div>
     </div>
   </section>
 
@@ -1337,68 +1492,88 @@ body{background:#eef3f0}
   </section>
 
   <section class="page" id="settingsPage">
-    <div class="inner">
-      <h1 class="section-title">設定</h1>
-      <p class="section-sub">Google Mapsはコース作成後だけ使う設計にして、無駄な読み込みを減らします。</p>
-
-      <div class="panel">
-        <div class="panel-title">Google Maps</div>
-        <div class="setting-row">
-          <div class="setting-copy">
-            <b>Google Mapsを使う</b>
-            <small>APIキーが未設定なら無料マップのデモ版として動きます。</small>
-          </div>
-          <button id="googleToggle" class="switch"></button>
+    <div class="inner settings-inner-v109">
+      <div class="settings-head-v109">
+        <div>
+          <h1 class="section-title">設定</h1>
+          <p class="section-sub">普段の使い方だけ、ここで整える。</p>
         </div>
-        <input id="apiKeyInput" class="api-input" type="password" placeholder="Google Maps API key">
-        <button id="saveApiKey" class="save-key">APIキーをこの端末に保存</button>
+      </div>
 
-        <div class="cost-card">
-          <b>APIを節約する動き</b>
-          <p>ホームを開いただけではGoogle Mapを読み込みません。「コースを作る」を押したあとにだけ地図・徒歩ルートを読み込みます。Placesはカフェ / ごはんを選んだ時だけ検索します。</p>
-          <div class="usage-grid">
-            <div><b id="usageMaps">0</b><small>地図読込</small></div>
+      <details class="settings-section-v109" open>
+        <summary><div><b>散歩の好み</b><small>いつもの初期値</small></div><span>›</span></summary>
+        <div class="settings-body-v109">
+          <div class="setting-row-v109">
+            <div><b>歩くペース</b><small>コース時間の目安に使います</small></div>
+            <div class="seg mini-v109" id="partnerPaceDummy">
+              <button type="button" data-default-pace="slow">ゆっくり</button>
+              <button type="button" data-default-pace="normal" class="active">普通</button>
+              <button type="button" data-default-pace="fast">早歩き</button>
+            </div>
+          </div>
+          <div class="setting-row-v109">
+            <div><b>営業中のお店を優先</b><small>カフェ・ごはんの候補に使用</small></div>
+            <button id="settingsOpenOnlyV109" class="switch on"></button>
+          </div>
+          <div class="setting-row-v109">
+            <div><b>みんなのおすすめも使う</b><small>近くの投稿スポットを候補に加える</small></div>
+            <button id="communityRouteToggleV109" class="switch on"></button>
+          </div>
+        </div>
+      </details>
+
+      <details class="settings-section-v109">
+        <summary><div><b>プロフィール</b><small>カロリー目安用・任意</small></div><span>›</span></summary>
+        <div class="settings-body-v109">
+          <div class="setting-copy compact-v109">
+            <small>入力しなくてもSANPOはすべて使えます。</small>
+          </div>
+          <div class="profile-grid-v108 profile-grid-v109">
+            <label>性別<select id="profileSex"><option value="">未設定</option><option value="female">女性</option><option value="male">男性</option><option value="other">その他</option></select></label>
+            <label>年齢<input id="profileAge" type="number" min="10" max="100" placeholder="例 30"></label>
+            <label>身長<input id="profileHeight" type="number" min="100" max="220" placeholder="cm"></label>
+            <label>体重<input id="profileWeight" type="number" min="30" max="200" step="0.1" placeholder="kg"></label>
+          </div>
+          <button class="save-key" id="saveProfileBtn">保存</button>
+        </div>
+      </details>
+
+      <details class="settings-section-v109">
+        <summary><div><b>表示・体験</b><small>地図・パートナー</small></div><span>›</span></summary>
+        <div class="settings-body-v109">
+          <div class="setting-row-v109">
+            <div><b>Google Mapsを使う</b><small>結果画面と実ルート作成で使用</small></div>
+            <button id="googleToggle" class="switch"></button>
+          </div>
+          <input id="apiKeyInput" class="api-input" type="password" placeholder="Google Maps API key">
+          <button id="saveApiKey" class="save-key">APIキーをこの端末に保存</button>
+
+          <div class="usage-grid usage-grid-v109">
+            <div><b id="usageMaps">0</b><small>地図</small></div>
             <div><b id="usageRoutes">0</b><small>Routes</small></div>
             <div><b id="usagePlaces">0</b><small>Places</small></div>
           </div>
-        </div>
-      </div>
 
-      <div class="panel">
-        <div class="panel-title">プロフィール（任意）</div>
-        <div class="setting-copy" style="margin-bottom:10px">
-          <b>カロリー表示の目安にだけ使用</b>
-          <small>SANPOはダイエットアプリではないので、入力しなくてもコース作成は使えます。</small>
+          <div class="setting-row-v109 column-v109">
+            <div><b>ウォーキングパートナー</b><small>サブ機能。初期はOFF</small></div>
+            <div class="seg" id="partnerSeg">
+              <button data-partner="off" class="active">使わない</button>
+              <button data-partner="female">女性</button>
+              <button data-partner="male">男性</button>
+            </div>
+          </div>
         </div>
-        <div class="profile-grid-v108">
-          <label>性別<select id="profileSex"><option value="">未設定</option><option value="female">女性</option><option value="male">男性</option><option value="other">その他</option></select></label>
-          <label>年齢<input id="profileAge" type="number" min="10" max="100" placeholder="例 30"></label>
-          <label>身長<input id="profileHeight" type="number" min="100" max="220" placeholder="cm"></label>
-          <label>体重<input id="profileWeight" type="number" min="30" max="200" step="0.1" placeholder="kg"></label>
-        </div>
-        <button class="save-key" id="saveProfileBtn">プロフィールを保存</button>
-      </div>
+      </details>
 
-      <div class="panel">
-        <div class="panel-title">ウォーキングパートナー</div>
-        <div class="setting-copy" style="margin-bottom:9px">
-          <b>デフォルトはOFF</b>
-          <small>以前のキャラクター機能はサブ機能として残します。</small>
+      <details class="settings-section-v109">
+        <summary><div><b>データ・その他</b><small>安全設定とアプリ情報</small></div><span>›</span></summary>
+        <div class="settings-body-v109">
+          <div class="settings-link-v109"><b>投稿について</b><span>場所単位で共有します</span></div>
+          <div class="settings-link-v109"><b>位置情報について</b><span>公開ルートは作りません</span></div>
+          <div class="settings-link-v109"><b>APIキーの安全設定</b><span>GitHub PagesのURLだけ許可</span></div>
+          <div class="settings-link-v109"><b>SANPO</b><span>prototype v109</span></div>
         </div>
-        <div class="seg" id="partnerSeg">
-          <button data-partner="off" class="active">使わない</button>
-          <button data-partner="female">女性</button>
-          <button data-partner="male">男性</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">APIキーの安全設定</div>
-        <div class="setting-copy">
-          <b>公開前にGoogle Cloud側で制限</b>
-          <small>HTTPリファラーをGitHub PagesのURLに限定し、使うAPIだけに制限してください。</small>
-        </div>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -1424,8 +1599,25 @@ body{background:#eef3f0}
         <label>スポット名</label><input id="communityPostName" maxlength="40" placeholder="例：運河沿いのベンチ">
         <label>カテゴリ</label><select id="communityPostKind"><option value="park">公園</option><option value="cafe">カフェ</option><option value="view">景色</option><option value="rest">休憩</option></select>
         <label>ひとことレビュー</label><textarea id="communityPostReview" maxlength="180" placeholder="どんなところが良かった？"></textarea>
+        <label>写真（最大5枚）</label>
+        <input id="communityPostPhotos" type="file" accept="image/*" multiple>
+        <div class="photo-preview-v109" id="communityPhotoPreviewV109"></div>
+
         <label>タグ（カンマ区切り）</label><input id="communityPostTags" maxlength="80" placeholder="水辺, ベンチあり, 静か">
         <div class="community-form-actions-v108"><button class="community-cancel-v108" id="communityPostCancel">戻る</button><button class="community-submit-v108" id="communityPostSubmit">この端末に投稿</button></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="extension-modal-v109" id="extensionModalV109">
+    <div class="extension-card-v109">
+      <span class="extension-eyebrow-v109">ちょっとだけ伸ばせます</span>
+      <h2 id="extensionTitleV109">少し延ばすと希望の寄り道ができます</h2>
+      <p id="extensionCopyV109"></p>
+      <div class="extension-compare-v109">
+        <button id="extensionExactV109"><small>指定を優先</small><b id="extensionExactTextV109">5.0 km</b></button>
+        <button class="recommended" id="extensionThemeV109"><small>寄り道を入れる</small><b id="extensionThemeTextV109">5.6 km</b></button>
       </div>
     </div>
   </div>
@@ -1475,7 +1667,7 @@ body{background:#eef3f0}
     <div class="spot-detail-body">
       <h2 id="spotDetailName">スポット</h2>
       <div id="spotDetailOpen" style="font-size:11px;color:#079b69;font-weight:900;margin:5px 0"></div>
-      <p id="spotDetailAddress"></p>
+      <p id="spotDetailAddress"></p><div class="google-place-summary-v109" id="googlePlaceSummaryV109"></div><div class="google-reviews-v109" id="googleReviewsV109"></div>
       <div class="spot-actions">
         <a id="spotMapLink" target="_blank" rel="noopener">Google Mapsで見る</a>
         <button id="spotBackToRoute">コースに戻る</button>
@@ -1907,64 +2099,143 @@ function routeOverlapRatioV108(path){
   return total?dup/total:0;
 }
 
+function cloneSpecV109(spec){
+  return {
+    intermediates:(spec.intermediates||[]).map(p=>({...p})),
+    waypoints:(spec.waypoints||[]).map(p=>({...p})),
+    spots:[...(spec.spots||[])],
+    spot:spec.spot||null,
+    themeMatched:!!spec.themeMatched
+  };
+}
+function scalePointFromStartV109(start,p,factor){
+  return {lat:start.lat+(p.lat-start.lat)*factor,lng:start.lng+(p.lng-start.lng)*factor};
+}
+async function refinePlainSpecV109(start,spec,targetKm,maxTry=3){
+  let working=cloneSpecV109(spec),best=null;
+  for(let n=0;n<maxTry;n++){
+    let result;
+    try{result=await googleCandidate(start,working)}catch(e){break}
+    const err=Math.abs(result.km-targetKm)/Math.max(.1,targetKm);
+    result.distanceError=err;
+    if(!best || err<best.distanceError)best=result;
+    if(err<=.055)break;
+    const factor=Math.max(.72,Math.min(1.32,targetKm/Math.max(.2,result.km)));
+    working.intermediates=working.intermediates.map(p=>scalePointFromStartV109(start,p,factor));
+    working.waypoints=working.intermediates.map(p=>({...p}));
+  }
+  return best;
+}
+async function buildPlainFallbackV109(start,seed,targetKm){
+  const spec=demoSpec(start,seed,[]);
+  return await refinePlainSpecV109(start,spec,targetKm,3);
+}
 async function buildGoogleRoutes(start,places){
   const wanted=resolvedStopCount();
-  const specs=[];
+  const target=effectiveTargetKmV102();
+  const raw=[];
+  let bestExtension=null;
 
   for(let i=0;i<3;i++){
-    const chosen=pickCandidateSpots(places,wanted,i);
-    specs.push(demoSpec(start,i,chosen));
-  }
-
-  const results=[];
-  for(const spec of specs){
     if(state.cancelled)break;
-    try{results.push(await googleCandidate(start,spec))}
-    catch(e){console.warn('Candidate route failed',e)}
+    const chosen=pickCandidateSpots(places,wanted,i);
+    const themedSpec=demoSpec(start,i,chosen);
+    let themed=null;
+    try{themed=await googleCandidate(start,themedSpec)}catch(e){console.warn('theme candidate failed',e)}
+
+    if(themed){
+      themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
+      const ratio=themed.km/Math.max(.1,target);
+
+      // theme route already fits -> keep
+      if(themed.distanceError<=.08 && (themed.overlapRatio||0)<.24){
+        raw.push(themed);
+        continue;
+      }
+
+      // only a little longer -> save as user-selectable offer
+      if(themed.themeMatched && ratio>1.08 && ratio<=1.15 && (themed.overlapRatio||0)<.24){
+        if(!bestExtension || themed.distanceError<bestExtension.distanceError)bestExtension=themed;
+      }
+
+      // if shorter, add/refine detour only when it doesn't move real POIs
+      if(ratio<.92 && chosen.length<=1){
+        const refined=await refinePlainSpecV109(start,themedSpec,target,2);
+        if(refined && (refined.overlapRatio||0)<.24)raw.push(refined);
+      }
+    }
+
+    // distance wins when theme is too far away
+    const plain=await buildPlainFallbackV109(start,i,target);
+    if(plain)raw.push(plain);
   }
 
-  const sorted=results.sort((a,b)=>{
-    const ad=Math.abs(a.km-effectiveTargetKmV102());
-    const bd=Math.abs(b.km-effectiveTargetKmV102());
-    const am=(['green','water','cafe','food'].includes(state.theme)&&!a.themeMatched)?1:0;
-    const bm=(['green','water','cafe','food'].includes(state.theme)&&!b.themeMatched)?1:0;
-    return (am-bm)||((a.overlapRatio||0)-(b.overlapRatio||0))||(ad-bd);
+  const deduped=[];
+  raw.sort((a,b)=>{
+    const aq=(a.overlapRatio||0)*1.6+(a.distanceError??Math.abs(a.km-target)/target);
+    const bq=(b.overlapRatio||0)*1.6+(b.distanceError??Math.abs(b.km-target)/target);
+    return aq-bq;
+  }).forEach(r=>{
+    if(!deduped.some(x=>Math.abs(x.km-r.km)<.08 && Math.abs((x.overlapRatio||0)-(r.overlapRatio||0))<.03)){
+      deduped.push(r);
+    }
   });
-  // 同じ道路を往復する比率が高い候補は原則除外。全滅時だけ最良候補を残す。
-  const loopLike=sorted.filter(x=>(x.overlapRatio||0)<0.24);
-  return loopLike.length?loopLike:sorted.slice(0,1);
+
+  let routes=deduped.filter(r=>(r.overlapRatio||0)<.24).slice(0,3);
+  if(!routes.length)routes=deduped.slice(0,1);
+
+  // user choice when a small extension makes theme possible
+  state.extensionOffer=null;
+  if(bestExtension && routes[0]){
+    const base=routes[0];
+    if(Math.abs(base.km-target)/target<=.09){
+      state.extensionOffer={base,extended:bestExtension,target};
+    }
+  }
+  return routes;
 }
 
 function buildDemoRoutes(start,places){
-  const wanted=resolvedStopCount(),results=[];
-  for(let i=0;i<3;i++){
-    const chosen=pickCandidateSpots(places,wanted,i);
-    const spec=demoSpec(start,i,chosen);
+  const wanted=resolvedStopCount(),target=effectiveTargetKmV102(),results=[];
+  for(let i=0;i<6;i++){
+    const seed=i%3;
+    const chosen=pickCandidateSpots(places,wanted,seed);
+    const spec=demoSpec(start,seed,chosen);
+    const scale=[.82,.92,1,1.08,1.18,1.28][i];
+    spec.intermediates=spec.intermediates.map(p=>scalePointFromStartV109(start,p,scale));
+    spec.waypoints=spec.intermediates.map(p=>({...p}));
     const path=[start,...spec.intermediates,start];
-    results.push({
-      path,
-      km:pathKm(path),
-      routeObj:null,
-      spots:spec.spots||[],
-      spot:spec.spot,
-      waypoints:spec.waypoints||[],
-      themeMatched:!!spec.themeMatched,
-      overlapRatio:routeOverlapRatioV108(path),
-      demo:true
-    });
+    const route={
+      path,km:pathKm(path),routeObj:null,spots:spec.spots||[],spot:spec.spot,
+      waypoints:spec.waypoints||[],themeMatched:!!spec.themeMatched,
+      overlapRatio:routeOverlapRatioV108(path),demo:true
+    };
+    route.distanceError=Math.abs(route.km-target)/Math.max(.1,target);
+    results.push(route);
   }
-  return results.sort((a,b)=>Math.abs(a.km-effectiveTargetKmV102())-Math.abs(b.km-effectiveTargetKmV102()));
+  return results.sort((a,b)=>(a.distanceError+(a.overlapRatio||0))-(b.distanceError+(b.overlapRatio||0))).slice(0,3);
 }
 
 /* ===== progress ===== */
 function resetProgress(){
   ['stepPlaces','stepRoute','stepFinish'].forEach(id=>$(id).classList.remove('done','doing'));
+  if($('generationBarV109'))$('generationBarV109').style.width='8%';
 }
 function markStep(id,status){
   $(id).classList.remove('done','doing');
   if(status)$(id).classList.add(status);
   const num={stepPlaces:'1',stepRoute:'2',stepFinish:'3'}[id];
   $(id).querySelector('.progress-icon').textContent=status==='done'?'✓':num;
+  const pct=status==='done'
+    ? ({stepPlaces:34,stepRoute:72,stepFinish:100}[id]||10)
+    : ({stepPlaces:18,stepRoute:50,stepFinish:86}[id]||10);
+  if($('generationBarV109'))$('generationBarV109').style.width=pct+'%';
+  if($('generatingMainCopy')){
+    $('generatingMainCopy').textContent=
+      id==='stepPlaces'?'立ち寄り候補を確認しています':
+      id==='stepRoute'?'歩きやすい周回ルートを調整しています':
+      'もう少しで完成です';
+  }
 }
 function updateGeneratingCopy(){
   const placeLine=$('stepPlaces')?.querySelector('.progress-text');
@@ -1977,6 +2248,23 @@ function updateGeneratingCopy(){
       state.theme==='direct'?'寄り道なしで作成します':
       '周辺の立ち寄り候補を探しています';
   }
+}
+
+function askExtensionChoiceV109(offer){
+  return new Promise(resolve=>{
+    const modal=$('extensionModalV109');
+    const target=offer.target,ext=offer.extended.km;
+    const targetMin=Math.round(target/state.paceKmh*60),extMin=Math.round(ext/state.paceKmh*60);
+    $('extensionTitleV109').textContent=`少し延ばすと「${themeLabel()}」を楽しめます`;
+    $('extensionCopyV109').textContent=state.amountMode==='time'
+      ? `指定は約${state.targetMin}分。約${Math.max(1,extMin-state.targetMin)}分だけ延ばすと、希望の寄り道を含められます。`
+      : `指定は${target.toFixed(1)}km。あと${Math.max(.1,ext-target).toFixed(1)}kmほどで、希望の寄り道を含められます。`;
+    $('extensionExactTextV109').textContent=state.amountMode==='time'?`${state.targetMin}分を優先`:`${target.toFixed(1)} kmを優先`;
+    $('extensionThemeTextV109').textContent=state.amountMode==='time'?`約${extMin}分で寄る`:`${ext.toFixed(1)} kmで寄る`;
+    modal.classList.add('show');
+    $('extensionExactV109').onclick=()=>{modal.classList.remove('show');resolve(false)};
+    $('extensionThemeV109').onclick=()=>{modal.classList.remove('show');resolve(true)};
+  });
 }
 
 async function createRoute(){
@@ -1995,7 +2283,7 @@ async function createRoute(){
     markStep('stepPlaces','doing');
     if(googleOk && resolvedStopCount()>0 && ['cafe','food','random','green','water'].includes(state.theme)){
       places=await searchPlaces(start);
-      const communityNearby=getCommunitySpots().filter(s=>s.lat&&s.lng&&hav(start,{lat:s.lat,lng:s.lng})<=Math.max(2,effectiveTargetKmV102()*.8)).map(s=>({id:'community-'+s.id,name:s.name,loc:{lat:s.lat,lng:s.lng},address:'みんなのおすすめスポット',uri:'',openFiltered:false,businessStatus:'',types:[],kind:s.kind,community:true}));
+      const communityNearby=(state.useCommunity===false?[]:getCommunitySpots()).filter(s=>s.lat&&s.lng&&hav(start,{lat:s.lat,lng:s.lng})<=Math.max(2,effectiveTargetKmV102()*.8)).map(s=>({id:'community-'+s.id,name:s.name,loc:{lat:s.lat,lng:s.lng},address:'みんなのおすすめスポット',uri:'',openFiltered:false,businessStatus:'',types:[],kind:s.kind,community:true}));
       places=[...communityNearby,...places];
     }else{
       await wait(420);
@@ -2023,6 +2311,14 @@ async function createRoute(){
     state.selected=0;
     markStep('stepFinish','done');
 
+    if(state.extensionOffer){
+      const useExtended=await askExtensionChoiceV109(state.extensionOffer);
+      if(useExtended){
+        state.routes=[state.extensionOffer.extended,...state.routes].slice(0,3);
+      }
+      state.extensionOffer=null;
+    }
+
     await wait(230);
     showHomeState('resultState');
     setTimeout(()=>{
@@ -2030,7 +2326,6 @@ async function createRoute(){
       if(gmap)google.maps.event.trigger(gmap,'resize');
       showCandidate(0);
     },90);
-    saveHistory(routes[0]);
 
   }catch(e){
     console.error(e);
@@ -2135,6 +2430,14 @@ function showCandidate(index){
   $('resultCal').textContent=cal;
   $('spotCaption').textContent=resolvedStopCount()===0?'寄り道なし':`${resolvedStopCount()}件の寄り道`;
   $('candidateCount').textContent=`候補 ${index+1} / ${state.routes.length}`;
+  let q=$('routeQualityV109');
+  if(!q){
+    q=document.createElement('div');q.id='routeQualityV109';q.className='route-quality-v109';
+    $('routeSummary').insertAdjacentElement('afterend',q);
+  }
+  const target=effectiveTargetKmV102();
+  const err=Math.abs(c.km-target)/Math.max(.1,target);
+  q.innerHTML=`<span>${err<=.06?'指定にかなり近い':err<=.10?'指定に近い':'距離差あり'}</span><span>${(c.overlapRatio||0)<.12?'往復少なめ':'周回優先'}</span>${c.themeMatched?'<span>テーマ経由</span>':''}`;
   renderSpots(c);
   renderCandidateList();
 }
@@ -2172,40 +2475,124 @@ function renderCandidateList(){
     box.appendChild(el);
   });
 }
+async function fetchGooglePlaceDetailsV109(s){
+  const summary=$('googlePlaceSummaryV109'),reviewsBox=$('googleReviewsV109');
+  summary.classList.remove('show');summary.innerHTML='';reviewsBox.innerHTML='';
+  if(!s?.id || String(s.id).startsWith('community-') || !state.googleEnabled || !state.apiKey)return;
+  try{
+    await loadGoogleMaps(state.apiKey);
+    const {Place}=await google.maps.importLibrary('places');
+    const place=new Place({id:s.id});
+    await place.fetchFields({
+      fields:['displayName','formattedAddress','rating','userRatingCount','reviews','regularOpeningHours','websiteURI','googleMapsURI']
+    });
+    bumpUsage('places',1);
+
+    const bits=[];
+    if(place.rating)bits.push(`<b>★ ${Number(place.rating).toFixed(1)}</b>`);
+    if(place.userRatingCount)bits.push(`<small>${place.userRatingCount.toLocaleString('ja-JP')}件の評価</small>`);
+    if(bits.length){summary.innerHTML=bits.join('');summary.classList.add('show')}
+
+    const rs=(place.reviews||[]).slice(0,3);
+    reviewsBox.innerHTML=rs.map(r=>{
+      const author=r.authorAttribution;
+      const name=author?.displayName||'Googleユーザー';
+      const link=author?.uri||'';
+      const head=link?`<a href="${escapeHtml(link)}" target="_blank" rel="noopener">${escapeHtml(name)}</a>`:`<b>${escapeHtml(name)}</b>`;
+      return `<div class="google-review-v109"><div class="google-review-head-v109">${head}<span>★ ${r.rating||'-'} ${escapeHtml(r.relativePublishTimeDescription||'')}</span></div><p>${escapeHtml(r.text||'')}</p></div>`;
+    }).join('');
+    if(place.googleMapsURI){
+      const a=$('spotMapLink');a.href=place.googleMapsURI;a.style.opacity='1';a.style.pointerEvents='auto';
+    }
+  }catch(e){
+    console.warn('Place details failed',e);
+  }
+}
 function openSpotDetail(s){
   $('spotDetailName').textContent=s.name||'スポット';
   $('spotDetailAddress').textContent=s.address||'このコースの立ち寄りスポットです。';
   $('spotDetailOpen').textContent=s.openFiltered?'営業中の候補':'';
-  $('spotHero').childNodes[0].nodeValue=themeEmoji()+' ';
+  $('spotHero').childNodes[0].nodeValue=' ';
   const a=$('spotMapLink');
   if(s.uri){a.href=s.uri;a.style.opacity='1';a.style.pointerEvents='auto'}else{a.removeAttribute('href');a.style.opacity='.45';a.style.pointerEvents='none'}
   $('spotDetailModal').classList.add('show');
+  fetchGooglePlaceDetailsV109(s);
 }
 
 /* ===== history ===== */
 function saveHistory(c){
   const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const min=Math.max(1,Math.round(c.km/state.paceKmh*60));
   h.unshift({
     id:Date.now(),date:new Date().toISOString(),
-    theme:state.theme,km:+c.km.toFixed(2),
+    theme:state.theme,km:+c.km.toFixed(2),min,
+    cal:calorieEstimateV108(min,state.paceKmh),
     google:state.mapEngine==='google',spot:c.spot?.name||'',
-    amountMode:state.amountMode,pace:state.pace
+    stops:(c.spots||[]).length,amountMode:state.amountMode,pace:state.pace,
+    overlap:+((c.overlapRatio||0).toFixed(3)),favorite:false,memo:''
   });
-  localStorage.setItem(KEY.history,JSON.stringify(h.slice(0,30)));
+  localStorage.setItem(KEY.history,JSON.stringify(h.slice(0,60)));
   renderHistory();
 }
-function renderHistory(){
+function weekStartV109(d=new Date()){
+  const x=new Date(d);x.setHours(0,0,0,0);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);return x;
+}
+function renderWeekChartV109(h){
+  const start=weekStartV109(),days=[];
+  for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);days.push({d,km:0})}
+  h.forEach(x=>{
+    const d=new Date(x.date);
+    days.forEach(o=>{if(d.toDateString()===o.d.toDateString())o.km+=Number(x.km)||0})
+  });
+  const max=Math.max(1,...days.map(x=>x.km));
+  $('weekChartV109').innerHTML=days.map(o=>`<div class="week-bar-v109"><i style="height:${Math.max(4,o.km/max*48)}px"></i><span>${'月火水木金土日'[(o.d.getDay()+6)%7]}</span></div>`).join('');
+}
+function updateHistoryMemoV109(id){
   const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const item=h.find(x=>String(x.id)===String(id));if(!item)return;
+  const memo=prompt('この散歩のメモ',item.memo||'');
+  if(memo===null)return;item.memo=memo.slice(0,80);
+  localStorage.setItem(KEY.history,JSON.stringify(h));renderHistory();
+}
+function toggleHistoryFavoriteV109(id){
+  const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const item=h.find(x=>String(x.id)===String(id));if(!item)return;
+  item.favorite=!item.favorite;localStorage.setItem(KEY.history,JSON.stringify(h));renderHistory();
+}
+function renderHistory(){
+  let h=[];try{h=JSON.parse(localStorage.getItem(KEY.history)||'[]')}catch(e){}
   const el=$('historyList');
+  const start=weekStartV109(),end=new Date(start);end.setDate(start.getDate()+7);
+  const week=h.filter(x=>{const d=new Date(x.date);return d>=start&&d<end});
+  const km=week.reduce((s,x)=>s+(Number(x.km)||0),0);
+  const mins=week.reduce((s,x)=>s+(Number(x.min)||Math.round((Number(x.km)||0)/4.5*60)),0);
+  const stops=week.reduce((s,x)=>s+(Number(x.stops)||0),0);
+  if($('weekWalksV109'))$('weekWalksV109').textContent=week.length;
+  if($('weekKmV109'))$('weekKmV109').textContent=km.toFixed(1);
+  if($('weekMinV109'))$('weekMinV109').textContent=mins;
+  if($('weekStopsV109'))$('weekStopsV109').textContent=stops;
+  if($('weeklyRangeV109')){
+    const last=new Date(end);last.setDate(last.getDate()-1);
+    $('weeklyRangeV109').textContent=`${start.getMonth()+1}/${start.getDate()} – ${last.getMonth()+1}/${last.getDate()}`;
+  }
+  if($('historyMonthLabel'))$('historyMonthLabel').textContent=`${new Date().getMonth()+1}月`;
+  if($('weekChartV109'))renderWeekChartV109(h);
+
   if(!h.length){
-    el.innerHTML='<div class="history-empty">まだコース履歴はありません。<br>ホームから最初の散歩を作ってみよう。</div>';
+    el.innerHTML='<div class="history-empty">まだ散歩の記録はありません。<br>「Google Mapsで歩く」を押したコースがここに残ります。</div>';
     return;
   }
-  el.innerHTML=h.map(x=>`
-    <div class="history-item">
-      <b>${escapeHtml(themeLabel(x.theme))}散歩 ・ ${x.km.toFixed(1)} km</b>
-      <small>${new Date(x.date).toLocaleString('ja-JP')} / ${x.google?'Google徒歩ルート':'無料デモ'}${x.spot?' / '+escapeHtml(x.spot):''}</small>
-    </div>`).join('');
+  el.innerHTML=h.slice(0,20).map(x=>{
+    const min=Number(x.min)||Math.round((Number(x.km)||0)/4.5*60);
+    return `<article class="history-card-v109">
+      <div class="history-card-top-v109"><h3>${escapeHtml(themeLabel(x.theme))}散歩</h3><span class="date">${new Date(x.date).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',weekday:'short'})}</span></div>
+      <div class="history-metrics-v109"><div><b>${Number(x.km).toFixed(1)}</b><small>km</small></div><div><b>${min}</b><small>分</small></div>${x.cal?`<div><b>${x.cal}</b><small>kcal</small></div>`:''}</div>
+      <div class="history-tags-v109"><span>${x.google?'Google徒歩ルート':'デモ'}</span>${x.spot?`<span>${escapeHtml(x.spot)}</span>`:''}${x.favorite?'<span>また歩きたい</span>':''}</div>
+      ${x.memo?`<div style="font-size:10px;color:#526a62;margin-top:7px">${escapeHtml(x.memo)}</div>`:''}
+      <button class="history-note-v109" onclick="updateHistoryMemoV109('${x.id}')">メモを残す</button>
+      <button class="history-note-v109" onclick="toggleHistoryFavoriteV109('${x.id}')">${x.favorite?'お気に入りから外す':'また歩きたい'}</button>
+    </article>`;
+  }).join('');
 }
 
 /* ===== community spots demo ===== */
@@ -2225,7 +2612,7 @@ function renderCommunitySpots(){
   const items=getCommunitySpots().filter(x=>communityFilter==='all'||x.kind===communityFilter);
   box.innerHTML=items.map(x=>`<article class="community-card-v108">
     <div class="community-card-top-v108">
-      <div class="community-photo-v108">${x.photo?`<img src="${escapeHtml(x.photo)}" alt="">`:`<span>${communityKindLabel(x.kind)}</span>`}</div>
+      <div class="community-photo-v108">${(x.photos&&x.photos[0])?`<img src="${x.photos[0]}" alt="">`:x.photo?`<img src="${x.photo}" alt="">`:`<span>${communityKindLabel(x.kind)}</span>`}</div>
       <div><div class="community-kind-v108">${communityKindLabel(x.kind)}</div><h3>${escapeHtml(x.name)}</h3>
       <div class="community-stars-v108">★ ${Number(x.rating||4.7).toFixed(1)} ・ ${x.reviews||'デモ'}件</div>
       <p class="community-review-v108">${escapeHtml(x.review||'')}</p></div>
@@ -2242,13 +2629,44 @@ qsa('[data-community-filter]').forEach(btn=>btn.onclick=()=>{
 $('openSpotPostBtn').onclick=()=>$('communityPostModal').classList.add('show');
 $('communityPostCancel').onclick=()=>$('communityPostModal').classList.remove('show');
 $('communityPostModal').onclick=e=>{if(e.target===$('communityPostModal'))$('communityPostModal').classList.remove('show')};
+let communityPhotosV109=[];
+async function compressImageV109(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        resolve(c.toDataURL('image/jpeg',.72));
+      };
+      img.onerror=reject;img.src=reader.result;
+    };
+    reader.onerror=reject;reader.readAsDataURL(file);
+  });
+}
+$('communityPostPhotos').addEventListener('change',async e=>{
+  const files=[...e.target.files].slice(0,5);
+  communityPhotosV109=[];
+  for(const f of files){try{communityPhotosV109.push(await compressImageV109(f))}catch(err){}}
+  $('communityPhotoPreviewV109').innerHTML=communityPhotosV109.map(src=>`<img src="${src}" alt="">`).join('');
+});
 $('communityPostSubmit').onclick=()=>{
   const name=$('communityPostName').value.trim(),review=$('communityPostReview').value.trim();
   if(!name||!review){alert('スポット名とレビューを入力してください。');return}
   let mine=[];try{mine=JSON.parse(localStorage.getItem(KEY.community)||'[]')}catch(e){}
-  mine.unshift({id:'mine'+Date.now(),kind:$('communityPostKind').value,name,review,tags:$('communityPostTags').value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5),rating:5,reviews:1,author:'あなた',lat:state.current?.lat||null,lng:state.current?.lng||null});
-  localStorage.setItem(KEY.community,JSON.stringify(mine.slice(0,30)));
+  mine.unshift({
+    id:'mine'+Date.now(),kind:$('communityPostKind').value,name,review,
+    tags:$('communityPostTags').value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5),
+    rating:5,reviews:1,author:'あなた',lat:state.current?.lat||null,lng:state.current?.lng||null,
+    photos:[...communityPhotosV109],photo:communityPhotosV109[0]||''
+  });
+  try{localStorage.setItem(KEY.community,JSON.stringify(mine.slice(0,30)))}catch(e){
+    alert('写真が多く端末保存容量を超えました。写真を減らしてもう一度試してください。');return;
+  }
   $('communityPostName').value='';$('communityPostReview').value='';$('communityPostTags').value='';
+  $('communityPostPhotos').value='';communityPhotosV109=[];$('communityPhotoPreviewV109').innerHTML='';
   $('communityPostModal').classList.remove('show');renderCommunitySpots();
 };
 
@@ -2273,9 +2691,41 @@ $('saveProfileBtn').onclick=()=>{
 };
 loadProfileV108();renderCommunitySpots();
 
+function loadPrefsV109(){
+  let p={};try{p=JSON.parse(localStorage.getItem(KEY.prefs)||'{}')}catch(e){}
+  if(p.defaultPace && PACE_V102[p.defaultPace]){
+    state.pace=p.defaultPace;state.paceKmh=PACE_V102[p.defaultPace].kmh;
+    qsa('[data-pace]').forEach(x=>x.classList.toggle('active',x.dataset.pace===p.defaultPace));
+    qsa('[data-default-pace]').forEach(x=>x.classList.toggle('active',x.dataset.defaultPace===p.defaultPace));
+  }
+  state.useCommunity=p.useCommunity!==false;
+  if($('communityRouteToggleV109'))$('communityRouteToggleV109').classList.toggle('on',state.useCommunity);
+  if($('settingsOpenOnlyV109'))$('settingsOpenOnlyV109').classList.toggle('on',state.openOnly);
+}
+function savePrefsV109(){
+  localStorage.setItem(KEY.prefs,JSON.stringify({defaultPace:state.pace,useCommunity:state.useCommunity!==false}));
+}
+qsa('[data-default-pace]').forEach(btn=>btn.onclick=()=>{
+  state.pace=btn.dataset.defaultPace;state.paceKmh=PACE_V102[state.pace].kmh;
+  qsa('[data-default-pace]').forEach(x=>x.classList.toggle('active',x===btn));
+  qsa('[data-pace]').forEach(x=>x.classList.toggle('active',x.dataset.pace===state.pace));
+  updateDistance();savePrefsV109();
+});
+$('settingsOpenOnlyV109').onclick=()=>{
+  state.openOnly=!state.openOnly;$('settingsOpenOnlyV109').classList.toggle('on',state.openOnly);
+  $('openOnlyToggle').classList.toggle('on',state.openOnly);
+};
+$('communityRouteToggleV109').onclick=()=>{
+  state.useCommunity=!(state.useCommunity!==false);$('communityRouteToggleV109').classList.toggle('on',state.useCommunity);savePrefsV109();
+};
+loadPrefsV109();
+
+
+
 /* ===== navigation ===== */
 function navTo(id){
   if(id==='spotsPage')renderCommunitySpots();
+  if(id==='historyPage')renderHistory();
   qsa('.page').forEach(p=>p.classList.toggle('active',p.id===id));
   qsa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
   if(id==='homePage' && $('resultState').classList.contains('active')){
