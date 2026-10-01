@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v112: v111 UI + button startup repair + safe localStorage migration -->
+<!-- SANPO v113: destination-first route generation + stronger loop filtering + accessible text polish -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1267,6 +1267,94 @@ body{letter-spacing:.005em}
 .community-feed-card-v110 h3{font-weight:700!important;letter-spacing:-.025em}.community-feed-review-v110{font-size:12px!important;color:#59665f!important}.community-main-photo-v110{border-radius:7px!important}.community-actions-v110{gap:12px!important;overflow-x:auto;padding-bottom:2px}.community-actions-v110 button{white-space:nowrap!important;font-weight:600!important}.community-route-add-v110{margin-left:0!important}
 .settings-section-v109 summary b,.setting-row-v109 b{font-weight:700!important}
 @media(max-width:370px){.generating-v110 h2{font-size:19px!important}.v107-theme-grid .theme{font-size:10.5px!important}.start-options button{font-size:12px!important}}
+
+/* ===== SANPO v113 accessible, photo-reference polish ===== */
+/* Small text is either removed or enlarged: no tiny UI copy. */
+.weather-pill b{font-size:15px!important;font-weight:700!important}
+.step-progress-v107{font-size:14px!important}
+.start-label{font-size:13px!important;line-height:1.35!important}
+.v107-range .range-labels,.range-labels{font-size:12px!important}
+.loop-note,.v107-loop{font-size:14px!important;line-height:1.4!important}
+.field-title,.v107-title,.small-theme-title,.stop-row-title-v107 b,.pace-head-v102 span{font-size:16px!important}
+.v107-theme-grid .theme{font-size:14px!important;min-height:58px!important}
+.v107-stops button,.v107-pace .pace-seg-v102 button{font-size:14px!important}
+.open-copy b{font-size:15px!important;font-weight:700!important}
+
+.generating-v110 h2{font-size:clamp(22px,6.2vw,27px)!important}
+.generating-main-copy-v110{font-size:16px!important;line-height:1.5!important;color:#5d6f67!important}
+.generation-steps-v110{width:210px!important}
+.generation-steps-v110 b{font-size:13px!important}
+.generation-bar-v109{width:210px!important;height:3px!important}
+.v109-cancel{font-size:14px!important;min-height:44px!important}
+
+.route-type-v110{font-size:13px!important}
+.result-panel-v102 .candidate-count,.candidate-count{font-size:13px!important}
+.result-panel-v102 .candidate-btn,.candidate-btn{font-size:14px!important;min-height:42px!important}
+.result-panel-v102 .result-head h2{font-size:21px!important}
+.result-metrics b{font-size:21px!important}
+.result-metrics small{font-size:13px!important}
+.route-quality-v109 span{font-size:12.5px!important;padding:5px 8px!important}
+.spot-title b{font-size:16px!important}
+.spot-title span{font-size:13px!important}
+.spot-card b{font-size:14px!important}
+.spot-card small{font-size:13px!important}
+.primary-result{font-size:16px!important;min-height:54px!important}
+.recommend-btn{font-size:15px!important;min-height:48px!important}
+.secondary-actions button{font-size:13px!important;min-height:46px!important}
+.bottom-nav .nav-btn{font-size:13px!important}
+
+.section-title{font-size:28px!important}
+.weekly-summary-v109 small,.weekly-summary-v109 span{font-size:13px!important}
+.history-card-v109 h3{font-size:17px!important}
+.history-card-v109 .date{font-size:13px!important}
+.history-meta-v109,.history-note-v109{font-size:13px!important}
+.history-tag-v109{font-size:12px!important}
+.history-actions-v109 button{font-size:14px!important}
+
+.community-tabs-v110 button{font-size:14px!important}
+.community-tags-scroll-v110 button{font-size:13px!important}
+.community-author-v110 b{font-size:15px!important}
+.community-author-v110 small{font-size:13px!important}
+.community-feed-card-v110 h3{font-size:19px!important}
+.community-feed-review-v110{font-size:15px!important;line-height:1.7!important}
+.community-more-v110{font-size:13px!important}
+.community-tags-v110 span{font-size:13px!important}
+.community-ratings-v110 span{font-size:12px!important}
+.community-ratings-v110 b{font-size:15px!important}
+.community-actions-v110 button{font-size:13px!important;min-height:34px}
+
+.settings-section-v109 summary b{font-size:17px!important}
+.setting-row-v109 b{font-size:15px!important}
+.settings-link-v109 span{font-size:15px!important}
+.seg button{font-size:14px!important}
+.api-input{font-size:14px!important}
+.save-key{font-size:14px!important;min-height:46px}
+.community-form-v108 label{font-size:14px!important}
+.community-form-v108 input,.community-form-v108 select,.community-form-v108 textarea{font-size:15px!important}
+.google-place-summary-v109 small,.google-review-head-v109{font-size:12px!important}
+.google-review-v109 p{font-size:14px!important}
+.extension-eyebrow-v109{font-size:13px!important}
+.extension-card-v109 p{font-size:14px!important}
+.extension-compare-v109 small{font-size:12px!important}
+.walk-confirm-metrics-v110 small,.finish-metrics-v110 small{font-size:12px!important}
+
+/* Softer, more human visual rhythm matching the approved mockup. */
+.builder-card,.result-panel-v102,.weekly-summary-v109,.history-card-v109{
+  box-shadow:0 5px 18px rgba(32,78,59,.055)!important;
+}
+.create-btn,.primary-result{background:#28694f!important}
+.result-panel-v102{border-radius:20px 20px 0 0!important}
+.result-map-card-v102{border-radius:18px!important}
+.spot-strip[hidden],.spot-title[hidden]{display:none!important}
+.result-panel-v102 .spot-title[hidden]+.spot-strip{display:none!important}
+
+@media(max-width:370px){
+  .home-main-title-v110{font-size:22px!important}
+  .builder-intro-v107.second h1{font-size:24px!important}
+  .v107-theme-grid .theme{font-size:13px!important}
+  .bottom-nav .nav-btn{font-size:12px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1986,21 +2074,19 @@ function resolvedStopCount(){
 
 function themeSearchConfig(){
   if(state.theme==='cafe'){
-    return {queries:['カフェ'],includedType:'cafe',strict:true,business:true,kind:'cafe'};
+    return {queries:['カフェ','喫茶店','コーヒー','ベーカリー カフェ'],includedType:'cafe',strict:false,business:true,kind:'cafe'};
   }
   if(state.theme==='food'){
-    return {queries:['レストラン'],includedType:'restaurant',strict:true,business:true,kind:'food'};
+    return {queries:['レストラン','定食','ランチ','飲食店'],includedType:'restaurant',strict:false,business:true,kind:'food'};
   }
   if(state.theme==='green'){
-    return {queries:['公園 緑地','公園'],includedType:'park',strict:false,business:false,kind:'green'};
+    return {queries:['公園','緑地','庭園','遊歩道'],includedType:'park',strict:false,business:false,kind:'green'};
   }
   if(state.theme==='water'){
-    // Placesには「川」そのものの専用タイプがないため、
-    // 川沿い公園・河川敷・水辺スポットを実際の経由地点として探す。
-    return {queries:['川沿い 公園','河川敷 水辺 公園','運河 水辺'],includedType:undefined,strict:false,business:false,kind:'water'};
+    return {queries:['川沿い 公園','河川敷','運河 公園','水辺 公園'],includedType:undefined,strict:false,business:false,kind:'water'};
   }
   if(state.theme==='random'){
-    return {queries:['カフェ レストラン'],includedType:undefined,strict:false,business:true,kind:'random'};
+    return {queries:['カフェ','公園','レストラン'],includedType:undefined,strict:false,business:false,kind:'random'};
   }
   return null;
 }
@@ -2012,12 +2098,12 @@ async function onePlaceTextSearch(start,config,textQuery){
     fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus','types'],
     locationBias:{
       center:start,
-      radius:Math.min(6500,Math.max(1400,effectiveTargetKmV102()*850))
+      radius:Math.min(5500,Math.max(1200,effectiveTargetKmV102()*650))
     },
     language:'ja',
     region:'jp',
     rankPreference:SearchByTextRankPreference.RELEVANCE,
-    maxResultCount:10
+    maxResultCount:20
   };
 
   if(config.includedType)request.includedType=config.includedType;
@@ -2044,21 +2130,32 @@ async function onePlaceTextSearch(start,config,textQuery){
 }
 
 function uniqueNearbyPlaces(start,places){
+  const target=effectiveTargetKmV102();
   const seen=new Set();
+  const maxDirect=Math.max(.9,target*.52);
+  const ideal=Math.max(.35,target*.28);
+
   return places
     .filter(p=>{
       const key=p.id||`${p.loc.lat.toFixed(5)},${p.loc.lng.toFixed(5)}`;
       if(seen.has(key))return false;
       seen.add(key);
-      // Very distant results make a bad round-trip route.
-      return hav(start,p.loc)<=Math.max(1.5,effectiveTargetKmV102()*0.8);
+      const d=hav(start,p.loc);
+      // A theme destination must realistically fit inside the requested round trip.
+      return d<=maxDirect && d>=.05;
     })
-    .sort((a,b)=>{
-      // Prefer useful points that are not right on top of the start.
-      const da=hav(start,a.loc),db=hav(start,b.loc);
-      const ideal=Math.max(.45,effectiveTargetKmV102()/3.2);
-      return Math.abs(da-ideal)-Math.abs(db-ideal);
-    });
+    .map(p=>{
+      const d=hav(start,p.loc);
+      let themeBonus=0;
+      const types=(p.types||[]).join(' ');
+      if(state.theme==='green' && /(park|garden|plaza)/i.test(types))themeBonus=-.22;
+      if(state.theme==='cafe' && /cafe/i.test(types))themeBonus=-.18;
+      if(state.theme==='food' && /(restaurant|meal|food)/i.test(types))themeBonus=-.14;
+      if(p.community)themeBonus-=.08;
+      const distanceScore=Math.abs(d-ideal)/Math.max(.4,target);
+      return {...p,directKm:d,_themeScore:distanceScore+themeBonus};
+    })
+    .sort((a,b)=>a._themeScore-b._themeScore);
 }
 
 async function searchPlaces(start){
@@ -2070,17 +2167,19 @@ async function searchPlaces(start){
     markStep('stepPlaces','doing');
     let all=[];
 
-    // First query normally suffices. For green/water, only retry if too few
-    // useful theme points were found, to keep API calls under control.
-    for(let i=0;i<config.queries.length;i++){
+    // Destination-first search:
+    // collect a healthy pool from the whole walkable area BEFORE making a route.
+    const desiredPool=Math.max(8,wanted*5);
+    const maxQueries=state.theme==='random'?3:Math.min(4,config.queries.length);
+
+    for(let i=0;i<maxQueries;i++){
       const found=await onePlaceTextSearch(start,config,config.queries[i]);
       all=uniqueNearbyPlaces(start,[...all,...found]);
-      if(all.length>=Math.max(3,wanted*2))break;
-      if(i>=1 && state.theme!=='water')break;
+      if(all.length>=desiredPool)break;
     }
 
     markStep('stepPlaces','done');
-    return all;
+    return all.slice(0,16);
   }catch(e){
     console.warn('Theme place search failed',e);
     markStep('stepPlaces','done');
@@ -2092,6 +2191,19 @@ async function searchPlaces(start){
 function seedBearing(seed){
   return (65 + seed*103 + (new Date().getMinutes()*7))%360;
 }
+function loopSupportPointV113(start,anchor,seed,target){
+  const mid={lat:(start.lat+anchor.lat)/2,lng:(start.lng+anchor.lng)/2};
+  const dy=anchor.lat-start.lat,dx=anchor.lng-start.lng;
+  const len=Math.hypot(dx,dy)||.00001;
+  const side=(seed%2===0?1:-1);
+  const km=Math.max(.22,Math.min(.65,target*.12));
+  const degLat=km/111;
+  const degLng=km/(111*Math.max(.35,Math.cos(rad(mid.lat))));
+  return {
+    lat:mid.lat + side*(-dx/len)*degLat,
+    lng:mid.lng + side*(dy/len)*degLng
+  };
+}
 function demoSpec(start,seed,spots=[]){
   const target=effectiveTargetKmV102();
   const r=Math.max(.35,target/4.35);
@@ -2099,14 +2211,14 @@ function demoSpec(start,seed,spots=[]){
   const mids=[];
   const usedSpots=(spots||[]).filter(Boolean);
 
-  if(usedSpots.length){
-    // These are real theme/place waypoints returned from Places.
-    usedSpots.forEach(s=>mids.push(s.loc));
+  usedSpots.forEach(s=>mids.push(s.loc));
+  const fixedCount=mids.length;
 
-    // Keep the loop shape even when only one theme point is requested.
-    if(usedSpots.length===1){
-      mids.push(pointFrom(start,(b+125)%360,r*.88));
-    }
+  if(usedSpots.length){
+    // Keep the real destination(s) fixed, then add one side waypoint to encourage
+    // a different return street instead of a simple out-and-back.
+    const anchor=usedSpots[usedSpots.length-1].loc;
+    mids.push(loopSupportPointV113(start,anchor,seed,target));
   }else{
     mids.push(
       pointFrom(start,b,r),
@@ -2119,6 +2231,7 @@ function demoSpec(start,seed,spots=[]){
     waypoints:mids.map(p=>({...p})),
     spots:usedSpots,
     spot:usedSpots[0]||null,
+    fixedCount,
     themeMatched:usedSpots.length>0
   };
 }
@@ -2190,7 +2303,8 @@ function cloneSpecV109(spec){
     waypoints:(spec.waypoints||[]).map(p=>({...p})),
     spots:[...(spec.spots||[])],
     spot:spec.spot||null,
-    themeMatched:!!spec.themeMatched
+    themeMatched:!!spec.themeMatched,
+    fixedCount:Number(spec.fixedCount)||0
   };
 }
 function scalePointFromStartV109(start,p,factor){
@@ -2211,6 +2325,26 @@ async function refinePlainSpecV109(start,spec,targetKm,maxTry=3){
   }
   return best;
 }
+async function refineThemedSpecV113(start,spec,targetKm,maxTry=2){
+  let working=cloneSpecV109(spec),best=null;
+  const fixed=Math.max(0,Number(working.fixedCount)||0);
+
+  for(let n=0;n<maxTry;n++){
+    let result;
+    try{result=await googleCandidate(start,working)}catch(e){break}
+    const err=Math.abs(result.km-targetKm)/Math.max(.1,targetKm);
+    result.distanceError=err;
+    if(!best || (err+(result.overlapRatio||0)*2.8) < (best.distanceError+(best.overlapRatio||0)*2.8))best=result;
+    if(err<=.07 && (result.overlapRatio||0)<=.18)break;
+
+    const factor=Math.max(.72,Math.min(1.28,targetKm/Math.max(.2,result.km)));
+    // Never move real POIs. Only adjust the synthetic loop-support waypoint(s).
+    working.intermediates=working.intermediates.map((p,i)=>i<fixed?p:scalePointFromStartV109(start,p,factor));
+    working.waypoints=working.intermediates.map(p=>({...p}));
+  }
+  return best;
+}
+
 async function buildPlainFallbackV109(start,seed,targetKm){
   const spec=demoSpec(start,seed,[]);
   return await refinePlainSpecV109(start,spec,targetKm,3);
@@ -2220,60 +2354,90 @@ async function buildGoogleRoutes(start,places){
   const target=effectiveTargetKmV102();
   const raw=[];
   let bestExtension=null;
+  const explicitTheme=['cafe','food','green','water'].includes(state.theme);
 
-  for(let i=0;i<3;i++){
+  // Theme-first: test real destinations first, then shape the route around them.
+  const ranked=(places||[]).slice(0,12);
+  const tries=explicitTheme ? Math.min(6,Math.max(3,ranked.length)) : 3;
+
+  for(let i=0;i<tries;i++){
     if(state.cancelled)break;
-    const chosen=pickCandidateSpots(places,wanted,i);
-    const themedSpec=demoSpec(start,i,chosen);
-    let themed=null;
-    try{themed=await googleCandidate(start,themedSpec)}catch(e){console.warn('theme candidate failed',e)}
 
-    if(themed){
-      themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
-      const ratio=themed.km/Math.max(.1,target);
+    let chosen=[];
+    if(wanted>0 && ranked.length){
+      chosen=pickCandidateSpots(ranked,wanted,i);
+    }
 
-      // theme route already fits -> keep
-      if(themed.distanceError<=.08 && (themed.overlapRatio||0)<.24){
-        raw.push(themed);
-        continue;
-      }
+    if(chosen.length){
+      const themedSpec=demoSpec(start,i,chosen);
+      let themed=null;
+      try{themed=await googleCandidate(start,themedSpec)}catch(e){console.warn('theme candidate failed',e)}
 
-      // only a little longer -> save as user-selectable offer
-      if(themed.themeMatched && ratio>1.08 && ratio<=1.15 && (themed.overlapRatio||0)<.24){
-        if(!bestExtension || themed.distanceError<bestExtension.distanceError)bestExtension=themed;
-      }
+      if(themed){
+        themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
+        const ratio=themed.km/Math.max(.1,target);
+        themed.themeMatched=true;
 
-      // if shorter, add/refine detour only when it doesn't move real POIs
-      if(ratio<.92 && chosen.length<=1){
-        const refined=await refinePlainSpecV109(start,themedSpec,target,2);
-        if(refined && (refined.overlapRatio||0)<.24)raw.push(refined);
+        // If short, extend only the synthetic loop point. Real destinations stay fixed.
+        if(ratio<.93){
+          const refined=await refineThemedSpecV113(start,themedSpec,target,2);
+          if(refined)themed=refined;
+        }
+
+        themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
+        const finalRatio=themed.km/Math.max(.1,target);
+
+        if(finalRatio<=1.12 && (themed.overlapRatio||0)<=.24){
+          raw.push(themed);
+        }else if(finalRatio>1.12 && finalRatio<=1.16 && (themed.overlapRatio||0)<=.22){
+          if(!bestExtension || themed.distanceError<bestExtension.distanceError)bestExtension=themed;
+        }
       }
     }
 
-    // distance wins when theme is too far away
-    const plain=await buildPlainFallbackV109(start,i,target);
-    if(plain)raw.push(plain);
+    // Direct / random / no useful theme destination: fill with a clean loop.
+    if(!explicitTheme || !ranked.length){
+      const plain=await buildPlainFallbackV109(start,i,target);
+      if(plain)raw.push(plain);
+    }
+  }
+
+  // If theme candidates exist but fewer than 3 are clean, add distance-first fallbacks last.
+  if(raw.length<3){
+    for(let i=0;i<4 && raw.length<6;i++){
+      if(state.cancelled)break;
+      const plain=await buildPlainFallbackV109(start,i+7,target);
+      if(plain)raw.push(plain);
+    }
   }
 
   const deduped=[];
   raw.sort((a,b)=>{
-    const aq=(a.overlapRatio||0)*1.6+(a.distanceError??Math.abs(a.km-target)/target);
-    const bq=(b.overlapRatio||0)*1.6+(b.distanceError??Math.abs(b.km-target)/target);
+    const themeA=(explicitTheme&&!a.themeMatched)?1.2:0;
+    const themeB=(explicitTheme&&!b.themeMatched)?1.2:0;
+    const aq=themeA+(a.overlapRatio||0)*3.6+(a.distanceError??Math.abs(a.km-target)/target);
+    const bq=themeB+(b.overlapRatio||0)*3.6+(b.distanceError??Math.abs(b.km-target)/target);
     return aq-bq;
   }).forEach(r=>{
-    if(!deduped.some(x=>Math.abs(x.km-r.km)<.08 && Math.abs((x.overlapRatio||0)-(r.overlapRatio||0))<.03)){
-      deduped.push(r);
-    }
+    if(!deduped.some(x=>
+      Math.abs(x.km-r.km)<.08 &&
+      Math.abs((x.overlapRatio||0)-(r.overlapRatio||0))<.03 &&
+      (x.spot?.id||'')===(r.spot?.id||'')
+    ))deduped.push(r);
   });
 
-  let routes=deduped.filter(r=>(r.overlapRatio||0)<.24).slice(0,3);
+  // Strong preference for genuine loops. Only relax if Google cannot produce one.
+  let routes=deduped.filter(r=>(r.overlapRatio||0)<=.18).slice(0,3);
+  if(routes.length<3){
+    const relaxed=deduped.filter(r=>(r.overlapRatio||0)<=.26 && !routes.includes(r));
+    routes=[...routes,...relaxed].slice(0,3);
+  }
   if(!routes.length)routes=deduped.slice(0,1);
 
-  // user choice when a small extension makes theme possible
   state.extensionOffer=null;
   if(bestExtension && routes[0]){
     const base=routes[0];
-    if(Math.abs(base.km-target)/target<=.09){
+    if(Math.abs(base.km-target)/target<=.10){
       state.extensionOffer={base,extended:bestExtension,target};
     }
   }
@@ -2317,9 +2481,9 @@ function markStep(id,status){
   if($('generationBarV109'))$('generationBarV109').style.width=pct+'%';
   if($('generatingMainCopy')){
     $('generatingMainCopy').textContent=
-      id==='stepPlaces'?'立ち寄り候補を確認しています':
-      id==='stepRoute'?'歩きやすい周回ルートを調整しています':
-      'もう少しで完成です';
+      id==='stepPlaces'?'行きたい場所を探しています':
+      id==='stepRoute'?'往復の少ない道を組み立てています':
+      'もうすぐ完成です';
   }
 }
 function updateGeneratingCopy(){
@@ -2327,9 +2491,9 @@ function updateGeneratingCopy(){
   if(placeLine){
     placeLine.textContent=
       state.theme==='water'?'水辺の実スポットを探しています':
-      state.theme==='green'?'公園・緑地を探しています':
-      state.theme==='cafe'?'カフェを探しています':
-      state.theme==='food'?'飲食店を探しています':
+      state.theme==='green'?'近くの公園・緑地を探しています':
+      state.theme==='cafe'?'歩ける範囲のカフェを探しています':
+      state.theme==='food'?'歩ける範囲のごはん候補を探しています':
       state.theme==='direct'?'歩きやすい道を探しています':
       '歩きやすい道を探しています';
   }
@@ -2481,7 +2645,7 @@ function drawCandidate(c){
   fitPath(c.path);
 }
 function showCandidate(index){
-  const routeLabels=['距離ぴったり','景色重視','寄り道重視'];
+  const routeLabels=['条件にぴったり','テーマ優先','往復少なめ'];
   if($('routeTypeV110'))$('routeTypeV110').textContent=routeLabels[index%3];
   const c=state.routes[index];if(!c)return;
   state.selected=index;
@@ -2520,6 +2684,9 @@ function showCandidate(index){
   if($('resultStopsV111'))$('resultStopsV111').textContent=resultStopCount;
   updateCalorieVisibilityV111();
   $('spotCaption').textContent=resultStopCount===0?'寄り道なし':`${resultStopCount}件の寄り道`;
+  const spotTitleEl=document.querySelector('#resultState .spot-title');
+  if(spotTitleEl)spotTitleEl.hidden=resultStopCount===0;
+  if($('spotStrip'))$('spotStrip').hidden=resultStopCount===0;
   $('candidateCount').textContent=`候補 ${index+1} / ${state.routes.length}`;
   let q=$('routeQualityV109');
   if(!q){
@@ -2693,7 +2860,7 @@ function repeatWalkV110(id,alternate){
 }
 /* ===== community spots demo ===== */
 const COMMUNITY_DEMO=[
-  {id:'demo1',kind:'park',name:'水辺の散歩道',review:'水辺が近く、ベンチで少し休むのにちょうどいい場所。風が気持ちよくて、散歩の途中に立ち寄りやすい。',tags:['水辺','休憩','静か'],rating:4.8,reviews:32,author:'Yumi',lat:35.6548,lng:139.7968,photo:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:5,walk:5,quiet:4,rest:5}},
+  {id:'demo1',kind:'park',name:'水辺の散歩道',review:'水辺が近く、ベンチで少し休むのにちょうどいい場所。風が気持ちよくて、散歩の途中に立ち寄りやすい。',tags:['水辺','休憩','静か'],rating:4.8,reviews:32,author:'Yumi',lat:35.6548,lng:139.7968,photo:'https://images.unsplash.com/photo-1473445361085-b9a07f55608b?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:5,walk:5,quiet:4,rest:5}},
   {id:'demo2',kind:'cafe',name:'散歩途中のテラスカフェ',review:'外席があって、歩いたあとにひと休みしやすい。のんびりした散歩の日に寄りたい場所。',tags:['カフェ','休憩','テラス'],rating:4.6,reviews:18,author:'Kota',lat:35.6562,lng:139.7947,photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:4,walk:4,quiet:3,rest:5}},
   {id:'demo3',kind:'view',name:'緑の遊歩道',review:'木が多くて歩きやすい道。短い散歩でも、少し景色を変えたい日にちょうどいい。',tags:['景色','緑','静か'],rating:4.9,reviews:24,author:'Mika',lat:35.6534,lng:139.7991,photo:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:5,walk:4,quiet:5,rest:3}}
 ];
