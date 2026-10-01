@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v111 UI polish: quieter typography + simpler generation + walking-first results + natural community feed -->
+<!-- SANPO v112: v111 UI + button startup repair + safe localStorage migration -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1765,6 +1765,26 @@ const KEY={
   spotSaves:'sanpo_spot_saves_v110'
 };
 
+// v112: Older SANPO versions may leave a valid JSON value with a different shape.
+// Treat array-backed stores defensively so one stale value cannot stop every button binding.
+function readArrayStore(key){
+  try{
+    const value=JSON.parse(localStorage.getItem(key)||'[]');
+    if(Array.isArray(value))return value;
+    localStorage.setItem(key,'[]');
+    return [];
+  }catch(e){
+    try{localStorage.setItem(key,'[]')}catch(_e){}
+    return [];
+  }
+}
+function readObjectStore(key,fallback={}){
+  try{
+    const value=JSON.parse(localStorage.getItem(key)||'{}');
+    return value && typeof value==='object' && !Array.isArray(value) ? value : {...fallback};
+  }catch(e){return {...fallback}}
+}
+
 const state={
   theme:'random',
   amountMode:'distance',
@@ -2592,7 +2612,7 @@ function openSpotDetail(s){
 
 /* ===== history ===== */
 function saveHistory(c){
-  const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const h=readArrayStore(KEY.history);
   const min=Math.max(1,Math.round(c.km/state.paceKmh*60));
   h.unshift({
     id:Date.now(),date:new Date().toISOString(),
@@ -2619,19 +2639,19 @@ function renderWeekChartV109(h){
   $('weekChartV109').innerHTML=days.map(o=>`<div class="week-bar-v109"><i style="height:${Math.max(4,o.km/max*48)}px"></i><span>${'月火水木金土日'[(o.d.getDay()+6)%7]}</span></div>`).join('');
 }
 function updateHistoryMemoV109(id){
-  const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const h=readArrayStore(KEY.history);
   const item=h.find(x=>String(x.id)===String(id));if(!item)return;
   const memo=prompt('この散歩のメモ',item.memo||'');
   if(memo===null)return;item.memo=memo.slice(0,80);
   localStorage.setItem(KEY.history,JSON.stringify(h));renderHistory();
 }
 function toggleHistoryFavoriteV109(id){
-  const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');
+  const h=readArrayStore(KEY.history);
   const item=h.find(x=>String(x.id)===String(id));if(!item)return;
   item.favorite=!item.favorite;localStorage.setItem(KEY.history,JSON.stringify(h));renderHistory();
 }
 function renderHistory(){
-  let h=[];try{h=JSON.parse(localStorage.getItem(KEY.history)||'[]')}catch(e){}
+  let h=[];try{h=readArrayStore(KEY.history)}catch(e){}
   const el=$('historyList');
   const start=weekStartV109(),end=new Date(start);end.setDate(start.getDate()+7);
   const week=h.filter(x=>{const d=new Date(x.date);return d>=start&&d<end});
@@ -2667,7 +2687,7 @@ function renderHistory(){
 }
 
 function repeatWalkV110(id,alternate){
-  const h=JSON.parse(localStorage.getItem(KEY.history)||'[]');const item=h.find(x=>String(x.id)===String(id));if(!item)return;
+  const h=readArrayStore(KEY.history);const item=h.find(x=>String(x.id)===String(id));if(!item)return;
   state.theme=item.theme||'random';state.targetKm=Number(item.km)||5;state.amountMode='distance';
   qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme===state.theme));updateDistance();navTo('homePage');showHomeState('builderState');showBuilderStep(2);if(alternate)setTimeout(()=>createRoute(),120);
 }
@@ -2681,7 +2701,7 @@ let communityFilter='all';
 let communityTagV110='';
 function communityKindLabel(k){return ({park:'公園',cafe:'カフェ',view:'景色',rest:'休憩'})[k]||'スポット'}
 function getCommunitySpots(){
-  let mine=[];try{mine=JSON.parse(localStorage.getItem(KEY.community)||'[]')}catch(e){}
+  let mine=[];try{mine=readArrayStore(KEY.community)}catch(e){}
   return [...mine,...COMMUNITY_DEMO];
 }
 function renderCommunitySpots(){
@@ -2754,7 +2774,7 @@ $('communityPostPhotos').addEventListener('change',async e=>{
 $('communityPostSubmit').onclick=()=>{
   const name=$('communityPostName').value.trim(),review=$('communityPostReview').value.trim();
   if(!name||!review){alert('スポット名とレビューを入力してください。');return}
-  let mine=[];try{mine=JSON.parse(localStorage.getItem(KEY.community)||'[]')}catch(e){}
+  let mine=[];try{mine=readArrayStore(KEY.community)}catch(e){}
   mine.unshift({
     id:'mine'+Date.now(),kind:$('communityPostKind').value,name,review,
     tags:$('communityPostTags').value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5),
@@ -2772,7 +2792,7 @@ $('communityPostSubmit').onclick=()=>{
 
 /* ===== optional profile / calorie helper ===== */
 function loadProfileV108(){
-  let p={};try{p=JSON.parse(localStorage.getItem(KEY.profile)||'{}')}catch(e){}
+  let p={};try{p=readObjectStore(KEY.profile)}catch(e){}
   if($('profileSex'))$('profileSex').value=p.sex||'';
   if($('profileAge'))$('profileAge').value=p.age||'';
   if($('profileHeight'))$('profileHeight').value=p.height||'';
@@ -2796,17 +2816,18 @@ if($('calorieToggleV111'))$('calorieToggleV111').onclick=()=>{
   savePrefsV109();updateCalorieVisibilityV111();
 };
 window.updateHistoryMemoV109=updateHistoryMemoV109;window.toggleHistoryFavoriteV109=toggleHistoryFavoriteV109;window.repeatWalkV110=repeatWalkV110;
-loadProfileV108();renderCommunitySpots();
+try{loadProfileV108()}catch(e){console.warn('profile init skipped',e)}
+try{renderCommunitySpots()}catch(e){console.warn('community init skipped',e)}
 
 function updateCalorieVisibilityV111(){
-  let p={};try{p=JSON.parse(localStorage.getItem(KEY.prefs)||'{}')}catch(e){}
+  let p={};try{p=readObjectStore(KEY.prefs)}catch(e){}
   const profile=loadProfileV108();
   const show=p.showCalories===true && Number(profile.weight)>0;
   if($('resultCalorieV111'))$('resultCalorieV111').hidden=!show;
   if($('calorieToggleV111'))$('calorieToggleV111').classList.toggle('on',p.showCalories===true);
 }
 function loadPrefsV109(){
-  let p={};try{p=JSON.parse(localStorage.getItem(KEY.prefs)||'{}')}catch(e){}
+  let p={};try{p=readObjectStore(KEY.prefs)}catch(e){}
   if(p.defaultPace && PACE_V102[p.defaultPace]){
     state.pace=p.defaultPace;state.paceKmh=PACE_V102[p.defaultPace].kmh;
     qsa('[data-pace]').forEach(x=>x.classList.toggle('active',x.dataset.pace===p.defaultPace));
@@ -2839,7 +2860,7 @@ $('settingsOpenOnlyV109').onclick=()=>{
 };
 $('communityRouteToggleV109').onclick=()=>{state.useCommunity=!(state.useCommunity!==false);syncCommunityTogglesV110();savePrefsV109();};
 $('communityRouteToggleBuilderV110').onclick=()=>{state.useCommunity=!(state.useCommunity!==false);syncCommunityTogglesV110();savePrefsV109();};
-loadPrefsV109();
+try{loadPrefsV109()}catch(e){console.warn('prefs init skipped',e)}
 
 
 
@@ -3105,7 +3126,7 @@ $('confirmGoogleWalkV110').onclick=()=>{
 };
 $('finishCloseV110').onclick=()=>$('walkFinishV110').classList.remove('show');
 $('finishPostSpotV110').onclick=()=>{$('walkFinishV110').classList.remove('show');navTo('spotsPage');$('communityPostModal').classList.add('show');};
-$('finishSaveV110').onclick=()=>{let h=[];try{h=JSON.parse(localStorage.getItem(KEY.history)||'[]')}catch(e){};if(h[0])h[0].memo=$('finishMemoV110').value.trim();localStorage.setItem(KEY.history,JSON.stringify(h));localStorage.removeItem('sanpo_pending_finish_v110');renderHistory();$('walkFinishV110').classList.remove('show');navTo('historyPage');};
+$('finishSaveV110').onclick=()=>{let h=[];try{h=readArrayStore(KEY.history)}catch(e){};if(h[0])h[0].memo=$('finishMemoV110').value.trim();localStorage.setItem(KEY.history,JSON.stringify(h));localStorage.removeItem('sanpo_pending_finish_v110');renderHistory();$('walkFinishV110').classList.remove('show');navTo('historyPage');};
 
 /* ===== settings ===== */
 $('apiKeyInput').value=state.apiKey;
@@ -3155,7 +3176,7 @@ async function boot(){
     }
   }catch(e){}
 }
-boot();
+boot().catch(e=>console.warn('boot skipped',e));
 
 })();
 </script>
