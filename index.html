@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v113: destination-first route generation + stronger loop filtering + accessible text polish -->
+<!-- SANPO v114: destination-first route generation + stronger loop filtering + accessible text polish -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1268,7 +1268,7 @@ body{letter-spacing:.005em}
 .settings-section-v109 summary b,.setting-row-v109 b{font-weight:700!important}
 @media(max-width:370px){.generating-v110 h2{font-size:19px!important}.v107-theme-grid .theme{font-size:10.5px!important}.start-options button{font-size:12px!important}}
 
-/* ===== SANPO v113 accessible, photo-reference polish ===== */
+/* ===== SANPO v114 accessible, photo-reference polish ===== */
 /* Small text is either removed or enlarged: no tiny UI copy. */
 .weather-pill b{font-size:15px!important;font-weight:700!important}
 .step-progress-v107{font-size:14px!important}
@@ -1354,6 +1354,30 @@ body{letter-spacing:.005em}
   .v107-theme-grid .theme{font-size:13px!important}
   .bottom-nav .nav-btn{font-size:12px!important}
 }
+
+
+/* ===== SANPO v114: slider scale alignment + no tiny helper copy ===== */
+.range-labels{
+  position:relative!important;
+  display:block!important;
+  height:26px!important;
+  padding:0!important;
+  margin-top:1px!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  color:#71847d!important;
+  line-height:26px!important;
+}
+.range-labels span{
+  position:absolute!important;
+  top:0!important;
+  white-space:nowrap!important;
+  transform:translateX(-50%);
+}
+.range-labels span:first-child{transform:none!important}
+.range-labels span:last-child{transform:translateX(-100%)!important}
+/* 地図選択では小さい説明文を置かず、主操作だけを残す */
+#pickedStartText{display:none!important}
 
 </style>
 </head>
@@ -1777,7 +1801,7 @@ body{letter-spacing:.005em}
     <div id="startLeafletMap"></div>
     <div class="start-picker-bottom">
       <b>地図をタップして出発地点を選択</b>
-      <small id="pickedStartText">まだ地点を選んでいません</small>
+      <small id="pickedStartText" aria-hidden="true"></small>
       <button class="confirm-start" id="confirmStartBtn" disabled>ここを出発地にする</button>
     </div>
   </div>
@@ -3068,10 +3092,10 @@ function syncRangeMode(){
   const r=$('amountRange');
   if(state.amountMode==='distance'){
     r.min='1';r.max='10';r.step='.5';r.value=String(state.targetKm);
-    $('rangeLabels').innerHTML='<span>1</span><span>5</span><span>10 km</span>';
+    $('rangeLabels').innerHTML='<span style="left:0%">1 km</span><span style="left:44.44%">5 km</span><span style="left:100%">10 km</span>';
   }else{
     r.min='10';r.max='180';r.step='5';r.value=String(state.targetMin);
-    $('rangeLabels').innerHTML='<span>10分</span><span>60分</span><span>180分</span>';
+    $('rangeLabels').innerHTML='<span style="left:0%">10分</span><span style="left:29.41%">60分</span><span style="left:100%">180分</span>';
   }
   updateRangeVisual();
 }
@@ -3166,7 +3190,7 @@ function initStartLeaflet(center){
   }else{startLMap.setView([center.lat,center.lng],15);setTimeout(()=>startLMap.invalidateSize(),60)}
 }
 function setPendingStart(p,engine){
-  pendingStart=p;$('pickedStartText').textContent=`選択地点：${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`;
+  pendingStart=p;if($('pickedStartText'))$('pickedStartText').textContent='';
   $('confirmStartBtn').disabled=false;
   if(engine==='google'){
     if(startGMarker)startGMarker.setMap(null);
