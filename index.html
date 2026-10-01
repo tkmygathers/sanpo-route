@@ -7,6 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
+<meta name="sanpo-build" content="v116-20261001">
 <!-- SANPO v115: destination-first route generation + stronger loop filtering + accessible text polish -->
 
 
@@ -1445,6 +1446,52 @@ body{letter-spacing:.005em}
   .google-review-v115 p{font-size:15px!important}
 }
 
+/* ===== SANPO v116: final requested polish ===== */
+/* start buttons explain themselves; no helper strip */
+#startLabel{display:none!important}
+
+/* generation screen: quieter, more product-like, bigger readable text */
+.generating-state{background:#fbfcfa!important}
+.generating-v115{justify-content:center!important;padding:22px 26px 34px!important}
+.generate-illustration-v115{width:min(390px,96%)!important;margin-bottom:28px!important}
+.generating-v115 h2{font-size:30px!important;font-weight:800!important;letter-spacing:-.045em!important;color:#143d32!important}
+.generate-copy-v115{font-size:18px!important;line-height:1.6!important;margin:12px 0 28px!important;color:#5d746b!important;font-weight:650!important}
+.generate-steps-v115{position:relative;width:min(390px,100%)!important;gap:0!important;margin:0 auto 24px!important}
+.generate-steps-v115:before{content:"";position:absolute;left:16.5%;right:16.5%;top:25px;height:2px;background:#dce7e1;z-index:0}
+.generate-steps-v115 .progress-item-v109{position:relative;z-index:1;background:transparent!important}
+.generate-steps-v115 .progress-item-v109 i{width:52px!important;height:52px!important;background:#edf4f0!important;border:5px solid #fbfcfa!important;font-size:17px!important;color:#61786f!important}
+.generate-steps-v115 .progress-item-v109.doing i{background:#1d7a58!important;color:#fff!important;box-shadow:0 0 0 5px rgba(29,122,88,.10)!important}
+.generate-steps-v115 .progress-item-v109.done i{background:#dff2e8!important;color:#126b4c!important}
+.generate-steps-v115 .progress-item-v109 b{font-size:16px!important;line-height:1.35!important;margin-top:3px!important;color:#536960!important}
+.generate-steps-v115 .progress-item-v109.doing b{color:#176b4e!important}
+.generate-bar-v115{height:8px!important;margin-bottom:28px!important;background:#e4ece7!important}
+.generate-cancel-v115{height:52px!important;font-size:17px!important;border-color:#d8e3dd!important;color:#5c6e67!important}
+
+/* Google place detail: photos first, reviews readable for all ages */
+.spot-photo-hero-v115{height:285px!important}
+.spot-photo-thumbs-v115 button{height:78px!important}
+.spot-detail-body-v115 h2{font-size:28px!important}
+.spot-address-v115{font-size:17px!important;line-height:1.65!important}
+.google-place-summary-v115{padding:15px 16px!important}
+.google-place-summary-v115 b{font-size:28px!important}
+.google-place-summary-v115 span{font-size:17px!important}
+.review-title-v115{font-size:23px!important;margin:22px 0 12px!important}
+.google-review-v115{padding:17px!important;border-radius:16px!important}
+.google-review-head-v115 b,.google-review-head-v115 a{font-size:18px!important}
+.google-review-head-v115 span{font-size:16px!important}
+.google-review-v115 p{font-size:17px!important;line-height:1.8!important;color:#344b42!important}
+.review-loading-v115,.review-empty-v115{font-size:17px!important}
+.spot-photo-source-v115{font-size:14px!important}
+.spot-photo-attribution-v115{font-size:14px!important}
+
+@media(max-width:390px){
+  .generating-v115 h2{font-size:27px!important}
+  .generate-copy-v115{font-size:17px!important}
+  .generate-steps-v115 .progress-item-v109 b{font-size:15px!important}
+  .spot-photo-hero-v115{height:250px!important}
+  .google-review-v115 p{font-size:16px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1491,7 +1538,6 @@ body{letter-spacing:.005em}
                 地図で選ぶ
               </button>
             </div>
-            <div class="start-label" id="startLabel">現在地からスタート</div>
             <span id="locationStatus" class="sr-only-v103">現在地を取得します</span>
           </div>
 
@@ -1600,11 +1646,11 @@ body{letter-spacing:.005em}
             </svg>
           </div>
           <h2>散歩コースを作っています</h2>
-          <p class="generate-copy-v115" id="generatingMainCopy">近くの候補を探しています</p>
+          <p class="generate-copy-v115" id="generatingMainCopy">行きたい場所を探しています</p>
           <div class="generate-steps-v115">
-            <span id="stepPlaces" class="progress-item-v109 doing"><i>⌕</i><b class="progress-text">候補を探す</b></span>
-            <span id="stepRoute" class="progress-item-v109"><i>↝</i><b>周回を整える</b></span>
-            <span id="stepFinish" class="progress-item-v109"><i>✓</i><b>仕上げ</b></span>
+            <span id="stepPlaces" class="progress-item-v109 doing"><i>1</i><b class="progress-text">候補を探す</b></span>
+            <span id="stepRoute" class="progress-item-v109"><i>2</i><b>周回を整える</b></span>
+            <span id="stepFinish" class="progress-item-v109"><i>3</i><b>仕上げ</b></span>
           </div>
           <div class="generation-bar-v109 generate-bar-v115"><i id="generationBarV109"></i></div>
           <button class="cancel-generate generate-cancel-v115" id="cancelGenerateBtn">やめる</button>
@@ -3204,14 +3250,24 @@ function updateRangeVisual(){
   const min=+r.min,max=+r.max,val=+r.value;
   r.style.setProperty('--pct',`${((val-min)/(max-min))*100}%`);
 }
+function timeToSliderPosV116(minutes){
+  const m=Math.max(10,Math.min(120,Number(minutes)||60));
+  return m<=60 ? ((m-10)/50)*50 : 50+((m-60)/60)*50;
+}
+function sliderPosToTimeV116(pos){
+  const p=Math.max(0,Math.min(100,Number(pos)||0));
+  const raw=p<=50 ? 10+(p/50)*50 : 60+((p-50)/50)*60;
+  return Math.max(10,Math.min(120,Math.round(raw/5)*5));
+}
 function syncRangeMode(){
   const r=$('amountRange');
   if(state.amountMode==='distance'){
     r.min='1';r.max='10';r.step='.5';r.value=String(state.targetKm);
     $('rangeLabels').innerHTML='<span style="left:0%">1 km</span><span style="left:44.44%">5 km</span><span style="left:100%">10 km</span>';
   }else{
-    r.min='10';r.max='180';r.step='5';r.value=String(state.targetMin);
-    $('rangeLabels').innerHTML='<span style="left:0%">10分</span><span style="left:29.41%">60分</span><span style="left:100%">180分</span>';
+    // v116: 10–120 min, with 60 min exactly at the visual center.
+    r.min='0';r.max='100';r.step='.01';r.value=String(timeToSliderPosV116(state.targetMin));
+    $('rangeLabels').innerHTML='<span style="left:0%">10分</span><span style="left:50%">60分</span><span style="left:100%">120分</span>';
   }
   updateRangeVisual();
 }
@@ -3233,7 +3289,7 @@ qsa('[data-amount-mode]').forEach(btn=>btn.onclick=()=>{
 });
 $('amountRange').addEventListener('input',e=>{
   if(state.amountMode==='distance')state.targetKm=+e.target.value;
-  else state.targetMin=+e.target.value;
+  else state.targetMin=sliderPosToTimeV116(+e.target.value);
   updateDistance();
 });
 qsa('[data-pace]').forEach(btn=>btn.onclick=()=>{
@@ -3276,7 +3332,7 @@ qsa('.suggest-chip').forEach(btn=>btn.onclick=()=>{
 $('currentLocationBtn').onclick=async()=>{
   await locate(); state.startMode='current'; state.customStart=null;
   $('currentLocationBtn').classList.add('active');$('mapStartBtn').classList.remove('active');
-  $('startLabel').textContent='現在地からスタート';
+  if($('startLabel'))$('startLabel').textContent='現在地からスタート';
 };
 
 async function openStartMap(){
@@ -3322,7 +3378,7 @@ $('confirmStartBtn').onclick=()=>{
   if(!pendingStart)return;
   state.customStart={...pendingStart};state.startMode='map';state.center={...pendingStart};
   $('currentLocationBtn').classList.remove('active');$('mapStartBtn').classList.add('active');
-  $('startLabel').textContent=`地図で選んだ地点からスタート`;
+  if($('startLabel'))$('startLabel').textContent=`地図で選んだ地点からスタート`;
   $('startMapModal').classList.remove('show');
 };
 
@@ -3486,6 +3542,11 @@ async function boot(){
 boot().catch(e=>console.warn('boot skipped',e));
 
 })();
+</script>
+
+<script>
+window.SANPO_BUILD='v116-20261001';
+console.info('[SANPO] build', window.SANPO_BUILD);
 </script>
 </body>
 </html>
