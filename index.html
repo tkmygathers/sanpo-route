@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v110 final-style polish: cleaner UI + community feed + simpler generation + route controls -->
+<!-- SANPO v111 UI polish: quieter typography + simpler generation + walking-first results + natural community feed -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1246,6 +1246,27 @@ body{letter-spacing:.005em}
 .hidden-v110{display:none!important}
 @media(max-width:370px){.home-main-title-v110{font-size:22px!important}.builder-intro-v107.second h1{font-size:25px!important}.theme{font-size:11px!important}.community-ratings-v110{grid-template-columns:repeat(2,1fr)}}
 
+
+/* ===== SANPO v111 quiet polish ===== */
+.home-main-title-v110{font-size:clamp(22px,6.2vw,28px)!important;letter-spacing:-.045em!important}
+.start-options button,.theme,.stop-counts button,.pace-seg-v102 button{font-weight:700!important}
+.v107-theme-grid .theme{font-size:12px!important;line-height:1!important;white-space:nowrap!important;padding:6px 4px!important}
+.v107-theme-grid .theme span.theme-svg{flex:0 0 auto}
+.stop-counts button{font-size:12px!important;white-space:nowrap!important}
+.generating-v110{justify-content:center!important;padding:18px 24px 34px!important}
+.walk-scene-v110{width:min(300px,82%)!important;margin-bottom:20px!important;opacity:.9}
+.generating-v110 h2{font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif!important;font-size:clamp(20px,5.7vw,24px)!important;font-weight:700!important;letter-spacing:-.055em!important;white-space:nowrap!important;line-height:1.2!important}
+.generating-main-copy-v110{font-size:13px!important;font-weight:500!important;margin:11px 0 20px!important;color:#718079!important}
+.generation-dots-v110{width:144px!important;display:grid!important;grid-template-columns:9px 1fr 9px 1fr 9px!important;align-items:center!important;gap:7px!important;margin:0 auto 8px!important}
+.generation-dots-v110 i{width:9px!important;height:9px!important}.generation-dots-v110 span{height:1px;background:#dbe2de;display:block}
+.generation-steps-v110{width:164px!important;justify-content:space-between!important;gap:0!important;margin:0 auto 10px!important}.generation-steps-v110 b{font-size:9px!important;font-weight:600!important;white-space:nowrap!important}
+.generation-bar-v109{width:164px!important;height:2px!important}.v109-cancel{font-size:11px!important;font-weight:600!important;color:#7f8b85!important}
+.result-metrics{margin:10px 0!important;padding:9px 0!important}.result-metrics b{font-size:18px!important;font-weight:700!important;letter-spacing:-.03em}.result-metrics small{font-size:9px!important;font-weight:500!important}.result-calorie-v111{font-size:9.5px;color:#87938e;text-align:right;margin:-3px 2px 8px}.result-calorie-v111 b{font-size:10.5px;color:#60716a;font-weight:600}
+.route-quality-v109 span{font-size:8.5px!important;font-weight:600!important}.spot-card b{font-size:12px!important}.spot-card small{font-size:10px!important}.spot-title b{font-size:15px!important}
+.section-title{font-weight:700!important;letter-spacing:-.04em!important}.weekly-summary-v109 b,.history-card-v109 h3{font-weight:700!important}.weekly-summary-v109{box-shadow:none!important}
+.community-feed-card-v110 h3{font-weight:700!important;letter-spacing:-.025em}.community-feed-review-v110{font-size:12px!important;color:#59665f!important}.community-main-photo-v110{border-radius:7px!important}.community-actions-v110{gap:12px!important;overflow-x:auto;padding-bottom:2px}.community-actions-v110 button{white-space:nowrap!important;font-weight:600!important}.community-route-add-v110{margin-left:0!important}
+.settings-section-v109 summary b,.setting-row-v109 b{font-weight:700!important}
+@media(max-width:370px){.generating-v110 h2{font-size:19px!important}.v107-theme-grid .theme{font-size:10.5px!important}.start-options button{font-size:12px!important}}
 </style>
 </head>
 <body>
@@ -1289,7 +1310,7 @@ body{letter-spacing:.005em}
               </button>
               <button class="location-mini" id="mapStartBtn">
                 <svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg>
-                地図から選ぶ
+                地図で選ぶ
               </button>
             </div>
             <div class="start-label" id="startLabel">現在地からスタート</div>
@@ -1338,7 +1359,7 @@ body{letter-spacing:.005em}
               <button class="theme" data-theme="food"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M6 3v8M3 3v5a3 3 0 0 0 6 0V3M6 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/></svg></span>ごはん</button>
               <button class="theme" data-theme="green"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 10v11M8 15l4-2 4 2"/></svg></span>緑</button>
               <button class="theme" data-theme="water"><span class="theme-svg"><svg viewBox="0 0 24 24"><path d="M3 8c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 2 2M3 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 2 2"/></svg></span>水辺</button>
-              <button class="theme" data-theme="direct"><span class="theme-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m7 17 10-10"/></svg></span>寄り道なし</button>
+              <button class="theme" data-theme="direct"><span class="theme-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m7 17 10-10"/></svg></span>なし</button>
             </div>
           </div>
 
@@ -1348,7 +1369,7 @@ body{letter-spacing:.005em}
               <button data-stops="1">1件</button>
               <button data-stops="2" class="active">2件</button>
               <button data-stops="3">3件</button>
-              <button data-stops="auto">おまかせ</button>
+              <button data-stops="auto">自動</button>
             </div>
           </div>
 
@@ -1399,11 +1420,11 @@ body{letter-spacing:.005em}
           </div>
           <h2>散歩コースを作っています</h2>
           <p class="generating-main-copy-v110" id="generatingMainCopy">歩きやすい道を選んでいます</p>
-          <div class="generation-dots-v110" aria-hidden="true"><i class="active"></i><i></i><i></i></div>
-          <div class="generation-steps-v110">
-            <span id="stepPlaces" class="progress-item-v109"><b class="progress-text">スポットを探す</b></span>
-            <span id="stepRoute" class="progress-item-v109"><b>ルートを整える</b></span>
-            <span id="stepFinish" class="progress-item-v109"><b>仕上げる</b></span>
+          <div class="generation-dots-v110" aria-hidden="true"><i class="active"></i><span></span><i></i><span></span><i></i></div>
+          <div class="generation-steps-v110" aria-hidden="true">
+            <span id="stepPlaces" class="progress-item-v109"><b class="progress-text">探す</b></span>
+            <span id="stepRoute" class="progress-item-v109"><b>整える</b></span>
+            <span id="stepFinish" class="progress-item-v109"><b>完成</b></span>
           </div>
           <div class="generation-bar-v109"><i id="generationBarV109"></i></div>
           <button class="cancel-generate v109-cancel" id="cancelGenerateBtn">やめる</button>
@@ -1437,9 +1458,10 @@ body{letter-spacing:.005em}
 
           <div class="result-metrics">
             <div><b><span id="resultKm">--</span> km</b><small>距離</small></div>
-            <div><b>約 <span id="resultMin">--</span> 分</b><small>所要時間</small></div>
-            <div><b>約 <span id="resultCal">--</span> kcal</b><small>消費目安</small></div>
+            <div><b><span id="resultMin">--</span> 分</b><small>時間</small></div>
+            <div><b><span id="resultStopsV111">--</span> 件</b><small>寄り道</small></div>
           </div>
+          <div class="result-calorie-v111" id="resultCalorieV111" hidden>消費目安 <b><span id="resultCal">--</span> kcal</b></div>
 
           <div class="spot-title"><b>立ち寄りスポット</b><span id="spotCaption">候補</span></div>
           <div class="spot-strip" id="spotStrip"></div>
@@ -1550,6 +1572,10 @@ body{letter-spacing:.005em}
             <div><b>Google Mapsを使う</b></div>
             <button id="googleToggle" class="switch"></button>
           </div>
+          <div class="setting-row-v109">
+            <div><b>消費カロリーを表示</b></div>
+            <button id="calorieToggleV111" class="switch"></button>
+          </div>
           <input id="apiKeyInput" class="api-input" type="password" placeholder="Google Maps API key">
           <button id="saveApiKey" class="save-key">APIキーをこの端末に保存</button>
 
@@ -1576,7 +1602,7 @@ body{letter-spacing:.005em}
           <div class="settings-link-v109"><b>投稿について</b><span>場所単位で共有します</span></div>
           <div class="settings-link-v109"><b>位置情報について</b><span>公開ルートは作りません</span></div>
           <div class="settings-link-v109"><b>APIキーの安全設定</b><span>GitHub PagesのURLだけ許可</span></div>
-          <div class="settings-link-v109"><b>SANPO</b><span>prototype v110</span></div>
+          <div class="settings-link-v109"><b>SANPO</b><span>prototype v111</span></div>
         </div>
       </details>
     </div>
@@ -1657,7 +1683,7 @@ body{letter-spacing:.005em}
 
   <div class="start-map-modal" id="startMapModal">
     <div class="start-map-top">
-      <button id="startMapClose">‹</button><b>出発地を地図から選ぶ</b>
+      <button id="startMapClose">‹</button><b>出発地を地図で選ぶ</b>
     </div>
     <div id="startGoogleMap"></div>
     <div id="startLeafletMap"></div>
@@ -2284,8 +2310,8 @@ function updateGeneratingCopy(){
       state.theme==='green'?'公園・緑地を探しています':
       state.theme==='cafe'?'カフェを探しています':
       state.theme==='food'?'飲食店を探しています':
-      state.theme==='direct'?'寄り道なしで作成します':
-      '周辺の立ち寄り候補を探しています';
+      state.theme==='direct'?'歩きやすい道を探しています':
+      '歩きやすい道を探しています';
   }
 }
 
@@ -2470,7 +2496,10 @@ function showCandidate(index){
   $('resultKm').textContent=c.km.toFixed(1);
   $('resultMin').textContent=mins;
   $('resultCal').textContent=cal;
-  $('spotCaption').textContent=resolvedStopCount()===0?'寄り道なし':`${resolvedStopCount()}件の寄り道`;
+  const resultStopCount=(c.spots||[]).length || (c.spot?1:0);
+  if($('resultStopsV111'))$('resultStopsV111').textContent=resultStopCount;
+  updateCalorieVisibilityV111();
+  $('spotCaption').textContent=resultStopCount===0?'寄り道なし':`${resultStopCount}件の寄り道`;
   $('candidateCount').textContent=`候補 ${index+1} / ${state.routes.length}`;
   let q=$('routeQualityV109');
   if(!q){
@@ -2488,8 +2517,8 @@ function renderSpots(c){
   if(!list.length && c.spot)list.push(c.spot);
   if(!list.length){
     list.push({
-      name:state.theme==='direct'?'寄り道なし':'テーマスポット未取得',
-      address:state.theme==='direct'?'出発地点へ戻る周回コースです':'この候補では実スポットを取得できませんでした',openFiltered:false
+      name:state.theme==='direct'?'寄り道なし':'今回は立ち寄りなし',
+      address:state.theme==='direct'?'出発地点へ戻る周回コースです':'条件に合うスポットが近くに見つかりませんでした',openFiltered:false
     });
   }
   $('spotStrip').innerHTML='';
@@ -2628,8 +2657,8 @@ function renderHistory(){
     const min=Number(x.min)||Math.round((Number(x.km)||0)/4.5*60);
     return `<article class="history-card-v109">
       <div class="history-card-top-v109"><h3>${escapeHtml(themeLabel(x.theme))}散歩</h3><span class="date">${new Date(x.date).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',weekday:'short'})}</span></div>
-      <div class="history-metrics-v109"><div><b>${Number(x.km).toFixed(1)}</b><small>km</small></div><div><b>${min}</b><small>分</small></div>${x.cal?`<div><b>${x.cal}</b><small>kcal</small></div>`:''}</div>
-      <div class="history-tags-v109"><span>${x.google?'Google徒歩ルート':'デモ'}</span>${x.spot?`<span>${escapeHtml(x.spot)}</span>`:''}${x.favorite?'<span>また歩きたい</span>':''}</div>
+      <div class="history-metrics-v109"><div><b>${Number(x.km).toFixed(1)}</b><small>km</small></div><div><b>${min}</b><small>分</small></div><div><b>${Number(x.stops)||0}</b><small>寄り道</small></div></div>
+      <div class="history-tags-v109"><span>${escapeHtml(themeLabel(x.theme))}</span>${x.spot?`<span>${escapeHtml(x.spot)}</span>`:''}${x.favorite?'<span>また歩きたい</span>':''}</div>
       ${x.memo?`<div style="font-size:10px;color:#526a62;margin-top:7px">${escapeHtml(x.memo)}</div>`:''}
       <button class="history-note-v109" onclick="updateHistoryMemoV109('${x.id}')">メモを残す</button>
       <div class="history-repeat-v110"><button onclick="repeatWalkV110('${x.id}',false)">もう一度</button><button onclick="repeatWalkV110('${x.id}',true)">別ルート</button></div><button class="history-note-v109" onclick="toggleHistoryFavoriteV109('${x.id}')">${x.favorite?'お気に入りから外す':'また歩きたい'}</button>
@@ -2644,9 +2673,9 @@ function repeatWalkV110(id,alternate){
 }
 /* ===== community spots demo ===== */
 const COMMUNITY_DEMO=[
-  {id:'demo1',kind:'park',name:'運河沿いの小さな公園',review:'水辺が近く、ベンチで少し休むのにちょうどいい場所。風が気持ちよくて散歩途中に寄りやすい。',tags:['水辺','休憩','静か'],rating:4.8,reviews:32,author:'Yumi',lat:35.6548,lng:139.7968,photo:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=78',ratings:{scenery:5,walk:5,quiet:4,rest:5}},
-  {id:'demo2',kind:'cafe',name:'散歩途中のテラスカフェ',review:'外席があって、歩いたあとにひと休みしやすい。水辺ルートとの相性がいい。',tags:['カフェ','休憩','テラス'],rating:4.6,reviews:18,author:'Kota',lat:35.6562,lng:139.7947,photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=78',ratings:{scenery:4,walk:4,quiet:3,rest:5}},
-  {id:'demo3',kind:'view',name:'夕方がきれいな水辺スポット',review:'夕方は空と水面がきれい。短い散歩でも景色を楽しみたい日におすすめ。',tags:['景色','水辺','静か'],rating:4.9,reviews:24,author:'Mika',lat:35.6534,lng:139.7991,photo:'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=78',ratings:{scenery:5,walk:4,quiet:5,rest:3}}
+  {id:'demo1',kind:'park',name:'水辺の散歩道',review:'水辺が近く、ベンチで少し休むのにちょうどいい場所。風が気持ちよくて、散歩の途中に立ち寄りやすい。',tags:['水辺','休憩','静か'],rating:4.8,reviews:32,author:'Yumi',lat:35.6548,lng:139.7968,photo:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:5,walk:5,quiet:4,rest:5}},
+  {id:'demo2',kind:'cafe',name:'散歩途中のテラスカフェ',review:'外席があって、歩いたあとにひと休みしやすい。のんびりした散歩の日に寄りたい場所。',tags:['カフェ','休憩','テラス'],rating:4.6,reviews:18,author:'Kota',lat:35.6562,lng:139.7947,photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:4,walk:4,quiet:3,rest:5}},
+  {id:'demo3',kind:'view',name:'緑の遊歩道',review:'木が多くて歩きやすい道。短い散歩でも、少し景色を変えたい日にちょうどいい。',tags:['景色','緑','静か'],rating:4.9,reviews:24,author:'Mika',lat:35.6534,lng:139.7991,photo:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=82',ratings:{scenery:5,walk:4,quiet:5,rest:3}}
 ];
 let communityFilter='all';
 let communityTagV110='';
@@ -2758,11 +2787,24 @@ function calorieEstimateV108(minutes,paceKmh){
 }
 $('saveProfileBtn').onclick=()=>{
   localStorage.setItem(KEY.profile,JSON.stringify({sex:$('profileSex').value,age:$('profileAge').value,height:$('profileHeight').value,weight:$('profileWeight').value}));
-  alert('プロフィールを保存しました。カロリーはあくまで目安として表示します。');
+  updateCalorieVisibilityV111();
+  alert('プロフィールを保存しました。');
+};
+if($('calorieToggleV111'))$('calorieToggleV111').onclick=()=>{
+  state.showCalories=!(state.showCalories===true);
+  $('calorieToggleV111').classList.toggle('on',state.showCalories);
+  savePrefsV109();updateCalorieVisibilityV111();
 };
 window.updateHistoryMemoV109=updateHistoryMemoV109;window.toggleHistoryFavoriteV109=toggleHistoryFavoriteV109;window.repeatWalkV110=repeatWalkV110;
 loadProfileV108();renderCommunitySpots();
 
+function updateCalorieVisibilityV111(){
+  let p={};try{p=JSON.parse(localStorage.getItem(KEY.prefs)||'{}')}catch(e){}
+  const profile=loadProfileV108();
+  const show=p.showCalories===true && Number(profile.weight)>0;
+  if($('resultCalorieV111'))$('resultCalorieV111').hidden=!show;
+  if($('calorieToggleV111'))$('calorieToggleV111').classList.toggle('on',p.showCalories===true);
+}
 function loadPrefsV109(){
   let p={};try{p=JSON.parse(localStorage.getItem(KEY.prefs)||'{}')}catch(e){}
   if(p.defaultPace && PACE_V102[p.defaultPace]){
@@ -2771,12 +2813,15 @@ function loadPrefsV109(){
     qsa('[data-default-pace]').forEach(x=>x.classList.toggle('active',x.dataset.defaultPace===p.defaultPace));
   }
   state.useCommunity=p.useCommunity!==false;
+  state.showCalories=p.showCalories===true;
   if(typeof p.openOnly==='boolean')state.openOnly=p.openOnly;
   syncCommunityTogglesV110();
   if($('settingsOpenOnlyV109'))$('settingsOpenOnlyV109').classList.toggle('on',state.openOnly);
+  if($('calorieToggleV111'))$('calorieToggleV111').classList.toggle('on',state.showCalories===true);
+  updateCalorieVisibilityV111();
 }
 function savePrefsV109(){
-  localStorage.setItem(KEY.prefs,JSON.stringify({defaultPace:state.pace,useCommunity:state.useCommunity!==false,openOnly:state.openOnly}));
+  localStorage.setItem(KEY.prefs,JSON.stringify({defaultPace:state.pace,useCommunity:state.useCommunity!==false,openOnly:state.openOnly,showCalories:state.showCalories===true}));
 }
 function syncCommunityTogglesV110(){
   if($('communityRouteToggleV109'))$('communityRouteToggleV109').classList.toggle('on',state.useCommunity!==false);
