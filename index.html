@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<!-- SANPO v114: destination-first route generation + stronger loop filtering + accessible text polish -->
+<!-- SANPO v115: destination-first route generation + stronger loop filtering + accessible text polish -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1268,7 +1268,7 @@ body{letter-spacing:.005em}
 .settings-section-v109 summary b,.setting-row-v109 b{font-weight:700!important}
 @media(max-width:370px){.generating-v110 h2{font-size:19px!important}.v107-theme-grid .theme{font-size:10.5px!important}.start-options button{font-size:12px!important}}
 
-/* ===== SANPO v114 accessible, photo-reference polish ===== */
+/* ===== SANPO v115 accessible, photo-reference polish ===== */
 /* Small text is either removed or enlarged: no tiny UI copy. */
 .weather-pill b{font-size:15px!important;font-weight:700!important}
 .step-progress-v107{font-size:14px!important}
@@ -1356,7 +1356,7 @@ body{letter-spacing:.005em}
 }
 
 
-/* ===== SANPO v114: slider scale alignment + no tiny helper copy ===== */
+/* ===== SANPO v115: slider scale alignment + no tiny helper copy ===== */
 .range-labels{
   position:relative!important;
   display:block!important;
@@ -1378,6 +1378,72 @@ body{letter-spacing:.005em}
 .range-labels span:last-child{transform:translateX(-100%)!important}
 /* 地図選択では小さい説明文を置かず、主操作だけを残す */
 #pickedStartText{display:none!important}
+
+
+/* ===== SANPO v115: generation + place detail readability ===== */
+.generating-state{background:#fbfcfa!important}
+.generating-v115{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 24px 36px;text-align:center}
+.generate-illustration-v115{width:min(360px,92%);margin:0 auto 24px}
+.generate-illustration-v115 svg{width:100%;height:auto;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.generate-illustration-v115 .sun-v115{fill:#fff1c6;stroke:none}
+.generate-illustration-v115 .cloud-v115{fill:#eef5f1;stroke:none}
+.generate-illustration-v115 .city-v115{stroke:#dbe8e1;stroke-width:2}
+.generate-illustration-v115 .ground-v115{stroke:#e0e8e3;stroke-width:2}
+.generate-illustration-v115 .tree-v115,.generate-illustration-v115 .bench-v115{stroke:#82a08d;stroke-width:2.2}
+.generate-illustration-v115 .walker-v115{stroke:#315e4b;stroke-width:2.8}
+.generate-illustration-v115 .route-v115{stroke:#287a59;stroke-width:4;stroke-dasharray:8 9;animation:dashV110 7s linear infinite}
+.generating-v115 h2{margin:0;font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;font-size:26px;line-height:1.3;color:#173d33;letter-spacing:-.035em;white-space:nowrap}
+.generate-copy-v115{margin:12px 0 22px;font-size:16px;line-height:1.55;font-weight:650;color:#667a72}
+.generate-steps-v115{width:min(360px,100%);display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 auto 18px}
+.generate-steps-v115 .progress-item-v109{display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px!important;border:0!important;padding:0!important;opacity:.42!important}
+.generate-steps-v115 .progress-item-v109.doing,.generate-steps-v115 .progress-item-v109.done{opacity:1!important}
+.generate-steps-v115 .progress-item-v109 i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#edf4f0;color:#547168;font-style:normal;font-size:23px;font-weight:700}
+.generate-steps-v115 .progress-item-v109.doing i{background:#197652;color:#fff;box-shadow:0 0 0 7px rgba(25,118,82,.10)}
+.generate-steps-v115 .progress-item-v109.done i{background:#dff2e8;color:#126b4c}
+.generate-steps-v115 .progress-item-v109 b{font-size:15px!important;line-height:1.35;color:#405a51!important;white-space:nowrap}
+.generate-steps-v115 .progress-item-v109.doing b{color:#176b4e!important}
+.generate-bar-v115{width:min(360px,100%)!important;height:7px!important;margin:0 auto 24px!important;background:#e5ebe7!important}
+.generate-bar-v115 i{background:#2a7658!important}
+.generate-cancel-v115{width:min(220px,70%);height:48px;border:1px solid #dce5e0!important;border-radius:999px!important;background:#fff!important;color:#52665f!important;font-size:16px!important;font-weight:700!important;margin:0 auto!important}
+
+.spot-detail-v115{overflow:auto!important;background:#fff!important}
+.spot-photo-hero-v115{position:relative;height:260px;background:#edf4f0;overflow:hidden;flex:0 0 auto}
+.spot-photo-hero-v115>img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-photo-placeholder-v115{height:100%;display:grid;place-items:center;font-size:16px;font-weight:700;color:#667b73;background:linear-gradient(145deg,#e9f5ee,#f4f7f4)}
+.spot-photo-source-v115{position:absolute;right:12px;bottom:12px;padding:7px 11px;border-radius:999px;background:rgba(20,48,39,.78);color:#fff;font-size:13px;font-weight:700;backdrop-filter:blur(8px)}
+.spot-photo-thumbs-v115{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:8px 14px 0;background:#fff}
+.spot-photo-thumbs-v115 button{height:70px;border:2px solid transparent;border-radius:11px;overflow:hidden;padding:0;background:#eef4f0}
+.spot-photo-thumbs-v115 button.active{border-color:#20805d}
+.spot-photo-thumbs-v115 img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-photo-attribution-v115{padding:8px 16px 0;font-size:13px;line-height:1.5;color:#667a72;background:#fff}
+.spot-photo-attribution-v115 a{color:#235f4a;text-decoration:underline}
+.spot-detail-body-v115{padding:16px 16px 26px!important;overflow:visible!important}
+.spot-detail-body-v115 h2{font-size:26px!important;line-height:1.3!important;margin:0 0 7px!important}
+.spot-open-v115{font-size:15px;color:#07845c;font-weight:800;margin:6px 0}
+.spot-address-v115{font-size:15px!important;line-height:1.6!important;color:#5e726a!important;margin:4px 0 10px!important}
+.google-place-summary-v115{display:none;margin:10px 0 18px!important;padding:13px 14px!important;border-radius:14px!important;background:#f0f7f3!important}
+.google-place-summary-v115.show{display:flex!important;align-items:baseline;gap:8px}
+.google-place-summary-v115 b{font-size:22px!important;color:#0d7654}
+.google-place-summary-v115 span{font-size:15px!important;color:#61756d}
+.review-title-v115{font-size:20px!important;margin:18px 0 10px!important;color:#183f35}
+.google-reviews-v115{gap:10px!important;margin-top:0!important}
+.google-review-v115{padding:14px!important;border-radius:15px!important;border:1px solid #dfe8e3!important}
+.google-review-head-v115{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap}
+.google-review-head-v115 b,.google-review-head-v115 a{font-size:16px!important;font-weight:800!important;color:#21493c!important;text-decoration:none!important}
+.google-review-head-v115 span{font-size:14px!important;color:#60756d!important}
+.google-review-v115 p{font-size:16px!important;line-height:1.75!important;color:#435950!important;margin:10px 0 0!important}
+.review-loading-v115,.review-empty-v115{padding:18px 0;font-size:15px;color:#71847c}
+.spot-actions-v115{gap:8px!important;margin:18px 0 10px!important}
+.spot-actions-v115 a,.spot-actions-v115 button{height:50px!important;font-size:15px!important;border-radius:13px!important}
+.spot-go-v115{height:52px!important;font-size:16px!important;border-radius:14px!important}
+@media(max-width:390px){
+  .generating-v115 h2{font-size:24px}
+  .generate-copy-v115{font-size:15px}
+  .generate-steps-v115{gap:8px}
+  .generate-steps-v115 .progress-item-v109 b{font-size:13.5px!important}
+  .spot-photo-hero-v115{height:230px}
+  .google-review-v115 p{font-size:15px!important}
+}
 
 </style>
 </head>
@@ -1520,26 +1586,28 @@ body{letter-spacing:.005em}
 
       <!-- ② 生成中 -->
       <section class="home-state generating-state" id="generatingState">
-        <div class="generating-v110">
-          <div class="walk-scene-v110" aria-hidden="true">
-            <svg viewBox="0 0 320 120">
-              <path class="ground-v110" d="M18 94H302"/>
-              <path class="tree-v110" d="M46 91V55m-17 9c0-14 8-27 17-36 10 10 18 22 18 36-11-1-23-1-35 0Zm227 27V58m-15 7c1-12 7-22 15-30 9 9 15 19 15 30-10-1-20-1-30 0Z"/>
-              <path class="bench-v110" d="M112 74h48m-42 0v17m36-17v17m-40-8h44"/>
-              <path class="walker-v110" d="M212 46a7 7 0 1 0 0 .1M211 55l-5 18 13 8m-8-20 11 7m-16 5-9 16m22-8 8 10"/>
-              <path class="route-v110" d="M65 98c44-20 82 14 128-4 31-12 46-27 74-18"/>
+        <div class="generating-v115">
+          <div class="generate-illustration-v115" aria-hidden="true">
+            <svg viewBox="0 0 360 190">
+              <circle class="sun-v115" cx="294" cy="34" r="12"/>
+              <path class="cloud-v115" d="M92 52c3-13 19-17 27-7 10-10 27-3 27 10h-54c0-1 0-2 0-3Z"/>
+              <path class="city-v115" d="M150 105V68h25v37m8 0V58h27v47m8 0V78h25v27"/>
+              <path class="ground-v115" d="M18 145H342"/>
+              <path class="tree-v115" d="M55 144V94m-20 11c0-18 9-35 20-47 12 13 21 29 21 47-13-2-27-2-41 0Zm253 39V97m-17 9c0-15 8-29 17-39 10 11 18 24 18 39-11-2-23-2-35 0Z"/>
+              <path class="bench-v115" d="M103 119h55m-47 0v25m39-25v25m-43-12h47"/>
+              <path class="walker-v115" d="M238 89a8 8 0 1 0 0 .1M237 99l-7 22 16 10m-8-24 14 9m-22 5-11 22m27-12 10 14"/>
+              <path class="route-v115" d="M72 151c56-26 96 18 154-6 32-13 56-38 94-22"/>
             </svg>
           </div>
           <h2>散歩コースを作っています</h2>
-          <p class="generating-main-copy-v110" id="generatingMainCopy">歩きやすい道を選んでいます</p>
-          <div class="generation-dots-v110" aria-hidden="true"><i class="active"></i><span></span><i></i><span></span><i></i></div>
-          <div class="generation-steps-v110" aria-hidden="true">
-            <span id="stepPlaces" class="progress-item-v109"><b class="progress-text">探す</b></span>
-            <span id="stepRoute" class="progress-item-v109"><b>整える</b></span>
-            <span id="stepFinish" class="progress-item-v109"><b>完成</b></span>
+          <p class="generate-copy-v115" id="generatingMainCopy">近くの候補を探しています</p>
+          <div class="generate-steps-v115">
+            <span id="stepPlaces" class="progress-item-v109 doing"><i>⌕</i><b class="progress-text">候補を探す</b></span>
+            <span id="stepRoute" class="progress-item-v109"><i>↝</i><b>周回を整える</b></span>
+            <span id="stepFinish" class="progress-item-v109"><i>✓</i><b>仕上げ</b></span>
           </div>
-          <div class="generation-bar-v109"><i id="generationBarV109"></i></div>
-          <button class="cancel-generate v109-cancel" id="cancelGenerateBtn">やめる</button>
+          <div class="generation-bar-v109 generate-bar-v115"><i id="generationBarV109"></i></div>
+          <button class="cancel-generate generate-cancel-v115" id="cancelGenerateBtn">やめる</button>
         </div>
       </section>
 
@@ -1833,17 +1901,27 @@ body{letter-spacing:.005em}
     </div>
   </div>
 
-  <div class="spot-detail-modal" id="spotDetailModal">
-    <div class="spot-hero" id="spotHero">☕<button class="spot-detail-close" id="spotDetailClose">‹</button></div>
-    <div class="spot-detail-body">
+  <div class="spot-detail-modal spot-detail-v115" id="spotDetailModal">
+    <div class="spot-photo-hero-v115" id="spotPhotoHeroV115">
+      <div class="spot-photo-placeholder-v115" id="spotPhotoPlaceholderV115">写真を読み込み中</div>
+      <img id="spotPhotoMainV115" alt="スポット写真" hidden>
+      <button class="spot-detail-close" id="spotDetailClose">‹</button>
+      <div class="spot-photo-source-v115" id="spotPhotoSourceV115" hidden>Google Maps の写真</div>
+    </div>
+    <div class="spot-photo-thumbs-v115" id="spotPhotoThumbsV115" hidden></div>
+    <div class="spot-photo-attribution-v115" id="spotPhotoAttributionV115" hidden></div>
+    <div class="spot-detail-body spot-detail-body-v115">
       <h2 id="spotDetailName">スポット</h2>
-      <div id="spotDetailOpen" style="font-size:11px;color:#079b69;font-weight:900;margin:5px 0"></div>
-      <p id="spotDetailAddress"></p><div class="google-place-summary-v109" id="googlePlaceSummaryV109"></div><div class="google-reviews-v109" id="googleReviewsV109"></div>
-      <div class="spot-actions">
+      <div id="spotDetailOpen" class="spot-open-v115"></div>
+      <p id="spotDetailAddress" class="spot-address-v115"></p>
+      <div class="google-place-summary-v109 google-place-summary-v115" id="googlePlaceSummaryV109"></div>
+      <h3 class="review-title-v115">Google のクチコミ</h3>
+      <div class="google-reviews-v109 google-reviews-v115" id="googleReviewsV109"></div>
+      <div class="spot-actions spot-actions-v115">
         <a id="spotMapLink" target="_blank" rel="noopener">Google Mapsで見る</a>
         <button id="spotBackToRoute">コースに戻る</button>
       </div>
-      <button class="spot-go" id="spotGoBtn">このスポットを確認して戻る</button>
+      <button class="spot-go spot-go-v115" id="spotGoBtn">このスポットを確認して戻る</button>
     </div>
   </div>
 
@@ -2757,44 +2835,82 @@ function renderCandidateList(){
     box.appendChild(el);
   });
 }
+function resetSpotPhotosV115(){
+  const hero=$('spotPhotoMainV115'),placeholder=$('spotPhotoPlaceholderV115'),thumbs=$('spotPhotoThumbsV115'),attr=$('spotPhotoAttributionV115'),src=$('spotPhotoSourceV115');
+  hero.hidden=true;hero.removeAttribute('src');
+  placeholder.hidden=false;placeholder.textContent='写真を読み込み中';
+  thumbs.hidden=true;thumbs.innerHTML='';
+  attr.hidden=true;attr.innerHTML='';
+  src.hidden=true;
+}
+function renderPlacePhotosV115(place){
+  const photos=(place.photos||[]).slice(0,4);
+  const hero=$('spotPhotoMainV115'),placeholder=$('spotPhotoPlaceholderV115'),thumbs=$('spotPhotoThumbsV115'),attr=$('spotPhotoAttributionV115'),src=$('spotPhotoSourceV115');
+  if(!photos.length){placeholder.textContent='写真はありません';return;}
+  const setPhoto=(photo,index)=>{
+    hero.src=photo.getURI({maxWidth:1200,maxHeight:800});hero.hidden=false;placeholder.hidden=true;src.hidden=false;
+    qsa('#spotPhotoThumbsV115 button').forEach((b,i)=>b.classList.toggle('active',i===index));
+    const ats=photo.authorAttributions||[];
+    if(ats.length){
+      attr.innerHTML='写真提供：'+ats.map(a=>a.uri?`<a href="${escapeHtml(a.uri)}" target="_blank" rel="noopener">${escapeHtml(a.displayName||'Google Maps ユーザー')}</a>`:escapeHtml(a.displayName||'Google Maps ユーザー')).join('、');
+      attr.hidden=false;
+    }else{attr.hidden=true;attr.innerHTML='';}
+  };
+  thumbs.innerHTML='';
+  photos.forEach((photo,i)=>{
+    const b=document.createElement('button');b.type='button';b.innerHTML=`<img src="${photo.getURI({maxWidth:320,maxHeight:220})}" alt="${escapeHtml(place.displayName||'スポット')}の写真 ${i+1}">`;
+    b.onclick=()=>setPhoto(photo,i);thumbs.appendChild(b);
+  });
+  thumbs.hidden=photos.length<2;
+  setPhoto(photos[0],0);
+}
 async function fetchGooglePlaceDetailsV109(s){
   const summary=$('googlePlaceSummaryV109'),reviewsBox=$('googleReviewsV109');
-  summary.classList.remove('show');summary.innerHTML='';reviewsBox.innerHTML='';
-  if(!s?.id || String(s.id).startsWith('community-') || !state.googleEnabled || !state.apiKey)return;
+  summary.classList.remove('show');summary.innerHTML='';reviewsBox.innerHTML='<div class="review-loading-v115">クチコミを読み込み中</div>';
+  resetSpotPhotosV115();
+  if(!s?.id || String(s.id).startsWith('community-') || !state.googleEnabled || !state.apiKey){
+    $('spotPhotoPlaceholderV115').textContent='Google Mapsの写真はありません';
+    reviewsBox.innerHTML='<div class="review-empty-v115">Googleのクチコミはありません</div>';
+    return;
+  }
   try{
     await loadGoogleMaps(state.apiKey);
     const {Place}=await google.maps.importLibrary('places');
     const place=new Place({id:s.id});
     await place.fetchFields({
-      fields:['displayName','formattedAddress','rating','userRatingCount','reviews','regularOpeningHours','websiteURI','googleMapsURI']
+      fields:['displayName','formattedAddress','rating','userRatingCount','reviews','regularOpeningHours','websiteURI','googleMapsURI','photos']
     });
     bumpUsage('places',1);
+    renderPlacePhotosV115(place);
 
+    if(place.formattedAddress)$('spotDetailAddress').textContent=place.formattedAddress;
     const bits=[];
     if(place.rating)bits.push(`<b>★ ${Number(place.rating).toFixed(1)}</b>`);
-    if(place.userRatingCount)bits.push(`<small>${place.userRatingCount.toLocaleString('ja-JP')}件の評価</small>`);
+    if(place.userRatingCount)bits.push(`<span>${place.userRatingCount.toLocaleString('ja-JP')}件の評価</span>`);
     if(bits.length){summary.innerHTML=bits.join('');summary.classList.add('show')}
 
     const rs=(place.reviews||[]).slice(0,3);
-    reviewsBox.innerHTML=rs.map(r=>{
+    reviewsBox.innerHTML=rs.length?rs.map(r=>{
       const author=r.authorAttribution;
       const name=author?.displayName||'Googleユーザー';
       const link=author?.uri||'';
       const head=link?`<a href="${escapeHtml(link)}" target="_blank" rel="noopener">${escapeHtml(name)}</a>`:`<b>${escapeHtml(name)}</b>`;
-      return `<div class="google-review-v109"><div class="google-review-head-v109">${head}<span>★ ${r.rating||'-'} ${escapeHtml(r.relativePublishTimeDescription||'')}</span></div><p>${escapeHtml(r.text||'')}</p></div>`;
-    }).join('');
+      return `<article class="google-review-v109 google-review-v115"><div class="google-review-head-v109 google-review-head-v115">${head}<span>★ ${r.rating||'-'}　${escapeHtml(r.relativePublishTimeDescription||'')}</span></div><p>${escapeHtml(r.text||'')}</p></article>`;
+    }).join(''):'<div class="review-empty-v115">Googleのクチコミはありません</div>';
     if(place.googleMapsURI){
       const a=$('spotMapLink');a.href=place.googleMapsURI;a.style.opacity='1';a.style.pointerEvents='auto';
     }
   }catch(e){
     console.warn('Place details failed',e);
+    $('spotPhotoPlaceholderV115').textContent='写真を読み込めませんでした';
+    reviewsBox.innerHTML='<div class="review-empty-v115">クチコミを読み込めませんでした</div>';
   }
 }
 function openSpotDetail(s){
   $('spotDetailName').textContent=s.name||'スポット';
   $('spotDetailAddress').textContent=s.address||'このコースの立ち寄りスポットです。';
   $('spotDetailOpen').textContent=s.openFiltered?'営業中の候補':'';
-  $('spotHero').childNodes[0].nodeValue=' ';
+  resetSpotPhotosV115();
   const a=$('spotMapLink');
   if(s.uri){a.href=s.uri;a.style.opacity='1';a.style.pointerEvents='auto'}else{a.removeAttribute('href');a.style.opacity='.45';a.style.pointerEvents='none'}
   $('spotDetailModal').classList.add('show');
