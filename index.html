@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v119-20261002-map-recovery-course-switch-restored">
-<!-- SANPO v119: keep v118 map/search recovery; restore pre-swipe course switching -->
+<meta name="sanpo-build" content="v120-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v120: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1539,6 +1539,16 @@ body{letter-spacing:.005em}
   .step-mini-v117{width:54px!important;min-width:54px!important;max-width:54px!important}
 }
 
+
+/* ===== SANPO v120: distance accuracy + spot photos ===== */
+.spot-photo-hero-v115{position:relative!important}
+.spot-photo-placeholder-v115,
+.spot-photo-hero-v115>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
+.spot-photo-placeholder-v115[hidden],
+.spot-photo-hero-v115>img[hidden]{display:none!important}
+.spot-icon.spot-photo-v120{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
+.spot-icon.spot-photo-v120 img{width:100%;height:100%;object-fit:cover;display:block}
+
 </style>
 </head>
 <body>
@@ -2283,7 +2293,7 @@ async function onePlaceTextSearch(start,config,textQuery){
   const {Place,SearchByTextRankPreference}=await google.maps.importLibrary('places');
   const request={
     textQuery,
-    fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus','types'],
+    fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus','types','photos'],
     locationBias:{
       center:start,
       radius:Math.min(5500,Math.max(1200,effectiveTargetKmV102()*650))
@@ -2313,7 +2323,8 @@ async function onePlaceTextSearch(start,config,textQuery){
       businessStatus:p.businessStatus||'',
       types:p.types||[],
       kind:config.kind,
-      query:textQuery
+      query:textQuery,
+      photoUri:(p.photos&&p.photos[0])?p.photos[0].getURI({maxWidth:480,maxHeight:360}):''
     }));
 }
 
@@ -2537,7 +2548,7 @@ async function refineThemedSpecV113(start,spec,targetKm,maxTry=2){
 
 async function buildPlainFallbackV109(start,seed,targetKm){
   const spec=demoSpec(start,seed,[]);
-  return await refinePlainSpecV109(start,spec,targetKm,1);
+  return await refinePlainSpecV109(start,spec,targetKm,2);
 }
 async function buildGoogleRoutes(start,places){
   const wanted=state.forcedPlace?Math.max(1,resolvedStopCount()):resolvedStopCount();
@@ -2561,25 +2572,21 @@ async function buildGoogleRoutes(start,places){
     if(chosen.length){
       const themedSpec=demoSpec(start,i,chosen);
       let themed=null;
-      try{themed=await googleCandidate(start,themedSpec)}catch(e){console.warn('theme candidate failed',e)}
+      try{
+        // v120: do not spend one call on an unrefined route and then repeat the same call.
+        // Use the call budget to converge toward the requested distance.
+        themed=await refineThemedSpecV113(start,themedSpec,target,2);
+      }catch(e){console.warn('theme candidate failed',e)}
 
       if(themed){
         themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
-        const ratio=themed.km/Math.max(.1,target);
         themed.themeMatched=true;
-
-        // If short, extend only the synthetic loop point. Real destinations stay fixed.
-        if(ratio<.93){
-          const refined=await refineThemedSpecV113(start,themedSpec,target,1);
-          if(refined)themed=refined;
-        }
-
-        themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
         const finalRatio=themed.km/Math.max(.1,target);
 
-        if(finalRatio<=1.12 && (themed.overlapRatio||0)<=.24){
+        // Requested distance is the primary condition.
+        if(finalRatio>=.94 && finalRatio<=1.06 && (themed.overlapRatio||0)<=.24){
           raw.push(themed);
-        }else if(finalRatio>1.12 && finalRatio<=1.16 && (themed.overlapRatio||0)<=.22){
+        }else if(finalRatio>1.06 && finalRatio<=1.12 && (themed.overlapRatio||0)<=.22){
           if(!bestExtension || themed.distanceError<bestExtension.distanceError)bestExtension=themed;
         }
       }
@@ -2616,13 +2623,22 @@ async function buildGoogleRoutes(start,places){
     ))deduped.push(r);
   });
 
-  // Strong preference for genuine loops. Only relax if Google cannot produce one.
-  let routes=deduped.filter(r=>(r.overlapRatio||0)<=.12).slice(0,3);
+  // v120: distance is a hard product requirement.
+  // For a 5 km request, prefer 4.7–5.3 km. If Google cannot make three,
+  // show fewer good candidates rather than filling the list with a 4.0/7.7 km route.
+  const strictDistance=r=>Math.abs(r.km-target)/Math.max(.1,target)<=.06;
+  const relaxedDistance=r=>Math.abs(r.km-target)/Math.max(.1,target)<=.10;
+  let routes=deduped.filter(r=>strictDistance(r)&&(r.overlapRatio||0)<=.14).slice(0,3);
   if(routes.length<3){
-    const relaxed=deduped.filter(r=>(r.overlapRatio||0)<=.20 && !routes.includes(r));
+    const relaxed=deduped.filter(r=>relaxedDistance(r)&&(r.overlapRatio||0)<=.20&&!routes.includes(r));
     routes=[...routes,...relaxed].slice(0,3);
   }
-  if(!routes.length)routes=deduped.slice(0,1);
+  if(!routes.length){
+    const nearest=deduped
+      .filter(r=>Math.abs(r.km-target)/Math.max(.1,target)<=.12)
+      .sort((a,b)=>a.distanceError-b.distanceError);
+    routes=nearest.slice(0,1);
+  }
 
   state.extensionOffer=null;
   if(bestExtension && routes[0]){
@@ -2652,7 +2668,9 @@ function buildDemoRoutes(start,places){
     route.distanceError=Math.abs(route.km-target)/Math.max(.1,target);
     results.push(route);
   }
-  return results.sort((a,b)=>(a.distanceError+(a.overlapRatio||0))-(b.distanceError+(b.overlapRatio||0))).slice(0,3);
+  const sorted=results.sort((a,b)=>(a.distanceError+(a.overlapRatio||0))-(b.distanceError+(b.overlapRatio||0)));
+  const close=sorted.filter(r=>r.distanceError<=.10);
+  return (close.length?close:sorted.filter(r=>r.distanceError<=.12)).slice(0,3);
 }
 
 /* ===== progress ===== */
@@ -2897,7 +2915,10 @@ function renderSpots(c){
   list.forEach((s,i)=>{
     const el=document.createElement('div');
     el.className='spot-card';
-    el.innerHTML=`<div class="spot-icon">${themeEmoji()}</div><div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
+    const spotVisual=s.photoUri
+      ? `<div class="spot-icon spot-photo-v120"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
+      : `<div class="spot-icon">${themeEmoji()}</div>`;
+    el.innerHTML=`${spotVisual}<div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
     el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
     if(s.id||s.uri)el.onclick=()=>openSpotDetail(s);
     $('spotStrip').appendChild(el);
@@ -3381,13 +3402,13 @@ async function searchForcedPlaceV117(){
     await loadGoogleMaps(state.apiKey);
     const {Place}=await google.maps.importLibrary('places');
     const center=state.customStart||state.current||state.center;
-    const {places}=await Place.searchByText({textQuery:q,fields:['id','displayName','location','formattedAddress','googleMapsURI','types'],locationBias:{center,radius:15000},language:'ja',region:'jp',maxResultCount:8});
+    const {places}=await Place.searchByText({textQuery:q,fields:['id','displayName','location','formattedAddress','googleMapsURI','types','photos'],locationBias:{center,radius:15000},language:'ja',region:'jp',maxResultCount:8});
     bumpUsage('places',1);
     const arr=(places||[]).filter(x=>x.location);
     box.innerHTML=arr.map((x,i)=>`<button type="button" data-forced-index="${i}"><b>${escapeHtml(x.displayName||q)}</b><small>${escapeHtml(x.formattedAddress||'')}</small></button>`).join('')||'<p>見つかりませんでした。別の名前や住所で試してください。</p>';
     qsa('[data-forced-index]').forEach(b=>b.onclick=()=>{
       const x=arr[+b.dataset.forcedIndex];
-      state.forcedPlace={id:x.id,name:x.displayName||q,loc:literal(x.location),address:x.formattedAddress||'',uri:x.googleMapsURI||'',types:x.types||[],kind:'forced'};
+      state.forcedPlace={id:x.id,name:x.displayName||q,loc:literal(x.location),address:x.formattedAddress||'',uri:x.googleMapsURI||'',types:x.types||[],kind:'forced',photoUri:(x.photos&&x.photos[0])?x.photos[0].getURI({maxWidth:480,maxHeight:360}):''};
       $('forcedPlaceValueV117').textContent=state.forcedPlace.name;
       $('forcedPlaceModalV117').classList.remove('show');
     });
@@ -3648,7 +3669,7 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-// v119: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+// v120: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
 
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
 qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
