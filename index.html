@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <meta name="sanpo-build" content="v125-route-recovery">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbf8">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v123-20261002-map-recovery-course-switch-restored">
-<!-- SANPO v123: keep v118 map/search recovery; restore pre-swipe course switching -->
+<meta name="sanpo-build" content="v125-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v125: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1540,14 +1541,14 @@ body{letter-spacing:.005em}
 }
 
 
-/* ===== SANPO v123: distance accuracy + spot photos ===== */
+/* ===== SANPO v125: distance accuracy + spot photos ===== */
 .spot-photo-hero-v115{position:relative!important}
 .spot-photo-placeholder-v115,
 .spot-photo-hero-v115>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
 .spot-photo-placeholder-v115[hidden],
 .spot-photo-hero-v115>img[hidden]{display:none!important}
-.spot-icon.spot-photo-v123{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
-.spot-icon.spot-photo-v123 img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-icon.spot-photo-v125{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
+.spot-icon.spot-photo-v125 img{width:100%;height:100%;object-fit:cover;display:block}
 
 </style>
 </head>
@@ -1645,8 +1646,8 @@ body{letter-spacing:.005em}
           <button class="course-pref-row-v117" id="forcedPlaceBtnV117" type="button"><span>行きたい場所</span><b id="forcedPlaceValueV117">指定なし</b><i>›</i></button>
 
           <div class="open-row v107-open">
-            <div class="open-copy"><b>営業中のお店だけ</b></div>
-            <button class="switch on" id="openOnlyToggle" aria-label="営業中のお店だけ"></button>
+            <div class="open-copy"><b>営業中のお店を優先</b></div>
+            <button class="switch on" id="openOnlyToggle" aria-label="営業中のお店を優先"></button>
           </div>
 
           <div class="open-row v107-open community-builder-toggle-v110">
@@ -1959,7 +1960,7 @@ body{letter-spacing:.005em}
 
   <div class="simple-sheet-v117" id="forcedPlaceModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>行きたい場所を指定</h2><p>店名・公園名・施設名から探して、この場所を通る周回コースを作ります。</p><div class="forced-search-v117"><input id="forcedPlaceInputV117" placeholder="例：上野公園、○○カフェ"><button id="forcedPlaceSearchV117">検索</button></div><div id="forcedPlaceResultsV117" class="forced-results-v117"></div><button class="plain-btn-v110" id="forcedPlaceClearV117">指定を外す</button><button class="plain-btn-v110" id="forcedPlaceCloseV117">閉じる</button></div></div>
 
-  <div class="simple-sheet-v117" id="routeFailModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>この条件では作れませんでした</h2><p>条件を少し変えると作れることがあります。</p><div class="fail-actions-v117"><button id="failLessStopsV117">寄り道を減らす</button><button id="failNoThemeV117">テーマなしで作る</button><button id="failRetryV117">もう一度試す</button></div><button class="plain-btn-v110" id="failCloseV117">条件に戻る</button></div></div>
+  <div class="simple-sheet-v117" id="routeFailModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>この条件では作れませんでした</h2><p>ルート情報を取得できませんでした。入力した条件はそのまま残っています。</p><div class="fail-actions-v117"><button id="failAnyHoursV124" style="display:none">営業時間を問わず作る</button><button id="failLessStopsV117">寄り道を減らす</button><button id="failNoThemeV117">テーマなしで作る</button><button id="failRetryV117">もう一度試す</button></div><button class="plain-btn-v110" id="failCloseV117">条件に戻る</button></div></div>
 
   <div class="route-sheet-modal" id="recommendModal">
     <div class="route-sheet">
@@ -2091,7 +2092,7 @@ const state={
 };
 
 let googleLoadPromise=null;
-let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v123: max 6 route calls / generation
+let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v125: max 6 route calls / generation
 let gmap=null;
 let gPolylines=[];
 let gMarkers=[];
@@ -2271,7 +2272,7 @@ function resolvedStopCount(){
 }
 
 function themeSearchConfig(){
-  // v123: Do not hard-filter Places by one Google place type.
+  // v125: Do not hard-filter Places by one Google place type.
   // Gather a broad pool first, then score the theme fit inside SANPO.
   if(state.theme==='cafe'){
     return {
@@ -2303,24 +2304,26 @@ function themeSearchConfig(){
   return null;
 }
 
-async function onePlaceTextSearch(start,config,textQuery){
+async function onePlaceTextSearch(start,config,textQuery,openOnlyOverride=null){
   const {Place,SearchByTextRankPreference}=await google.maps.importLibrary('places');
+  const shouldOpenOnly=config.business && (typeof openOnlyOverride==='boolean' ? openOnlyOverride : state.openOnly);
   const request={
     textQuery,
     fields:['id','displayName','location','formattedAddress','googleMapsURI','businessStatus','types','photos'],
     locationBias:{
       center:start,
-      radius:Math.min(5500,Math.max(1200,effectiveTargetKmV102()*650))
+      radius:Math.min(5000,Math.max(1200,effectiveTargetKmV102()*600))
     },
     language:'ja',
     region:'jp',
-    rankPreference:SearchByTextRankPreference.RELEVANCE,
+    // SANPO needs nearby places more than globally 'relevant' places.
+    rankPreference:SearchByTextRankPreference.DISTANCE,
     maxResultCount:20
   };
 
   if(config.includedType)request.includedType=config.includedType;
   if(config.includedType)request.useStrictTypeFiltering=config.strict;
-  if(config.business && state.openOnly)request.isOpenNow=true;
+  if(shouldOpenOnly)request.isOpenNow=true;
 
   const {places}=await Place.searchByText(request);
   bumpUsage('places',1);
@@ -2333,7 +2336,7 @@ async function onePlaceTextSearch(start,config,textQuery){
       loc:literal(p.location),
       address:p.formattedAddress||'',
       uri:p.googleMapsURI||'',
-      openFiltered:!!(config.business&&state.openOnly),
+      openFiltered:!!shouldOpenOnly,
       businessStatus:p.businessStatus||'',
       types:p.types||[],
       kind:config.kind,
@@ -2345,7 +2348,7 @@ async function onePlaceTextSearch(start,config,textQuery){
 function uniqueNearbyPlaces(start,places){
   const target=effectiveTargetKmV102();
   const seen=new Set();
-  // v123: a 5 km loop works best when the destination is roughly 0.5–1.7 km away.
+  // v125: a 5 km loop works best when the destination is roughly 0.5–1.7 km away.
   // Very distant POIs force a piston/out-and-back route or overshoot the target.
   const maxDirect=Math.max(.8,target*.38);
   const ideal=Math.max(.35,target*.22);
@@ -2397,34 +2400,40 @@ async function searchPlaces(start){
   try{
     markStep('stepPlaces','doing');
     let all=[];
+    let calls=0;
+    const MAX_PLACE_CALLS_V124=4;
+    const desiredPool=Math.max(10,wanted*6);
 
-    // Destination-first search:
-    // collect a healthy pool from the whole walkable area BEFORE making a route.
-    const desiredPool=Math.max(12,wanted*6);
-    const maxQueries=state.theme==='random'?4:Math.min(6,config.queries.length);
-
-    for(let i=0;i<maxQueries;i++){
-      const found=await onePlaceTextSearch(start,config,config.queries[i]);
+    const run=async(q,openOnly)=>{
+      if(calls>=MAX_PLACE_CALLS_V124)return;
+      calls++;
+      const found=await onePlaceTextSearch(start,config,q,openOnly);
       all=uniqueNearbyPlaces(start,[...all,...found]);
-      // Continue a little longer even when we already have enough results so
-      // parks / bakeries / restaurants with a different Google category are not missed.
-      if(all.length>=desiredPool && i>=2)break;
+    };
+
+    if(config.business && state.openOnly){
+      // '営業中を優先': first ask Google for places open right now.
+      await run(config.queries[0],true);
+      if(all.length<desiredPool)await run(config.queries[1]||config.queries[0],true);
+
+      // Important: if it is early morning / late night, do NOT return zero.
+      // Supplement with nearby cafes/restaurants regardless of current hours.
+      if(all.length<desiredPool)await run(config.queries[0],false);
+      if(all.length<desiredPool)await run(config.queries[2]||config.queries[1]||config.queries[0],false);
+    }else{
+      for(let i=0;i<Math.min(MAX_PLACE_CALLS_V124,config.queries.length);i++){
+        await run(config.queries[i],false);
+        if(all.length>=desiredPool && i>=1)break;
+      }
     }
 
-    // v123 safety net: if Google returned very few useful candidates,
-    // retry with generic Japanese search wording and without type restrictions.
-    if(all.length<Math.max(3,wanted)){
-      const fallbackQueries =
-        state.theme==='green' ? ['近くの公園','近くの緑地','近くの庭園'] :
-        state.theme==='cafe' ? ['近くのカフェ','近くの喫茶店','近くのパン屋'] :
-        state.theme==='food' ? ['近くの飲食店','近くのレストラン','近くの定食屋'] :
-        state.theme==='water' ? ['近くの水辺','近くの川','近くの池 公園'] :
-        [];
-      for(const q of fallbackQueries){
-        const found=await onePlaceTextSearch(start,{...config,includedType:undefined,strict:false},q);
-        all=uniqueNearbyPlaces(start,[...all,...found]);
-        if(all.length>=Math.max(8,wanted*4))break;
-      }
+    // One last generic local wording only when we still have almost nothing.
+    if(all.length<Math.max(3,wanted) && calls<MAX_PLACE_CALLS_V124){
+      const q = state.theme==='green' ? '近くの公園' :
+                state.theme==='cafe' ? '近くのカフェ' :
+                state.theme==='food' ? '近くの飲食店' :
+                state.theme==='water' ? '近くの水辺' : config.queries[0];
+      await run(q,false);
     }
 
     markStep('stepPlaces','done');
@@ -2435,7 +2444,6 @@ async function searchPlaces(start){
     return [];
   }
 }
-
 /* ===== route generation ===== */
 function seedBearing(seed){
   return (65 + seed*103 + (new Date().getMinutes()*7))%360;
@@ -2446,7 +2454,7 @@ function bearingBetweenV122(a,b){
   return (deg(Math.atan2(y,x))+360)%360;
 }
 function loopSupportPointsV123(start,anchor,seed,target){
-  // v123: put the real destination on the outer arc of the loop.
+  // v125: put the real destination on the outer arc of the loop.
   // Route order becomes: start -> side A -> POI -> side B -> start.
   // This is much less likely to create a long branch that must be walked twice.
   const base=bearingBetweenV122(start,anchor);
@@ -2615,10 +2623,10 @@ function routeRetraceRatioV123(path){
     let hit=false;
     for(let y=x+8;y<segs.length;y+=step){
       const t=segs[y];
-      if(hav(s.mid,t.mid)>.025)continue;
+      if(hav(s.mid,t.mid)>.009)continue;
       const diff=Math.abs(((s.bearing-t.bearing+540)%360)-180);
       // Same street in roughly the opposite direction.
-      if(diff>=145){
+      if(diff>=160){
         hit=true;
         break;
       }
@@ -2628,7 +2636,7 @@ function routeRetraceRatioV123(path){
   return Math.min(1,retraced/total);
 }
 function routeShapeScoreV123(r){
-  return (r.retraceRatio||0)*6.5+(r.overlapRatio||0)*2.0+(r.distanceError||0);
+  return (r.retraceRatio||0)*5.4+(r.overlapRatio||0)*1.6+(r.distanceError||0);
 }
 function diversifyPlacesV122(start,places,count=3){
   const pool=(places||[]).slice(0,18);
@@ -2712,64 +2720,131 @@ async function buildGoogleRoutes(start,places){
   const target=effectiveTargetKmV102();
   const raw=[];
   const explicitTheme=['cafe','food','green','water'].includes(state.theme);
+  const isRandom=state.theme==='random';
+  const isDirect=state.theme==='direct';
   const ranked=(places||[]).slice(0,20);
 
-  // v123: spend the six-call budget on up to six DIFFERENT real destinations.
-  // This gives cafe-rich areas a much better chance of returning 2–3 courses.
-  const diverse=diversifyPlacesV122(start,ranked,6);
-  const attemptCount=explicitTheme ? Math.min(6,Math.max(1,diverse.length||ranked.length)) : 3;
+  const pushCandidate=(c)=>{
+    if(!c)return;
+    c.distanceError=Math.abs(c.km-target)/Math.max(.1,target);
+    raw.push(c);
+  };
 
-  for(let i=0;i<attemptCount;i++){
-    if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+  if(explicitTheme){
+    // Explicit theme: try three different real destinations.
+    // Each gets up to two route calls so the synthetic side-points can be resized.
+    const primary=diversifyPlacesV122(start,ranked,3);
+    const attemptCount=Math.min(3,primary.length);
 
-    let chosen=[];
-    if(wanted>0 && ranked.length){
-      if(wanted===1){
-        chosen=[diverse[i]||ranked[i%ranked.length]];
-      }else{
-        chosen=pickCandidateSpots(ranked,wanted,i*2);
-      }
-    }
+    for(let i=0;i<attemptCount;i++){
+      if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+      const chosen = wanted===1
+        ? [primary[i]]
+        : pickCandidateSpots(ranked,wanted,i*2);
 
-    if(chosen.length){
-      const spec=demoSpec(start,i,chosen);
-      let candidate=null;
+      if(!chosen.length)continue;
+
       try{
-        // One call per destination first. Good geometry now handles target distance.
-        candidate=await googleCandidate(start,spec);
-      }catch(e){console.warn('theme candidate failed',e)}
-
-      if(candidate){
-        candidate.distanceError=Math.abs(candidate.km-target)/Math.max(.1,target);
-        candidate.themeMatched=true;
-        raw.push(candidate);
+        const spec=demoSpec(start,i,chosen);
+        const c=await refineThemedSpecV113(start,spec,target,2);
+        if(c){
+          c.themeMatched=true;
+          pushCandidate(c);
+        }
+      }catch(e){
+        console.warn('theme candidate failed',e);
       }
-    }else if(!explicitTheme){
-      const plain=await buildPlainFallbackV109(start,i,target);
-      if(plain){
-        plain.retraceRatio=routeRetraceRatioV123(plain.path);
-        raw.push(plain);
+    }
+  }else if(isRandom){
+    // "おまかせ" must never depend entirely on place search.
+    // Use at most 3 calls for real-stop routes, then spend the remaining budget
+    // on pure loop candidates. This prevents a Places/POI mismatch from causing 0 routes.
+    const primary=diversifyPlacesV122(start,ranked,3);
+
+    for(let i=0;i<Math.min(3,primary.length);i++){
+      if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+      try{
+        const chosen=wanted>0?[primary[i]]:[];
+        const spec=demoSpec(start,i,chosen);
+        const c=await googleCandidate(start,spec);
+        if(c){
+          c.themeMatched=chosen.length>0;
+          pushCandidate(c);
+        }
+      }catch(e){
+        console.warn('random spot candidate failed',e);
+      }
+    }
+
+    // Guaranteed plain-loop fallback candidates using the remaining route-call budget.
+    let seed=10;
+    while(routeCallsV117<ROUTE_CALL_LIMIT_V117){
+      try{
+        const spec=demoSpec(start,seed++,[]);
+        const c=await googleCandidate(start,spec);
+        if(c){
+          c.themeMatched=false;
+          pushCandidate(c);
+        }
+      }catch(e){
+        console.warn('random plain candidate failed',e);
+        break;
+      }
+    }
+  }else{
+    // Theme "なし": spend all available calls on clean loop shapes.
+    let seed=0;
+    while(routeCallsV117<ROUTE_CALL_LIMIT_V117){
+      try{
+        const spec=demoSpec(start,seed++,[]);
+        const c=await googleCandidate(start,spec);
+        if(c){
+          c.themeMatched=false;
+          pushCandidate(c);
+        }
+      }catch(e){
+        console.warn('plain candidate failed',e);
+        break;
       }
     }
   }
 
-  while(raw.length<3 && routeCallsV117<ROUTE_CALL_LIMIT_V117 && (!explicitTheme || !ranked.length)){
-    const plain=await buildPlainFallbackV109(start,7+raw.length,target);
-    if(!plain)break;
-    plain.retraceRatio=routeRetraceRatioV123(plain.path);
-    raw.push(plain);
+  // If an explicit theme had no usable POI routes at all, do NOT make the whole
+  // app look broken. Use any remaining calls for plain loops, but only as a last resort.
+  if(explicitTheme && !raw.length){
+    let seed=20;
+    while(routeCallsV117<ROUTE_CALL_LIMIT_V117){
+      try{
+        const spec=demoSpec(start,seed++,[]);
+        const c=await googleCandidate(start,spec);
+        if(c){
+          c.themeMatched=false;
+          pushCandidate(c);
+        }
+      }catch(e){break}
+    }
   }
 
+  // De-dupe.
   const deduped=[];
-  raw.sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b)).forEach(r=>{
-    const spotId=(r.spot?.id||'');
-    const duplicate=deduped.some(x=>{
-      const sameSpot=spotId && (x.spot?.id||'')===spotId;
-      const nearKm=Math.abs(x.km-r.km)<.05;
-      return sameSpot && nearKm;
+  raw
+    .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b))
+    .forEach(r=>{
+      const spotId=(r.spot?.id||'');
+      const duplicate=deduped.some(x=>{
+        const sameSpot=spotId && (x.spot?.id||'')===spotId;
+        const sameKm=Math.abs(x.km-r.km)<.05;
+        const sameStartShape=
+          x.path?.[Math.floor((x.path.length||1)*.25)] &&
+          r.path?.[Math.floor((r.path.length||1)*.25)] &&
+          hav(
+            x.path[Math.floor(x.path.length*.25)],
+            r.path[Math.floor(r.path.length*.25)]
+          )<.08;
+        return (sameSpot && sameKm) || (!spotId && !(x.spot?.id) && sameKm && sameStartShape);
+      });
+      if(!duplicate)deduped.push(r);
     });
-    if(!duplicate)deduped.push(r);
-  });
 
   const distErr=r=>Math.abs(r.km-target)/Math.max(.1,target);
   let routes=[];
@@ -2778,29 +2853,39 @@ async function buildGoogleRoutes(start,places){
     for(const r of deduped){
       if(routes.length>=3)break;
       if(routes.includes(r))continue;
+
+      // Explicit themes prefer real themed stops, but plain fallbacks are allowed
+      // only when no themed candidate has survived at all.
+      if(explicitTheme && routes.some(x=>x.themeMatched) && !r.themeMatched)continue;
+
       if(distErr(r)<=maxErr && (r.retraceRatio||0)<=maxRetrace){
         routes.push(r);
       }
     }
   };
 
-  // 5 km => 4.65–5.35 first, then 4.4–5.6. Never jump to 7 km just to fill.
-  addStage(.07,.10);
-  if(routes.length<3)addStage(.12,.16);
+  // Normal acceptance.
+  addStage(.08,.16);   // 5 km -> 4.6–5.4 km
+  if(routes.length<3)addStage(.12,.24); // 4.4–5.6 km
+  if(routes.length<3)addStage(.16,.30); // emergency but still reasonable
 
-  // If there are plenty of cafes but only one route barely misses the gate,
-  // allow one final sensible candidate rather than showing total failure.
-  if(!routes.length){
-    const nearest=deduped
-      .filter(r=>distErr(r)<=.14 && (r.retraceRatio||0)<=.18)
+  // Critical v125 safety net:
+  // never return zero if Google actually produced walking routes.
+  if(!routes.length && deduped.length){
+    const sane=deduped
+      .filter(r=>distErr(r)<=.22 && (r.retraceRatio||0)<=.36)
       .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b));
-    routes=nearest.slice(0,1);
+
+    if(sane.length)routes=sane.slice(0,Math.min(3,sane.length));
+    else{
+      // One best candidate is preferable to the entire feature appearing dead.
+      routes=[deduped[0]];
+    }
   }
 
   state.extensionOffer=null;
   return routes.slice(0,3);
 }
-
 function buildDemoRoutes(start,places){
   const wanted=resolvedStopCount(),target=effectiveTargetKmV102(),results=[];
   for(let i=0;i<6;i++){
@@ -2819,9 +2904,9 @@ function buildDemoRoutes(start,places){
     route.distanceError=Math.abs(route.km-target)/Math.max(.1,target);
     results.push(route);
   }
-  const sorted=results.sort((a,b)=>(a.distanceError+(a.overlapRatio||0))-(b.distanceError+(b.overlapRatio||0)));
-  const close=sorted.filter(r=>r.distanceError<=.10);
-  return (close.length?close:sorted.filter(r=>r.distanceError<=.12)).slice(0,3);
+  const sorted=results.sort((a,b)=>(a.distanceError+(a.retraceRatio||0)*2+(a.overlapRatio||0))-(b.distanceError+(b.retraceRatio||0)*2+(b.overlapRatio||0)));
+  const close=sorted.filter(r=>r.distanceError<=.12 && (r.retraceRatio||0)<=.30);
+  return (close.length?close:sorted).slice(0,3);
 }
 
 /* ===== progress ===== */
@@ -2944,6 +3029,7 @@ async function createRoute(){
   }catch(e){
     console.error(e);
     showHomeState('builderState');
+    if($('failAnyHoursV124'))$('failAnyHoursV124').style.display=(state.openOnly&&['cafe','food'].includes(state.theme))?'block':'none';
     $('routeFailModalV117').classList.add('show');
   }
 }
@@ -3067,7 +3153,7 @@ function renderSpots(c){
     const el=document.createElement('div');
     el.className='spot-card';
     const spotVisual=s.photoUri
-      ? `<div class="spot-icon spot-photo-v123"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
+      ? `<div class="spot-icon spot-photo-v125"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
       : `<div class="spot-icon">${themeEmoji()}</div>`;
     el.innerHTML=`${spotVisual}<div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
     el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
@@ -3820,8 +3906,9 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-// v123: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+// v125: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
 
+if($('failAnyHoursV124'))$('failAnyHoursV124').onclick=()=>{state.openOnly=false;$('openOnlyToggle')?.classList.remove('on');$('settingsOpenOnlyV109')?.classList.remove('on');savePrefsV109();$('routeFailModalV117').classList.remove('show');createRoute()};
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
 qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
 
