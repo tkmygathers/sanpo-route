@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v117-20261002">
-<!-- SANPO v117: destination-first route generation + stronger loop filtering + accessible text polish -->
+<meta name="sanpo-build" content="v118-20261002-recovery">
+<!-- SANPO v118: Google Maps / search / route button recovery + mobile title fit -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1503,7 +1503,43 @@ body{letter-spacing:.005em}
 .community-feed-card-v110{padding:16px 16px 20px!important}.community-author-v110 b{font-size:15px!important}.community-author-v110 small{font-size:13px!important}.community-feed-card-v110 h3{font-size:20px!important;margin-bottom:7px!important}.community-feed-review-v110{font-size:16px!important;line-height:1.75!important}.community-more-v110{font-size:14px!important}.community-tags-v110 span{font-size:14px!important}.community-actions-v110 button{font-size:15px!important;min-height:38px!important}.community-ratings-v110 span{font-size:12px!important}.community-ratings-v110 b{font-size:15px!important}.community-tabs-v110 button{font-size:15px!important;min-height:48px}.community-tags-scroll-v110 button{font-size:14px!important;padding:8px 12px!important}.history-empty{font-size:15px!important}.history-card-v109 h3{font-size:18px!important}.history-card-v109 .date{font-size:14px!important}.history-metrics-v109 b{font-size:18px!important}.history-metrics-v109 small,.history-tags-v109 span,.history-note-v109,.history-repeat-v110 button{font-size:14px!important}
 .spot-replace-v117{border:1px solid #cfded6;background:#fff;border-radius:9px;padding:7px 9px;font-size:13px;font-weight:800;color:#27644c;margin-left:auto}
 @media(max-width:390px){.builder-title-row-v117 h1{font-size:22px!important}.step-mini-v117{width:58px;flex-basis:58px}.result-split-v102{grid-template-rows:minmax(315px,50vh) auto!important}}
-.forced-search-v117{display:grid;grid-template-columns:1fr auto;gap:8px}.forced-search-v117 input{height:48px;border:1px solid #dce6e1;border-radius:12px;padding:0 12px;font-size:16px}.forced-search-v117 button{border:0;border-radius:12px;background:#1c7f5c;color:#fff;padding:0 16px;font-weight:800}.forced-results-v117{display:grid;max-height:220px;overflow:auto;margin:10px 0}.forced-results-v117 button{border:0;border-top:1px solid #e6ede9;background:#fff;text-align:left;padding:12px 4px}.forced-results-v117 b{display:block;font-size:16px;color:#244a3c}.forced-results-v117 small{display:block;font-size:13px;color:#6c7f77;margin-top:3px}</style>
+.forced-search-v117{display:grid;grid-template-columns:1fr auto;gap:8px}.forced-search-v117 input{height:48px;border:1px solid #dce6e1;border-radius:12px;padding:0 12px;font-size:16px}.forced-search-v117 button{border:0;border-radius:12px;background:#1c7f5c;color:#fff;padding:0 16px;font-weight:800}.forced-results-v117{display:grid;max-height:220px;overflow:auto;margin:10px 0}.forced-results-v117 button{border:0;border-top:1px solid #e6ede9;background:#fff;text-align:left;padding:12px 4px}.forced-results-v117 b{display:block;font-size:16px;color:#244a3c}.forced-results-v117 small{display:block;font-size:13px;color:#6c7f77;margin-top:3px}
+
+/* ===== SANPO v118 recovery patch ===== */
+.builder-title-row-v117{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 58px!important;align-items:end!important;gap:8px!important;
+  width:100%!important;overflow:hidden!important;
+}
+.builder-title-row-v117 h1,.home-main-title-v110{
+  min-width:0!important;max-width:100%!important;white-space:nowrap!important;overflow:visible!important;
+  font-size:clamp(20px,5.8vw,25px)!important;letter-spacing:-.055em!important;
+}
+.builder-title-row-v117.second{grid-template-columns:minmax(0,1fr) 58px!important}
+.title-with-back-v117{min-width:0!important;display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;align-items:center!important;gap:6px!important}
+.title-with-back-v117 h1{min-width:0!important;white-space:nowrap!important;font-size:clamp(19px,5.5vw,24px)!important;letter-spacing:-.055em!important}
+.step-mini-v117{width:58px!important;min-width:58px!important;max-width:58px!important}
+.step-mini-v117 b{white-space:nowrap!important}
+
+/* Search bar now occupies real space: maps begin below it. */
+#startGoogleMap,#startLeafletMap{inset:123px 0 102px!important;background:#eef3f0}
+.start-search-results-v118{
+  display:none;position:absolute;z-index:12;left:14px;right:14px;top:116px;max-height:245px;overflow:auto;
+  background:#fff;border:1px solid #dce6e1;border-radius:14px;box-shadow:0 10px 26px rgba(20,55,43,.18)
+}
+.start-search-results-v118.show{display:block}
+.start-search-results-v118 button{width:100%;border:0;border-top:1px solid #edf1ef;background:#fff;text-align:left;padding:11px 12px}
+.start-search-results-v118 button:first-child{border-top:0}
+.start-search-results-v118 b{display:block;font-size:15px;color:#21483a}
+.start-search-results-v118 small{display:block;margin-top:3px;font-size:12px;color:#6e8179}
+.start-picker-bottom{z-index:14!important}
+.confirm-start:disabled{opacity:.45!important}
+@media(max-width:360px){
+  .builder-title-row-v117 h1,.home-main-title-v110{font-size:19px!important}
+  .title-with-back-v117 h1{font-size:18px!important}
+  .step-mini-v117{width:54px!important;min-width:54px!important;max-width:54px!important}
+}
+
+</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -1895,6 +1931,7 @@ body{letter-spacing:.005em}
 
   <div class="start-map-modal" id="startMapModal">
     <div class="start-map-top"><button id="startMapClose">‹</button><b>出発地を地図で選ぶ</b></div><div class="start-search-v117"><input id="startSearchInputV117" placeholder="駅・公園・住所などを検索"><button id="startSearchBtnV117">検索</button></div>
+    <div id="startSearchResultsV118" class="start-search-results-v118"></div>
     <div id="startGoogleMap"></div>
     <div id="startLeafletMap"></div>
     <div class="start-picker-bottom">
@@ -2030,7 +2067,7 @@ const state={
   customStart:null,
   current:null,
   center:{lat:35.681236,lng:139.767125},
-  googleEnabled:localStorage.getItem(KEY.google)==='1',
+  googleEnabled:localStorage.getItem(KEY.google)==='1' || !!localStorage.getItem(KEY.api),
   apiKey:localStorage.getItem(KEY.api)||'',
   partner:localStorage.getItem(KEY.partner)||'off',
   mapEngine:'none',
@@ -2155,13 +2192,18 @@ async function updateWeather(loc){
 /* ===== Google loader: only called AFTER create ===== */
 function loadGoogleMaps(key){
   if(window.google?.maps?.importLibrary)return Promise.resolve();
+  if(!key)return Promise.reject(new Error('Google Maps API key is empty'));
   if(googleLoadPromise)return googleLoadPromise;
   googleLoadPromise=new Promise((resolve,reject)=>{
-    window.__sanpoGoogleReady=()=>resolve();
+    let settled=false;
+    const finish=(fn,val)=>{if(settled)return;settled=true;clearTimeout(timer);fn(val)};
+    window.__sanpoGoogleReady=()=>finish(resolve);
     const s=document.createElement('script');
-    s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&language=ja&region=JP&callback=__sanpoGoogleReady`;
+    s.id='sanpoGoogleMapsScript';
+    s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&libraries=places&language=ja&region=JP&loading=async&callback=__sanpoGoogleReady`;
     s.async=true;s.defer=true;
-    s.onerror=()=>reject(new Error('Google Maps load failed'));
+    s.onerror=()=>{googleLoadPromise=null;finish(reject,new Error('Google Maps load failed'))};
+    const timer=setTimeout(()=>{googleLoadPromise=null;finish(reject,new Error('Google Maps load timeout'))},12000);
     document.head.appendChild(s);
   });
   return googleLoadPromise;
@@ -2615,14 +2657,17 @@ function buildDemoRoutes(start,places){
 
 /* ===== progress ===== */
 function resetProgress(){
-  ['stepPlaces','stepRoute','stepFinish'].forEach(id=>$(id).classList.remove('done','doing'));
+  ['stepPlaces','stepRoute','stepFinish'].forEach(id=>{const el=$(id);if(el)el.classList.remove('done','doing')});
   if($('generationBarV109'))$('generationBarV109').style.width='8%';
 }
 function markStep(id,status){
-  $(id).classList.remove('done','doing');
-  if(status)$(id).classList.add(status);
+  const el=$(id);
   const num={stepPlaces:'1',stepRoute:'2',stepFinish:'3'}[id];
-  const icon=$(id).querySelector('.progress-icon');if(icon)icon.textContent=status==='done'?'✓':num;
+  if(el){
+    el.classList.remove('done','doing');
+    if(status)el.classList.add(status);
+    const icon=el.querySelector('.progress-icon');if(icon)icon.textContent=status==='done'?'✓':num;
+  }
   const pct=status==='done'
     ? ({stepPlaces:34,stepRoute:72,stepFinish:100}[id]||10)
     : ({stepPlaces:18,stepRoute:50,stepFinish:86}[id]||10);
@@ -3327,8 +3372,28 @@ $('coursePrefBtnV117').onclick=()=>$('coursePrefModalV117').classList.add('show'
 $('coursePrefCloseV117').onclick=()=>$('coursePrefModalV117').classList.remove('show');
 qsa('[data-pref]').forEach(btn=>btn.onclick=()=>{state.coursePref=btn.dataset.pref;qsa('[data-pref]').forEach(x=>{x.classList.toggle('active',x===btn);x.querySelector('span').textContent=x===btn?'✓':''});$('coursePrefValueV117').textContent=PREF_LABEL_V117[state.coursePref];$('coursePrefModalV117').classList.remove('show')});
 $('forcedPlaceBtnV117').onclick=()=>$('forcedPlaceModalV117').classList.add('show');$('forcedPlaceCloseV117').onclick=()=>$('forcedPlaceModalV117').classList.remove('show');$('forcedPlaceClearV117').onclick=()=>{state.forcedPlace=null;$('forcedPlaceValueV117').textContent='指定なし';$('forcedPlaceResultsV117').innerHTML='';$('forcedPlaceModalV117').classList.remove('show')};
-async function searchForcedPlaceV117(){const q=$('forcedPlaceInputV117').value.trim();if(!q)return;if(!(state.googleEnabled&&state.apiKey)){alert('場所検索にはGoogle MapsをONにしてください。');return}try{await loadGoogleMaps(state.apiKey);const {Place}=await google.maps.importLibrary('places');const center=state.customStart||state.current||state.center;const {places}=await Place.searchByText({textQuery:q,fields:['id','displayName','location','formattedAddress','googleMapsURI','types'],locationBias:{center,radius:6000},language:'ja',region:'jp',maxResultCount:6});bumpUsage('places',1);$('forcedPlaceResultsV117').innerHTML=(places||[]).filter(x=>x.location).map((x,i)=>`<button data-forced-index="${i}"><b>${escapeHtml(x.displayName||q)}</b><small>${escapeHtml(x.formattedAddress||'')}</small></button>`).join('')||'<p>見つかりませんでした。</p>';const arr=(places||[]).filter(x=>x.location);qsa('[data-forced-index]').forEach(b=>b.onclick=()=>{const x=arr[+b.dataset.forcedIndex];state.forcedPlace={id:x.id,name:x.displayName||q,loc:literal(x.location),address:x.formattedAddress||'',uri:x.googleMapsURI||'',types:x.types||[],kind:'forced'};$('forcedPlaceValueV117').textContent=state.forcedPlace.name;$('forcedPlaceModalV117').classList.remove('show')})}catch(e){alert('場所を検索できませんでした。')}}
-$('forcedPlaceSearchV117').onclick=searchForcedPlaceV117;$('forcedPlaceInputV117').addEventListener('keydown',e=>{if(e.key==='Enter')searchForcedPlaceV117()});
+async function searchForcedPlaceV117(){
+  const q=$('forcedPlaceInputV117').value.trim();if(!q)return;
+  if(state.apiKey){state.googleEnabled=true;localStorage.setItem(KEY.google,'1')}
+  if(!(state.googleEnabled&&state.apiKey)){alert('Google MapsのAPIキーが見つかりません。設定画面でAPIキーを確認してください。');return}
+  const box=$('forcedPlaceResultsV117');box.innerHTML='<p>検索中…</p>';
+  try{
+    await loadGoogleMaps(state.apiKey);
+    const {Place}=await google.maps.importLibrary('places');
+    const center=state.customStart||state.current||state.center;
+    const {places}=await Place.searchByText({textQuery:q,fields:['id','displayName','location','formattedAddress','googleMapsURI','types'],locationBias:{center,radius:15000},language:'ja',region:'jp',maxResultCount:8});
+    bumpUsage('places',1);
+    const arr=(places||[]).filter(x=>x.location);
+    box.innerHTML=arr.map((x,i)=>`<button type="button" data-forced-index="${i}"><b>${escapeHtml(x.displayName||q)}</b><small>${escapeHtml(x.formattedAddress||'')}</small></button>`).join('')||'<p>見つかりませんでした。別の名前や住所で試してください。</p>';
+    qsa('[data-forced-index]').forEach(b=>b.onclick=()=>{
+      const x=arr[+b.dataset.forcedIndex];
+      state.forcedPlace={id:x.id,name:x.displayName||q,loc:literal(x.location),address:x.formattedAddress||'',uri:x.googleMapsURI||'',types:x.types||[],kind:'forced'};
+      $('forcedPlaceValueV117').textContent=state.forcedPlace.name;
+      $('forcedPlaceModalV117').classList.remove('show');
+    });
+  }catch(e){console.warn(e);box.innerHTML='<p>検索できませんでした。Google Maps API設定を確認してください。</p>'}
+}
+$('forcedPlaceSearchV117').onclick=searchForcedPlaceV117;$('forcedPlaceInputV117').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchForcedPlaceV117()}});
 $('openOnlyToggle').onclick=()=>{
   state.openOnly=!state.openOnly;
   $('openOnlyToggle').classList.toggle('on',state.openOnly);
@@ -3357,8 +3422,20 @@ $('currentLocationBtn').onclick=async()=>{
 
 async function openStartMap(){
   $('startMapModal').classList.add('show');
+  $('startSearchResultsV118')?.classList.remove('show');
+  if(!state.current && state.startMode!=='map'){
+    try{await locate()}catch{}
+  }
   const center=state.customStart||state.current||state.center;
-  pendingStart=state.customStart||null;
+  pendingStart={...center};
+  $('confirmStartBtn').disabled=false;
+  if($('pickedStartText'))$('pickedStartText').textContent=state.customStart?'選択中の出発地点':'現在地を中心に表示しています';
+
+  // An existing saved API key means Google Maps should be used.
+  if(state.apiKey){
+    state.googleEnabled=true;
+    localStorage.setItem(KEY.google,'1');
+  }
   const useGoogle=state.googleEnabled&&state.apiKey;
   if(useGoogle){
     try{
@@ -3366,12 +3443,20 @@ async function openStartMap(){
       const {Map}=await google.maps.importLibrary('maps');
       $('startLeafletMap').style.display='none';$('startGoogleMap').style.display='block';
       if(!startGMap){
-        startGMap=new Map($('startGoogleMap'),{center,zoom:15,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,zoomControl:false,gestureHandling:'greedy'});
+        startGMap=new Map($('startGoogleMap'),{center,zoom:16,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,zoomControl:true,gestureHandling:'greedy'});
         bumpUsage('maps',1);
         startGMap.addListener('click',e=>setPendingStart(literal(e.latLng),'google'));
-      }else{startGMap.setCenter(center);startGMap.setZoom(15)}
-    }catch(e){initStartLeaflet(center)}
-  }else initStartLeaflet(center);
+      }else{startGMap.setCenter(center);startGMap.setZoom(16)}
+      // Show a marker immediately, so the screen is useful before any search/tap.
+      setPendingStart(center,'google');
+      requestAnimationFrame(()=>setTimeout(()=>{try{google.maps.event.trigger(startGMap,'resize');startGMap.setCenter(center)}catch{}},120));
+      return;
+    }catch(e){
+      console.warn('Google start map failed; using fallback map',e);
+    }
+  }
+  initStartLeaflet(center);
+  setPendingStart(center,'leaflet');
 }
 function initStartLeaflet(center){
   $('startGoogleMap').style.display='none';$('startLeafletMap').style.display='block';
@@ -3395,19 +3480,35 @@ function setPendingStart(p,engine){
 
 async function searchStartPlaceV117(){
   const q=$('startSearchInputV117').value.trim();if(!q)return;
-  if(!(state.googleEnabled&&state.apiKey)){alert('場所名検索にはGoogle MapsをONにしてください。地図タップはそのまま使えます。');return}
+  if(state.apiKey){state.googleEnabled=true;localStorage.setItem(KEY.google,'1')}
+  if(!(state.googleEnabled&&state.apiKey)){alert('Google MapsのAPIキーが見つかりません。設定画面でAPIキーを確認してください。');return}
+  const resultBox=$('startSearchResultsV118');
+  resultBox.innerHTML='<button type="button"><b>検索中…</b><small>候補を探しています</small></button>';resultBox.classList.add('show');
   try{
-    await loadGoogleMaps(state.apiKey);const {Place}=await google.maps.importLibrary('places');
-    const {places}=await Place.searchByText({textQuery:q,fields:['displayName','location','formattedAddress'],language:'ja',region:'jp',maxResultCount:5});bumpUsage('places',1);
-    const p=places?.[0];if(!p?.location){alert('場所が見つかりませんでした。');return}
-    const loc=literal(p.location);setPendingStart(loc,'google');if(startGMap){startGMap.setCenter(loc);startGMap.setZoom(16)}
-    if($('pickedStartText'))$('pickedStartText').textContent=p.displayName||p.formattedAddress||q;
-  }catch(e){console.warn(e);alert('場所を検索できませんでした。もう一度試してください。')}
+    await loadGoogleMaps(state.apiKey);
+    const {Place}=await google.maps.importLibrary('places');
+    const center=state.customStart||state.current||state.center;
+    const {places}=await Place.searchByText({textQuery:q,fields:['displayName','location','formattedAddress'],locationBias:{center,radius:15000},language:'ja',region:'jp',maxResultCount:8});
+    bumpUsage('places',1);
+    const arr=(places||[]).filter(x=>x.location);
+    if(!arr.length){resultBox.innerHTML='<button type="button"><b>見つかりませんでした</b><small>駅名・施設名・住所を変えて試してください</small></button>';return}
+    resultBox.innerHTML=arr.map((x,i)=>`<button type="button" data-start-result-v118="${i}"><b>${escapeHtml(x.displayName||q)}</b><small>${escapeHtml(x.formattedAddress||'')}</small></button>`).join('');
+    qsa('[data-start-result-v118]').forEach(btn=>btn.onclick=()=>{
+      const x=arr[+btn.dataset.startResultV118],loc=literal(x.location);
+      setPendingStart(loc,'google');
+      if(startGMap){startGMap.setCenter(loc);startGMap.setZoom(16)}
+      if($('pickedStartText'))$('pickedStartText').textContent=x.displayName||x.formattedAddress||q;
+      resultBox.classList.remove('show');
+    });
+  }catch(e){
+    console.warn(e);
+    resultBox.innerHTML='<button type="button"><b>検索できませんでした</b><small>Google Maps API設定を確認してください</small></button>';
+  }
 }
-$('startSearchBtnV117').onclick=searchStartPlaceV117;$('startSearchInputV117').addEventListener('keydown',e=>{if(e.key==='Enter')searchStartPlaceV117()});
+$('startSearchBtnV117').onclick=searchStartPlaceV117;$('startSearchInputV117').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchStartPlaceV117()}});
 
 $('mapStartBtn').onclick=openStartMap;
-$('startMapClose').onclick=()=>$('startMapModal').classList.remove('show');
+$('startMapClose').onclick=()=>{$('startSearchResultsV118')?.classList.remove('show');$('startMapModal').classList.remove('show')};
 $('confirmStartBtn').onclick=()=>{
   if(!pendingStart)return;
   state.customStart={...pendingStart};state.startMode='map';state.center={...pendingStart};
@@ -3501,7 +3602,14 @@ function showBuilderStep(step){
 $('builderNextBtn').onclick=()=>showBuilderStep(2);
 $('builderBackBtn').onclick=()=>showBuilderStep(1);
 
-$('createRouteBtn').onclick=createRoute;
+$('createRouteBtn').onclick=async()=>{
+  const btn=$('createRouteBtn');
+  if(btn.dataset.busy==='1')return;
+  btn.dataset.busy='1';
+  const oldHtml=btn.innerHTML;
+  btn.textContent='コースを作成中…';
+  try{await createRoute()}catch(e){console.error(e);alert('コース作成でエラーが起きました。もう一度試してください。')}finally{btn.dataset.busy='0';btn.innerHTML=oldHtml}
+};
 $('cancelGenerateBtn').onclick=()=>{
   state.cancelled=true;
   showHomeState('builderState');
@@ -3576,6 +3684,7 @@ qsa('#partnerSeg button').forEach(btn=>{
 
 /* ===== boot ===== */
 async function boot(){
+  if(state.apiKey){state.googleEnabled=true;localStorage.setItem(KEY.google,'1');}
   renderUsage();
   renderHistory();
   updateDistance();
@@ -3598,7 +3707,7 @@ boot().catch(e=>console.warn('boot skipped',e));
 </script>
 
 <script>
-window.SANPO_BUILD='v117-20261002';
+window.SANPO_BUILD='v118-20261002-recovery';
 console.info('[SANPO] build', window.SANPO_BUILD);
 </script>
 </body>
