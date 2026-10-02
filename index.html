@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v120-20261002-map-recovery-course-switch-restored">
-<!-- SANPO v120: keep v118 map/search recovery; restore pre-swipe course switching -->
+<meta name="sanpo-build" content="v121-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v121: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1540,14 +1540,14 @@ body{letter-spacing:.005em}
 }
 
 
-/* ===== SANPO v120: distance accuracy + spot photos ===== */
+/* ===== SANPO v121: distance accuracy + spot photos ===== */
 .spot-photo-hero-v115{position:relative!important}
 .spot-photo-placeholder-v115,
 .spot-photo-hero-v115>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
 .spot-photo-placeholder-v115[hidden],
 .spot-photo-hero-v115>img[hidden]{display:none!important}
-.spot-icon.spot-photo-v120{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
-.spot-icon.spot-photo-v120 img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-icon.spot-photo-v121{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
+.spot-icon.spot-photo-v121 img{width:100%;height:100%;object-fit:cover;display:block}
 
 </style>
 </head>
@@ -2271,20 +2271,34 @@ function resolvedStopCount(){
 }
 
 function themeSearchConfig(){
+  // v121: Do not hard-filter Places by one Google place type.
+  // Gather a broad pool first, then score the theme fit inside SANPO.
   if(state.theme==='cafe'){
-    return {queries:['カフェ','喫茶店','コーヒー','ベーカリー カフェ'],includedType:'cafe',strict:false,business:true,kind:'cafe'};
+    return {
+      queries:['カフェ','喫茶店','コーヒーショップ','ベーカリー','パン屋 カフェ','スイーツ カフェ'],
+      includedType:undefined,strict:false,business:true,kind:'cafe'
+    };
   }
   if(state.theme==='food'){
-    return {queries:['レストラン','定食','ランチ','飲食店'],includedType:'restaurant',strict:false,business:true,kind:'food'};
+    return {
+      queries:['レストラン','定食','飲食店','ランチ','ラーメン','そば うどん','中華料理','カレー'],
+      includedType:undefined,strict:false,business:true,kind:'food'
+    };
   }
   if(state.theme==='green'){
-    return {queries:['公園','緑地','庭園','遊歩道'],includedType:'park',strict:false,business:false,kind:'green'};
+    return {
+      queries:['公園','緑地','庭園','遊歩道','植物園','広場','自然公園'],
+      includedType:undefined,strict:false,business:false,kind:'green'
+    };
   }
   if(state.theme==='water'){
-    return {queries:['川沿い 公園','河川敷','運河 公園','水辺 公園'],includedType:undefined,strict:false,business:false,kind:'water'};
+    return {
+      queries:['水辺','川沿い','河川敷','池 公園','湖 公園','運河','親水公園','海辺 公園'],
+      includedType:undefined,strict:false,business:false,kind:'water'
+    };
   }
   if(state.theme==='random'){
-    return {queries:['カフェ','公園','レストラン'],includedType:undefined,strict:false,business:false,kind:'random'};
+    return {queries:['カフェ','公園','レストラン','水辺'],includedType:undefined,strict:false,business:false,kind:'random'};
   }
   return null;
 }
@@ -2346,10 +2360,26 @@ function uniqueNearbyPlaces(start,places){
     .map(p=>{
       const d=hav(start,p.loc);
       let themeBonus=0;
-      const types=(p.types||[]).join(' ');
-      if(state.theme==='green' && /(park|garden|plaza)/i.test(types))themeBonus=-.22;
-      if(state.theme==='cafe' && /cafe/i.test(types))themeBonus=-.18;
-      if(state.theme==='food' && /(restaurant|meal|food)/i.test(types))themeBonus=-.14;
+      const types=(p.types||[]).join(' ').toLowerCase();
+      const name=(p.name||'').toLowerCase();
+      const query=(p.query||'').toLowerCase();
+      const bag=`${types} ${name} ${query}`;
+
+      if(state.theme==='green'){
+        if(/park|garden|botanical|plaza|natural_feature/.test(types))themeBonus-=.24;
+        if(/公園|緑地|庭園|遊歩道|植物園|広場|自然/.test(bag))themeBonus-=.20;
+      }
+      if(state.theme==='cafe'){
+        if(/cafe|coffee|bakery/.test(types))themeBonus-=.22;
+        if(/カフェ|喫茶|コーヒー|珈琲|ベーカリー|パン/.test(bag))themeBonus-=.18;
+      }
+      if(state.theme==='food'){
+        if(/restaurant|meal|food|ramen|bakery/.test(types))themeBonus-=.20;
+        if(/レストラン|定食|食堂|ラーメン|そば|うどん|中華|カレー|焼肉|寿司|ランチ|飲食/.test(bag))themeBonus-=.17;
+      }
+      if(state.theme==='water'){
+        if(/川|河川|水辺|親水|池|湖|運河|海辺|海浜|river|lake|canal|water/.test(bag))themeBonus-=.23;
+      }
       if(p.community)themeBonus-=.08;
       const distanceScore=Math.abs(d-ideal)/Math.max(.4,target);
       return {...p,directKm:d,_themeScore:distanceScore+themeBonus};
@@ -2368,17 +2398,35 @@ async function searchPlaces(start){
 
     // Destination-first search:
     // collect a healthy pool from the whole walkable area BEFORE making a route.
-    const desiredPool=Math.max(8,wanted*5);
-    const maxQueries=state.theme==='random'?3:Math.min(4,config.queries.length);
+    const desiredPool=Math.max(12,wanted*6);
+    const maxQueries=state.theme==='random'?4:Math.min(6,config.queries.length);
 
     for(let i=0;i<maxQueries;i++){
       const found=await onePlaceTextSearch(start,config,config.queries[i]);
       all=uniqueNearbyPlaces(start,[...all,...found]);
-      if(all.length>=desiredPool)break;
+      // Continue a little longer even when we already have enough results so
+      // parks / bakeries / restaurants with a different Google category are not missed.
+      if(all.length>=desiredPool && i>=2)break;
+    }
+
+    // v121 safety net: if Google returned very few useful candidates,
+    // retry with generic Japanese search wording and without type restrictions.
+    if(all.length<Math.max(3,wanted)){
+      const fallbackQueries =
+        state.theme==='green' ? ['近くの公園','近くの緑地','近くの庭園'] :
+        state.theme==='cafe' ? ['近くのカフェ','近くの喫茶店','近くのパン屋'] :
+        state.theme==='food' ? ['近くの飲食店','近くのレストラン','近くの定食屋'] :
+        state.theme==='water' ? ['近くの水辺','近くの川','近くの池 公園'] :
+        [];
+      for(const q of fallbackQueries){
+        const found=await onePlaceTextSearch(start,{...config,includedType:undefined,strict:false},q);
+        all=uniqueNearbyPlaces(start,[...all,...found]);
+        if(all.length>=Math.max(8,wanted*4))break;
+      }
     }
 
     markStep('stepPlaces','done');
-    return all.slice(0,16);
+    return all.slice(0,20);
   }catch(e){
     console.warn('Theme place search failed',e);
     markStep('stepPlaces','done');
@@ -2573,7 +2621,7 @@ async function buildGoogleRoutes(start,places){
       const themedSpec=demoSpec(start,i,chosen);
       let themed=null;
       try{
-        // v120: do not spend one call on an unrefined route and then repeat the same call.
+        // v121: do not spend one call on an unrefined route and then repeat the same call.
         // Use the call budget to converge toward the requested distance.
         themed=await refineThemedSpecV113(start,themedSpec,target,2);
       }catch(e){console.warn('theme candidate failed',e)}
@@ -2623,7 +2671,7 @@ async function buildGoogleRoutes(start,places){
     ))deduped.push(r);
   });
 
-  // v120: distance is a hard product requirement.
+  // v121: distance is a hard product requirement.
   // For a 5 km request, prefer 4.7–5.3 km. If Google cannot make three,
   // show fewer good candidates rather than filling the list with a 4.0/7.7 km route.
   const strictDistance=r=>Math.abs(r.km-target)/Math.max(.1,target)<=.06;
@@ -2703,9 +2751,9 @@ function updateGeneratingCopy(){
   if(placeLine){
     placeLine.textContent=
       state.theme==='water'?'水辺の実スポットを探しています':
-      state.theme==='green'?'近くの公園・緑地を探しています':
-      state.theme==='cafe'?'歩ける範囲のカフェを探しています':
-      state.theme==='food'?'歩ける範囲のごはん候補を探しています':
+      state.theme==='green'?'近くの公園・緑地・庭園を探しています':
+      state.theme==='cafe'?'歩ける範囲のカフェ・喫茶店を探しています':
+      state.theme==='food'?'歩ける範囲のごはん候補を広く探しています':
       state.theme==='direct'?'歩きやすい道を探しています':
       '歩きやすい道を探しています';
   }
@@ -2916,7 +2964,7 @@ function renderSpots(c){
     const el=document.createElement('div');
     el.className='spot-card';
     const spotVisual=s.photoUri
-      ? `<div class="spot-icon spot-photo-v120"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
+      ? `<div class="spot-icon spot-photo-v121"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
       : `<div class="spot-icon">${themeEmoji()}</div>`;
     el.innerHTML=`${spotVisual}<div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
     el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
@@ -3669,7 +3717,7 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-// v120: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+// v121: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
 
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
 qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
