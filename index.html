@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v122-20261002-map-recovery-course-switch-restored">
-<!-- SANPO v122: keep v118 map/search recovery; restore pre-swipe course switching -->
+<meta name="sanpo-build" content="v123-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v123: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1540,14 +1540,14 @@ body{letter-spacing:.005em}
 }
 
 
-/* ===== SANPO v122: distance accuracy + spot photos ===== */
+/* ===== SANPO v123: distance accuracy + spot photos ===== */
 .spot-photo-hero-v115{position:relative!important}
 .spot-photo-placeholder-v115,
 .spot-photo-hero-v115>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
 .spot-photo-placeholder-v115[hidden],
 .spot-photo-hero-v115>img[hidden]{display:none!important}
-.spot-icon.spot-photo-v122{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
-.spot-icon.spot-photo-v122 img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-icon.spot-photo-v123{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
+.spot-icon.spot-photo-v123 img{width:100%;height:100%;object-fit:cover;display:block}
 
 </style>
 </head>
@@ -2091,7 +2091,7 @@ const state={
 };
 
 let googleLoadPromise=null;
-let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v122: max 6 route calls / generation
+let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v123: max 6 route calls / generation
 let gmap=null;
 let gPolylines=[];
 let gMarkers=[];
@@ -2271,7 +2271,7 @@ function resolvedStopCount(){
 }
 
 function themeSearchConfig(){
-  // v122: Do not hard-filter Places by one Google place type.
+  // v123: Do not hard-filter Places by one Google place type.
   // Gather a broad pool first, then score the theme fit inside SANPO.
   if(state.theme==='cafe'){
     return {
@@ -2345,8 +2345,10 @@ async function onePlaceTextSearch(start,config,textQuery){
 function uniqueNearbyPlaces(start,places){
   const target=effectiveTargetKmV102();
   const seen=new Set();
-  const maxDirect=Math.max(.9,target*.52);
-  const ideal=Math.max(.35,target*.28);
+  // v123: a 5 km loop works best when the destination is roughly 0.5–1.7 km away.
+  // Very distant POIs force a piston/out-and-back route or overshoot the target.
+  const maxDirect=Math.max(.8,target*.38);
+  const ideal=Math.max(.35,target*.22);
 
   return places
     .filter(p=>{
@@ -2409,7 +2411,7 @@ async function searchPlaces(start){
       if(all.length>=desiredPool && i>=2)break;
     }
 
-    // v122 safety net: if Google returned very few useful candidates,
+    // v123 safety net: if Google returned very few useful candidates,
     // retry with generic Japanese search wording and without type restrictions.
     if(all.length<Math.max(3,wanted)){
       const fallbackQueries =
@@ -2443,36 +2445,44 @@ function bearingBetweenV122(a,b){
   const x=Math.cos(rad(a.lat))*Math.sin(rad(b.lat))-Math.sin(rad(a.lat))*Math.cos(rad(b.lat))*Math.cos(rad(b.lng-a.lng));
   return (deg(Math.atan2(y,x))+360)%360;
 }
-function loopSupportPointsV122(start,anchor,seed,target){
-  // Build a broad arc around the start instead of placing one tiny point beside
-  // the outbound leg. This strongly reduces "go out on one street and come back"
-  // branch-shaped routes.
+function loopSupportPointsV123(start,anchor,seed,target){
+  // v123: put the real destination on the outer arc of the loop.
+  // Route order becomes: start -> side A -> POI -> side B -> start.
+  // This is much less likely to create a long branch that must be walked twice.
   const base=bearingBetweenV122(start,anchor);
-  const side=seed%2===0?1:-1;
   const direct=hav(start,anchor);
-  const radius=Math.max(.65,Math.min(target*.42,Math.max(target*.24,direct*.92)));
-  const r1=radius;
-  const r2=Math.max(.58,radius*.88);
-  return [
-    pointFrom(start,(base+side*102+360)%360,r1),
-    pointFrom(start,(base+side*208+360)%360,r2)
-  ];
+  const side=seed%2===0?1:-1;
+
+  // Radius is derived from the target and POI distance instead of using a
+  // large fixed percentage of the target.
+  const radius=Math.max(
+    .58,
+    Math.min(target*.27, target/4.2 - direct*.25)
+  );
+
+  return {
+    before:pointFrom(start,(base-side*102+360)%360,radius),
+    after:pointFrom(start,(base+side*102+360)%360,radius*.96)
+  };
 }
 function demoSpec(start,seed,spots=[]){
   const target=effectiveTargetKmV102();
   const r=Math.max(.35,target/4.35);
   const b=seedBearing(seed);
   const mids=[];
+  const fixedIndices=[];
   const usedSpots=(spots||[]).filter(Boolean);
 
-  usedSpots.forEach(s=>mids.push(s.loc));
-  const fixedCount=mids.length;
-
   if(usedSpots.length){
-    // Keep the real destination(s) fixed, then continue around the start through
-    // two synthetic arc points. This makes a genuine loop much more likely.
-    const anchor=usedSpots[usedSpots.length-1].loc;
-    mids.push(...loopSupportPointsV122(start,anchor,seed,target));
+    const anchor=usedSpots[Math.floor(usedSpots.length/2)].loc;
+    const support=loopSupportPointsV123(start,anchor,seed,target);
+
+    mids.push(support.before);
+    usedSpots.forEach(s=>{
+      fixedIndices.push(mids.length);
+      mids.push(s.loc);
+    });
+    mids.push(support.after);
   }else{
     mids.push(
       pointFrom(start,b,r),
@@ -2485,7 +2495,8 @@ function demoSpec(start,seed,spots=[]){
     waypoints:mids.map(p=>({...p})),
     spots:usedSpots,
     spot:usedSpots[0]||null,
-    fixedCount,
+    fixedIndices,
+    fixedCount:0,
     themeMatched:usedSpots.length>0
   };
 }
@@ -2516,6 +2527,7 @@ async function googleCandidate(start,spec){
     themeMatched:!!spec.themeMatched,
     overlapRatio:routeOverlapRatioV108(path),
     branchRatio:routeBranchRatioV122(path),
+    retraceRatio:routeRetraceRatioV123(path),
     demo:false
   };
 }
@@ -2580,8 +2592,43 @@ function routeBranchRatioV122(path){
   }
   return Math.min(1,worst);
 }
-function routeShapeScoreV122(r){
-  return (r.overlapRatio||0)*5.5+(r.branchRatio||0)*3.8+(r.distanceError||0);
+function routeRetraceRatioV123(path){
+  if(!path||path.length<8)return 0;
+  const segs=[];
+  let total=0;
+
+  for(let i=1;i<path.length;i++){
+    const a=path[i-1],b=path[i];
+    const len=hav(a,b);
+    if(len<.002)continue;
+    total+=len;
+    const mid={lat:(a.lat+b.lat)/2,lng:(a.lng+b.lng)/2};
+    segs.push({i,len,mid,bearing:bearingBetweenV122(a,b)});
+  }
+  if(total<=0)return 0;
+
+  const step=Math.max(1,Math.floor(segs.length/220));
+  let retraced=0;
+
+  for(let x=0;x<segs.length;x+=step){
+    const s=segs[x];
+    let hit=false;
+    for(let y=x+8;y<segs.length;y+=step){
+      const t=segs[y];
+      if(hav(s.mid,t.mid)>.025)continue;
+      const diff=Math.abs(((s.bearing-t.bearing+540)%360)-180);
+      // Same street in roughly the opposite direction.
+      if(diff>=145){
+        hit=true;
+        break;
+      }
+    }
+    if(hit)retraced+=s.len*step;
+  }
+  return Math.min(1,retraced/total);
+}
+function routeShapeScoreV123(r){
+  return (r.retraceRatio||0)*6.5+(r.overlapRatio||0)*2.0+(r.distanceError||0);
 }
 function diversifyPlacesV122(start,places,count=3){
   const pool=(places||[]).slice(0,18);
@@ -2611,7 +2658,8 @@ function cloneSpecV109(spec){
     spots:[...(spec.spots||[])],
     spot:spec.spot||null,
     themeMatched:!!spec.themeMatched,
-    fixedCount:Number(spec.fixedCount)||0
+    fixedCount:Number(spec.fixedCount)||0,
+    fixedIndices:Array.isArray(spec.fixedIndices)?[...spec.fixedIndices]:[]
   };
 }
 function scalePointFromStartV109(start,p,factor){
@@ -2635,18 +2683,21 @@ async function refinePlainSpecV109(start,spec,targetKm,maxTry=3){
 async function refineThemedSpecV113(start,spec,targetKm,maxTry=2){
   let working=cloneSpecV109(spec),best=null;
   const fixed=Math.max(0,Number(working.fixedCount)||0);
+  const fixedSet=new Set(working.fixedIndices||[]);
 
   for(let n=0;n<maxTry;n++){
     let result;
     try{result=await googleCandidate(start,working)}catch(e){break}
     const err=Math.abs(result.km-targetKm)/Math.max(.1,targetKm);
     result.distanceError=err;
-    if(!best || routeShapeScoreV122(result) < routeShapeScoreV122(best))best=result;
-    if(err<=.07 && (result.overlapRatio||0)<=.14 && (result.branchRatio||0)<=.18)break;
+    if(!best || routeShapeScoreV123(result) < routeShapeScoreV123(best))best=result;
+    if(err<=.08 && (result.retraceRatio||0)<=.12)break;
 
-    const factor=Math.max(.72,Math.min(1.28,targetKm/Math.max(.2,result.km)));
-    // Never move real POIs. Only adjust the synthetic loop-support waypoint(s).
-    working.intermediates=working.intermediates.map((p,i)=>i<fixed?p:scalePointFromStartV109(start,p,factor));
+    const factor=Math.max(.78,Math.min(1.22,targetKm/Math.max(.2,result.km)));
+    // Never move real Google POIs. Only resize the synthetic side points.
+    working.intermediates=working.intermediates.map((p,i)=>
+      (i<fixed || fixedSet.has(i)) ? p : scalePointFromStartV109(start,p,factor)
+    );
     working.waypoints=working.intermediates.map(p=>({...p}));
   }
   return best;
@@ -2661,100 +2712,91 @@ async function buildGoogleRoutes(start,places){
   const target=effectiveTargetKmV102();
   const raw=[];
   const explicitTheme=['cafe','food','green','water'].includes(state.theme);
+  const ranked=(places||[]).slice(0,20);
 
-  const ranked=(places||[]).slice(0,18);
-  const diversePrimary=diversifyPlacesV122(start,ranked,3);
-
-  // v122: for a 1-stop themed walk, deliberately start from three different real
-  // destinations. Each gets up to two route calls (hard cap stays at 6 total).
-  const attemptCount=explicitTheme ? Math.min(3,Math.max(1,ranked.length)) : 3;
+  // v123: spend the six-call budget on up to six DIFFERENT real destinations.
+  // This gives cafe-rich areas a much better chance of returning 2–3 courses.
+  const diverse=diversifyPlacesV122(start,ranked,6);
+  const attemptCount=explicitTheme ? Math.min(6,Math.max(1,diverse.length||ranked.length)) : 3;
 
   for(let i=0;i<attemptCount;i++){
     if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
 
     let chosen=[];
     if(wanted>0 && ranked.length){
-      if(wanted===1 && diversePrimary.length){
-        chosen=[diversePrimary[i%diversePrimary.length]];
+      if(wanted===1){
+        chosen=[diverse[i]||ranked[i%ranked.length]];
       }else{
         chosen=pickCandidateSpots(ranked,wanted,i*2);
       }
     }
 
     if(chosen.length){
-      const themedSpec=demoSpec(start,i,chosen);
-      let themed=null;
+      const spec=demoSpec(start,i,chosen);
+      let candidate=null;
       try{
-        themed=await refineThemedSpecV113(start,themedSpec,target,2);
+        // One call per destination first. Good geometry now handles target distance.
+        candidate=await googleCandidate(start,spec);
       }catch(e){console.warn('theme candidate failed',e)}
 
-      if(themed){
-        themed.distanceError=Math.abs(themed.km-target)/Math.max(.1,target);
-        themed.themeMatched=true;
-        // Keep usable candidates in the pool; the staged gate below decides
-        // strict / relaxed acceptance. Do not throw away candidate #2/#3 early.
-        if(themed.distanceError<=.14 && (themed.overlapRatio||0)<=.24 && (themed.branchRatio||0)<=.34){
-          raw.push(themed);
-        }
+      if(candidate){
+        candidate.distanceError=Math.abs(candidate.km-target)/Math.max(.1,target);
+        candidate.themeMatched=true;
+        raw.push(candidate);
       }
     }else if(!explicitTheme){
       const plain=await buildPlainFallbackV109(start,i,target);
       if(plain){
-        plain.branchRatio=routeBranchRatioV122(plain.path);
+        plain.retraceRatio=routeRetraceRatioV123(plain.path);
         raw.push(plain);
       }
     }
   }
 
-  // No theme / no real destination: use remaining API budget for normal loops.
   while(raw.length<3 && routeCallsV117<ROUTE_CALL_LIMIT_V117 && (!explicitTheme || !ranked.length)){
     const plain=await buildPlainFallbackV109(start,7+raw.length,target);
     if(!plain)break;
-    plain.branchRatio=routeBranchRatioV122(plain.path);
+    plain.retraceRatio=routeRetraceRatioV123(plain.path);
     raw.push(plain);
   }
 
   const deduped=[];
-  raw.sort((a,b)=>{
-    const themeA=(explicitTheme&&!a.themeMatched)?1.2:0;
-    const themeB=(explicitTheme&&!b.themeMatched)?1.2:0;
-    return (themeA+routeShapeScoreV122(a))-(themeB+routeShapeScoreV122(b));
-  }).forEach(r=>{
+  raw.sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b)).forEach(r=>{
     const spotId=(r.spot?.id||'');
     const duplicate=deduped.some(x=>{
       const sameSpot=spotId && (x.spot?.id||'')===spotId;
-      const verySimilarDistance=Math.abs(x.km-r.km)<.06;
-      const similarShape=Math.abs((x.branchRatio||0)-(r.branchRatio||0))<.04 &&
-                         Math.abs((x.overlapRatio||0)-(r.overlapRatio||0))<.03;
-      return sameSpot && verySimilarDistance && similarShape;
+      const nearKm=Math.abs(x.km-r.km)<.05;
+      return sameSpot && nearKm;
     });
     if(!duplicate)deduped.push(r);
   });
 
-  // Distance first, but relax in stages so a cafe-rich area can still provide
-  // 2–3 useful options. For 5 km: 4.7–5.3 first, then 4.5–5.5, then max 4.4–5.6.
   const distErr=r=>Math.abs(r.km-target)/Math.max(.1,target);
-  const shapeOK=(r,level)=>{
-    const ov=r.overlapRatio||0, br=r.branchRatio||0;
-    if(level===0)return ov<=.11 && br<=.16;
-    if(level===1)return ov<=.16 && br<=.22;
-    return ov<=.20 && br<=.28;
-  };
-
   let routes=[];
-  const addStage=(maxErr,level)=>{
+
+  const addStage=(maxErr,maxRetrace)=>{
     for(const r of deduped){
       if(routes.length>=3)break;
       if(routes.includes(r))continue;
-      if(distErr(r)<=maxErr && shapeOK(r,level))routes.push(r);
+      if(distErr(r)<=maxErr && (r.retraceRatio||0)<=maxRetrace){
+        routes.push(r);
+      }
     }
   };
-  addStage(.06,0);
-  if(routes.length<3)addStage(.10,1);
-  if(routes.length<3)addStage(.12,2);
 
-  // Do NOT fill the list with ugly branch / piston routes just to reach 3.
-  // Fewer clean candidates is preferable to a visibly broken loop.
+  // 5 km => 4.65–5.35 first, then 4.4–5.6. Never jump to 7 km just to fill.
+  addStage(.07,.10);
+  if(routes.length<3)addStage(.12,.16);
+
+  // If there are plenty of cafes but only one route barely misses the gate,
+  // allow one final sensible candidate rather than showing total failure.
+  if(!routes.length){
+    const nearest=deduped
+      .filter(r=>distErr(r)<=.14 && (r.retraceRatio||0)<=.18)
+      .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b));
+    routes=nearest.slice(0,1);
+  }
+
   state.extensionOffer=null;
   return routes.slice(0,3);
 }
@@ -2772,7 +2814,7 @@ function buildDemoRoutes(start,places){
     const route={
       path,km:pathKm(path),routeObj:null,spots:spec.spots||[],spot:spec.spot,
       waypoints:spec.waypoints||[],themeMatched:!!spec.themeMatched,
-      overlapRatio:routeOverlapRatioV108(path),branchRatio:routeBranchRatioV122(path),demo:true
+      overlapRatio:routeOverlapRatioV108(path),branchRatio:routeBranchRatioV122(path),retraceRatio:routeRetraceRatioV123(path),demo:true
     };
     route.distanceError=Math.abs(route.km-target)/Math.max(.1,target);
     results.push(route);
@@ -3025,7 +3067,7 @@ function renderSpots(c){
     const el=document.createElement('div');
     el.className='spot-card';
     const spotVisual=s.photoUri
-      ? `<div class="spot-icon spot-photo-v122"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
+      ? `<div class="spot-icon spot-photo-v123"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
       : `<div class="spot-icon">${themeEmoji()}</div>`;
     el.innerHTML=`${spotVisual}<div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
     el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
@@ -3778,7 +3820,7 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-// v122: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+// v123: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
 
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
 qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
