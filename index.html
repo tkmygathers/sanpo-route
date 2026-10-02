@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v118-20261002-recovery">
-<!-- SANPO v118: Google Maps / search / route button recovery + mobile title fit -->
+<meta name="sanpo-build" content="v119-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v119: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1701,7 +1701,7 @@ body{letter-spacing:.005em}
               <h2 id="routeTitle">おすすめ散歩コース</h2>
               <p id="routeSummary">条件から作ったコースです。</p><span class="candidate-count" id="candidateCount">1 / 3</span>
             </div>
-            <button class="candidate-btn" id="nextCandidateBtn">次の候補 ›</button>
+            <button class="candidate-btn" id="nextCandidateBtn">別の候補</button>
           </div>
 
           <div class="result-metrics">
@@ -3648,7 +3648,8 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-let swipeStartX117=null;$('resultState').addEventListener('touchstart',e=>{swipeStartX117=e.changedTouches[0].clientX},{passive:true});$('resultState').addEventListener('touchend',e=>{if(swipeStartX117==null||!state.routes.length)return;const dx=e.changedTouches[0].clientX-swipeStartX117;swipeStartX117=null;if(Math.abs(dx)<65)return;const n=dx<0?(state.selected+1)%state.routes.length:(state.selected-1+state.routes.length)%state.routes.length;showCandidate(n)},{passive:true});
+// v119: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
 qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
 
