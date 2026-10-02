@@ -7,8 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v116-20261001">
-<!-- SANPO v115: destination-first route generation + stronger loop filtering + accessible text polish -->
+<meta name="sanpo-build" content="v117-20261002">
+<!-- SANPO v117: destination-first route generation + stronger loop filtering + accessible text polish -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1492,7 +1492,18 @@ body{letter-spacing:.005em}
   .google-review-v115 p{font-size:16px!important}
 }
 
-</style>
+
+/* ===== SANPO v117 product UI / beta core ===== */
+.builder-title-row-v117{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:2px 2px 14px}.builder-title-row-v117 h1{margin:0!important;font-size:25px!important;line-height:1.25!important;letter-spacing:-.045em!important}.title-with-back-v117{display:flex;align-items:center;gap:7px;min-width:0}.title-with-back-v117 .back-step-v107{position:static!important;flex:0 0 auto}.step-mini-v117{width:66px;flex:0 0 66px}.step-mini-v117 b{display:block;text-align:right;font-size:14px;color:#587168}.step-mini-v117 span{display:block;height:4px;background:#dce7e1;border-radius:99px;margin-top:5px;overflow:hidden}.step-mini-v117 i{display:block;width:50%;height:100%;background:#198b63}.step-mini-v117.full i{width:100%}
+.quick-options-v117{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.quick-options-v117.direct{grid-template-columns:1fr}.quick-options-v117.direct #stopCountCardV110{display:none}.select-field-v117{display:block;background:#fff;border:1px solid #dfe8e3;padding:11px 12px;border-radius:14px}.select-field-v117 span{display:block;font-size:14px;font-weight:700;color:#526a61;margin-bottom:6px}.select-field-v117 select{width:100%;border:0;background:transparent;font-size:17px;font-weight:800;color:#173f35;outline:0}.course-pref-row-v117{width:100%;min-height:54px;border:0;border-top:1px solid #e3ebe7;border-bottom:1px solid #e3ebe7;background:transparent;display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;text-align:left;padding:0 4px;font-size:16px;color:#23483b}.course-pref-row-v117 b{font-size:16px}.course-pref-row-v117 i{font-size:24px;font-style:normal;color:#82938c}
+.generate-steps-v115{display:none!important}.generate-simple-v117{display:flex;justify-content:center;align-items:center;gap:10px;margin:18px 0 8px;font-size:17px;font-weight:700;color:#45665a}.pulse-dot-v117{width:10px;height:10px;border-radius:50%;background:#168d62;animation:pulse117 1.2s infinite}@keyframes pulse117{50%{opacity:.25;transform:scale(.7)}}
+.result-split-v102{display:none!important;padding:0!important;background:#f7faf8!important;grid-template-rows:minmax(330px,52vh) auto!important;gap:0!important;overflow-y:auto!important;padding-bottom:86px!important}.result-split-v102.active{display:grid!important}.result-map-card-v102{min-height:330px!important;border-radius:0!important;border:0!important;box-shadow:none!important}.result-panel-v102{height:auto!important;overflow:visible!important;border-radius:0!important;border:0!important;box-shadow:none!important;padding:18px 16px 26px!important}.result-panel-v102 .result-head p{font-size:15px!important}.result-panel-v102 .result-metrics b{font-size:21px!important}.result-panel-v102 .result-metrics small{font-size:13px!important}.result-panel-v102 .spot-card b{font-size:16px!important}.result-panel-v102 .spot-card small{font-size:14px!important}.result-panel-v102 .primary-result{height:54px!important;font-size:17px!important}.result-inline-actions-v117{display:grid;grid-template-columns:1fr auto;gap:8px}.result-inline-actions-v117 .recommend-btn{margin:0!important}.route-quality-v109{display:none!important}
+.start-search-v117{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 14px;border-bottom:1px solid #e3ebe7;background:#fff}.start-search-v117 input{min-width:0;height:46px;border:1px solid #dce6e1;border-radius:12px;padding:0 13px;font-size:16px}.start-search-v117 button{border:0;border-radius:12px;background:#1c7f5c;color:#fff;padding:0 16px;font-size:15px;font-weight:800}
+.simple-sheet-v117{display:none;position:absolute;inset:0;z-index:2600;background:rgba(12,31,24,.28);align-items:flex-end}.simple-sheet-v117.show{display:flex}.simple-sheet-card-v117{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:10px 18px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.12)}.simple-sheet-card-v117 h2{font-size:22px;margin:10px 0 14px}.simple-sheet-card-v117 p{font-size:15px;line-height:1.6;color:#5c7168}.pref-list-v117{display:grid}.pref-list-v117 button{border:0;border-top:1px solid #e8eeeb;background:#fff;min-height:52px;text-align:left;font-size:16px;font-weight:700;color:#29483c;display:flex;justify-content:space-between;align-items:center}.pref-list-v117 button.active{color:#087d56}.fail-actions-v117{display:grid;gap:8px}.fail-actions-v117 button{min-height:50px;border:1px solid #d9e5df;border-radius:12px;background:#fff;font-size:16px;font-weight:800;color:#285444}.walk-rating-v117{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.walk-rating-v117 span{grid-column:1/-1;font-size:15px;font-weight:800}.walk-rating-v117 button{height:44px;border:1px solid #dbe6e0;border-radius:12px;background:#fff;font-size:15px;font-weight:800}.walk-rating-v117 button.active{background:#e8f5ef;border-color:#87bea5;color:#176a4d}
+.community-feed-card-v110{padding:16px 16px 20px!important}.community-author-v110 b{font-size:15px!important}.community-author-v110 small{font-size:13px!important}.community-feed-card-v110 h3{font-size:20px!important;margin-bottom:7px!important}.community-feed-review-v110{font-size:16px!important;line-height:1.75!important}.community-more-v110{font-size:14px!important}.community-tags-v110 span{font-size:14px!important}.community-actions-v110 button{font-size:15px!important;min-height:38px!important}.community-ratings-v110 span{font-size:12px!important}.community-ratings-v110 b{font-size:15px!important}.community-tabs-v110 button{font-size:15px!important;min-height:48px}.community-tags-scroll-v110 button{font-size:14px!important;padding:8px 12px!important}.history-empty{font-size:15px!important}.history-card-v109 h3{font-size:18px!important}.history-card-v109 .date{font-size:14px!important}.history-metrics-v109 b{font-size:18px!important}.history-metrics-v109 small,.history-tags-v109 span,.history-note-v109,.history-repeat-v110 button{font-size:14px!important}
+.spot-replace-v117{border:1px solid #cfded6;background:#fff;border-radius:9px;padding:7px 9px;font-size:13px;font-weight:800;color:#27644c;margin-left:auto}
+@media(max-width:390px){.builder-title-row-v117 h1{font-size:22px!important}.step-mini-v117{width:58px;flex-basis:58px}.result-split-v102{grid-template-rows:minmax(315px,50vh) auto!important}}
+.forced-search-v117{display:grid;grid-template-columns:1fr auto;gap:8px}.forced-search-v117 input{height:48px;border:1px solid #dce6e1;border-radius:12px;padding:0 12px;font-size:16px}.forced-search-v117 button{border:0;border-radius:12px;background:#1c7f5c;color:#fff;padding:0 16px;font-weight:800}.forced-results-v117{display:grid;max-height:220px;overflow:auto;margin:10px 0}.forced-results-v117 button{border:0;border-top:1px solid #e6ede9;background:#fff;text-align:left;padding:12px 4px}.forced-results-v117 b{display:block;font-size:16px;color:#244a3c}.forced-results-v117 small{display:block;font-size:13px;color:#6c7f77;margin-top:3px}</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -1518,10 +1529,7 @@ body{letter-spacing:.005em}
       <!-- ① 地図なし：条件設定 -->
       <section class="home-state builder-state active" id="builderState">
         <div class="builder-step-v107 active" id="builderStep1">
-          <div class="step-progress-v107"><b>1 / 2</b><span><i></i></span></div>
-          <div class="builder-intro-v107">
-            <h1 class="home-main-title-v110">どこから、どのくらい歩く？</h1>
-          </div>
+          <div class="builder-title-row-v117"><h1 class="home-main-title-v110">どこから、どのくらい歩く？</h1><div class="step-mini-v117"><b>1 / 2</b><span><i></i></span></div></div>
 
           <div class="builder-card v107-card">
             <div class="field-title v107-title">
@@ -1566,11 +1574,7 @@ body{letter-spacing:.005em}
         </div>
 
         <div class="builder-step-v107" id="builderStep2">
-          <div class="step-progress-v107 full"><b>2 / 2</b><span><i></i></span></div>
-          <div class="builder-intro-v107 second">
-            <button class="back-step-v107" id="builderBackBtn">‹</button>
-            <h1>どんな散歩にする？</h1>
-          </div>
+          <div class="builder-title-row-v117 second"><div class="title-with-back-v117"><button class="back-step-v107" id="builderBackBtn">‹</button><h1>どんな散歩にする？</h1></div><div class="step-mini-v117 full"><b>2 / 2</b><span><i></i></span></div></div>
 
           <div class="builder-card v107-card compact">
             <div class="field-title v107-title small-theme-title">
@@ -1587,26 +1591,12 @@ body{letter-spacing:.005em}
             </div>
           </div>
 
-          <div class="builder-card v107-card compact" id="stopCountCardV110">
-            <div class="stop-row-title v107-stop-title"><b>寄り道の数</b></div>
-            <div class="stop-counts v107-stops" id="stopCounts">
-              <button data-stops="1">1件</button>
-              <button data-stops="2" class="active">2件</button>
-              <button data-stops="3">3件</button>
-              <button data-stops="auto">自動</button>
-            </div>
+          <div class="quick-options-v117" id="quickOptionsV117">
+            <label class="select-field-v117" id="stopCountCardV110"><span>寄り道</span><select id="stopSelectV117"><option value="1" selected>1件</option><option value="2">2件</option><option value="3">3件</option><option value="auto">自動</option></select></label>
+            <label class="select-field-v117 pace-field-v117"><span>歩くペース</span><select id="paceSelectV117"><option value="slow">ゆっくり</option><option value="normal" selected>普通</option><option value="fast">早歩き</option></select><small id="paceHintV102" class="sr-only-v103">普通ペース</small></label>
           </div>
-
-          <div class="builder-card v107-card compact">
-            <div class="pace-box-v102 v107-pace">
-              <div class="pace-head-v102"><span>歩くペース</span><small id="paceHintV102" class="sr-only-v103">普通ペース</small></div>
-              <div class="pace-seg-v102">
-                <button data-pace="slow">ゆっくり</button>
-                <button data-pace="normal" class="active">普通</button>
-                <button data-pace="fast">早歩き</button>
-              </div>
-            </div>
-          </div>
+          <button class="course-pref-row-v117" id="coursePrefBtnV117" type="button"><span>コースの好み</span><b id="coursePrefValueV117">特になし</b><i>›</i></button>
+          <button class="course-pref-row-v117" id="forcedPlaceBtnV117" type="button"><span>行きたい場所</span><b id="forcedPlaceValueV117">指定なし</b><i>›</i></button>
 
           <div class="open-row v107-open">
             <div class="open-copy"><b>営業中のお店だけ</b></div>
@@ -1647,11 +1637,7 @@ body{letter-spacing:.005em}
           </div>
           <h2>散歩コースを作っています</h2>
           <p class="generate-copy-v115" id="generatingMainCopy">行きたい場所を探しています</p>
-          <div class="generate-steps-v115">
-            <span id="stepPlaces" class="progress-item-v109 doing"><i>1</i><b class="progress-text">候補を探す</b></span>
-            <span id="stepRoute" class="progress-item-v109"><i>2</i><b>周回を整える</b></span>
-            <span id="stepFinish" class="progress-item-v109"><i>3</i><b>仕上げ</b></span>
-          </div>
+          <div class="generate-simple-v117"><span class="pulse-dot-v117"></span><span id="generatePhaseV117">候補を探しています</span></div>
           <div class="generation-bar-v109 generate-bar-v115"><i id="generationBarV109"></i></div>
           <button class="cancel-generate generate-cancel-v115" id="cancelGenerateBtn">やめる</button>
         </div>
@@ -1675,11 +1661,11 @@ body{letter-spacing:.005em}
         <div class="result-sheet result-panel-v102">
           <div class="result-head">
             <div>
-              <div class="route-type-v110" id="routeTypeV110">距離ぴったり</div>
+              <div class="route-type-v110" id="routeTypeV110">周回コース</div>
               <h2 id="routeTitle">おすすめ散歩コース</h2>
               <p id="routeSummary">条件から作ったコースです。</p><span class="candidate-count" id="candidateCount">1 / 3</span>
             </div>
-            <button class="candidate-btn" id="nextCandidateBtn">別の候補</button>
+            <button class="candidate-btn" id="nextCandidateBtn">次の候補 ›</button>
           </div>
 
           <div class="result-metrics">
@@ -1692,9 +1678,9 @@ body{letter-spacing:.005em}
           <div class="spot-title"><b>立ち寄りスポット</b><span id="spotCaption">候補</span></div>
           <div class="spot-strip" id="spotStrip"></div>
 
-          <button class="primary-result" id="walkRouteBtn">Google Mapsで歩く</button>
+          <button class="primary-result" id="walkRouteBtn">このコースで歩く</button>
           
-          <button class="recommend-btn" id="recommendBtn">3コースを比べる</button>
+          <div class="result-inline-actions-v117"><button class="recommend-btn" id="recommendBtn">3コースを比べる</button><button class="recommend-btn" id="shareRouteBtnV117">共有</button></div>
           <div class="secondary-actions">
             <button id="regenerateBtn">別の候補を作る</button>
             <button id="changeConditionsBtn">条件を変更する</button>
@@ -1878,7 +1864,7 @@ body{letter-spacing:.005em}
       <div class="sheet-handle"></div>
       <h2>このコースで歩く？</h2>
       <div class="walk-confirm-metrics-v110"><span><b id="confirmKmV110">--</b><small>km</small></span><span><b id="confirmMinV110">--</b><small>分</small></span><span><b id="confirmStopsV110">--</b><small>寄り道</small></span></div>
-      <button class="primary-result" id="confirmGoogleWalkV110">Google Mapsで開く</button>
+      <button class="primary-result" id="confirmGoogleWalkV110">散歩を開始してGoogle Mapsを開く</button>
       <button class="plain-btn-v110" id="cancelWalkConfirmV110">戻る</button>
     </div>
   </div>
@@ -1888,7 +1874,7 @@ body{letter-spacing:.005em}
       <div class="sheet-handle"></div>
       <h2>おつかれさまでした！</h2>
       <div class="finish-metrics-v110"><span><b id="finishKmV110">--</b><small>km</small></span><span><b id="finishMinV110">--</b><small>分</small></span><span><b id="finishStopsV110">--</b><small>寄り道</small></span></div>
-      <textarea id="finishMemoV110" placeholder="今日の散歩のメモ"></textarea>
+      <div class="walk-rating-v117"><span>今日のコースは？</span><button data-walk-rating="good">よかった</button><button data-walk-rating="bad">いまいち</button></div><textarea id="finishMemoV110" placeholder="今日の散歩のメモ"></textarea>
       <button class="primary-result" id="finishSaveV110">記録に保存</button>
       <button class="plain-btn-v110" id="finishPostSpotV110">スポットを投稿</button>
       <button class="plain-btn-v110" id="finishCloseV110">閉じる</button>
@@ -1908,9 +1894,7 @@ body{letter-spacing:.005em}
   </div>
 
   <div class="start-map-modal" id="startMapModal">
-    <div class="start-map-top">
-      <button id="startMapClose">‹</button><b>出発地を地図で選ぶ</b>
-    </div>
+    <div class="start-map-top"><button id="startMapClose">‹</button><b>出発地を地図で選ぶ</b></div><div class="start-search-v117"><input id="startSearchInputV117" placeholder="駅・公園・住所などを検索"><button id="startSearchBtnV117">検索</button></div>
     <div id="startGoogleMap"></div>
     <div id="startLeafletMap"></div>
     <div class="start-picker-bottom">
@@ -1919,6 +1903,16 @@ body{letter-spacing:.005em}
       <button class="confirm-start" id="confirmStartBtn" disabled>ここを出発地にする</button>
     </div>
   </div>
+
+
+  <div class="simple-sheet-v117" id="coursePrefModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>コースの好み</h2><div class="pref-list-v117" id="coursePrefListV117">
+    <button data-pref="none" class="active">特になし <span>✓</span></button><button data-pref="walkable">歩きやすさ優先 <span></span></button><button data-pref="quiet">静かな道 <span></span></button><button data-pref="green">緑の多い道 <span></span></button><button data-pref="water">水辺を多めに <span></span></button><button data-pref="flat">坂少なめ <span></span></button>
+  </div><button class="plain-btn-v110" id="coursePrefCloseV117">閉じる</button></div></div>
+
+
+  <div class="simple-sheet-v117" id="forcedPlaceModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>行きたい場所を指定</h2><p>店名・公園名・施設名から探して、この場所を通る周回コースを作ります。</p><div class="forced-search-v117"><input id="forcedPlaceInputV117" placeholder="例：上野公園、○○カフェ"><button id="forcedPlaceSearchV117">検索</button></div><div id="forcedPlaceResultsV117" class="forced-results-v117"></div><button class="plain-btn-v110" id="forcedPlaceClearV117">指定を外す</button><button class="plain-btn-v110" id="forcedPlaceCloseV117">閉じる</button></div></div>
+
+  <div class="simple-sheet-v117" id="routeFailModalV117"><div class="simple-sheet-card-v117"><div class="sheet-handle"></div><h2>この条件では作れませんでした</h2><p>条件を少し変えると作れることがあります。</p><div class="fail-actions-v117"><button id="failLessStopsV117">寄り道を減らす</button><button id="failNoThemeV117">テーマなしで作る</button><button id="failRetryV117">もう一度試す</button></div><button class="plain-btn-v110" id="failCloseV117">条件に戻る</button></div></div>
 
   <div class="route-sheet-modal" id="recommendModal">
     <div class="route-sheet">
@@ -2029,7 +2023,9 @@ const state={
   pace:'normal',
   paceKmh:4.5,
   openOnly:true,
-  stopCount:'2',
+  stopCount:'1',
+  coursePref:'none',
+  walkRating:'',
   startMode:'current',
   customStart:null,
   current:null,
@@ -2043,10 +2039,12 @@ const state={
   places:[],
   cancelled:false,
   useCommunity:true,
-  forcedCommunitySpotId:null
+  forcedCommunitySpotId:null,
+  forcedPlace:null
 };
 
 let googleLoadPromise=null;
+let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6;
 let gmap=null;
 let gPolylines=[];
 let gMarkers=[];
@@ -2385,6 +2383,8 @@ function demoSpec(start,seed,spots=[]){
 }
 
 async function googleCandidate(start,spec){
+  if(routeCallsV117>=ROUTE_CALL_LIMIT_V117)throw new Error('route call limit');
+  routeCallsV117++;
   const {Route}=await google.maps.importLibrary('routes');
   const {routes}=await Route.computeRoutes({
     origin:start,
@@ -2495,10 +2495,10 @@ async function refineThemedSpecV113(start,spec,targetKm,maxTry=2){
 
 async function buildPlainFallbackV109(start,seed,targetKm){
   const spec=demoSpec(start,seed,[]);
-  return await refinePlainSpecV109(start,spec,targetKm,3);
+  return await refinePlainSpecV109(start,spec,targetKm,1);
 }
 async function buildGoogleRoutes(start,places){
-  const wanted=resolvedStopCount();
+  const wanted=state.forcedPlace?Math.max(1,resolvedStopCount()):resolvedStopCount();
   const target=effectiveTargetKmV102();
   const raw=[];
   let bestExtension=null;
@@ -2506,7 +2506,7 @@ async function buildGoogleRoutes(start,places){
 
   // Theme-first: test real destinations first, then shape the route around them.
   const ranked=(places||[]).slice(0,12);
-  const tries=explicitTheme ? Math.min(6,Math.max(3,ranked.length)) : 3;
+  const tries=explicitTheme ? Math.min(3,Math.max(2,ranked.length)) : 2;
 
   for(let i=0;i<tries;i++){
     if(state.cancelled)break;
@@ -2528,7 +2528,7 @@ async function buildGoogleRoutes(start,places){
 
         // If short, extend only the synthetic loop point. Real destinations stay fixed.
         if(ratio<.93){
-          const refined=await refineThemedSpecV113(start,themedSpec,target,2);
+          const refined=await refineThemedSpecV113(start,themedSpec,target,1);
           if(refined)themed=refined;
         }
 
@@ -2552,7 +2552,7 @@ async function buildGoogleRoutes(start,places){
 
   // If theme candidates exist but fewer than 3 are clean, add distance-first fallbacks last.
   if(raw.length<3){
-    for(let i=0;i<4 && raw.length<6;i++){
+    for(let i=0;i<2 && raw.length<4;i++){
       if(state.cancelled)break;
       const plain=await buildPlainFallbackV109(start,i+7,target);
       if(plain)raw.push(plain);
@@ -2563,8 +2563,8 @@ async function buildGoogleRoutes(start,places){
   raw.sort((a,b)=>{
     const themeA=(explicitTheme&&!a.themeMatched)?1.2:0;
     const themeB=(explicitTheme&&!b.themeMatched)?1.2:0;
-    const aq=themeA+(a.overlapRatio||0)*3.6+(a.distanceError??Math.abs(a.km-target)/target);
-    const bq=themeB+(b.overlapRatio||0)*3.6+(b.distanceError??Math.abs(b.km-target)/target);
+    const aq=themeA+(a.overlapRatio||0)*6.0+(a.distanceError??Math.abs(a.km-target)/target);
+    const bq=themeB+(b.overlapRatio||0)*6.0+(b.distanceError??Math.abs(b.km-target)/target);
     return aq-bq;
   }).forEach(r=>{
     if(!deduped.some(x=>
@@ -2575,9 +2575,9 @@ async function buildGoogleRoutes(start,places){
   });
 
   // Strong preference for genuine loops. Only relax if Google cannot produce one.
-  let routes=deduped.filter(r=>(r.overlapRatio||0)<=.18).slice(0,3);
+  let routes=deduped.filter(r=>(r.overlapRatio||0)<=.12).slice(0,3);
   if(routes.length<3){
-    const relaxed=deduped.filter(r=>(r.overlapRatio||0)<=.26 && !routes.includes(r));
+    const relaxed=deduped.filter(r=>(r.overlapRatio||0)<=.20 && !routes.includes(r));
     routes=[...routes,...relaxed].slice(0,3);
   }
   if(!routes.length)routes=deduped.slice(0,1);
@@ -2627,6 +2627,7 @@ function markStep(id,status){
     ? ({stepPlaces:34,stepRoute:72,stepFinish:100}[id]||10)
     : ({stepPlaces:18,stepRoute:50,stepFinish:86}[id]||10);
   if($('generationBarV109'))$('generationBarV109').style.width=pct+'%';
+  if($('generatePhaseV117'))$('generatePhaseV117').textContent=({stepPlaces:'寄り道候補を探しています',stepRoute:'周回ルートを整えています',stepFinish:'仕上げています'}[id]||'コースを作っています');
   if($('generatingMainCopy')){
     $('generatingMainCopy').textContent=
       id==='stepPlaces'?'行きたい場所を探しています':
@@ -2666,6 +2667,7 @@ function askExtensionChoiceV109(offer){
 
 async function createRoute(){
   state.cancelled=false;
+  routeCallsV117=0;
   updateGeneratingCopy();
   resetProgress();
   showHomeState('generatingState');
@@ -2678,11 +2680,11 @@ async function createRoute(){
 
     let places=[];
     markStep('stepPlaces','doing');
-    if(googleOk && resolvedStopCount()>0 && ['cafe','food','random','green','water'].includes(state.theme)){
+    if(googleOk && (state.forcedPlace || (resolvedStopCount()>0 && ['cafe','food','random','green','water'].includes(state.theme)))){
       places=await searchPlaces(start);
       const communityNearby=(state.useCommunity===false?[]:getCommunitySpots()).filter(s=>s.lat&&s.lng&&hav(start,{lat:s.lat,lng:s.lng})<=Math.max(2,effectiveTargetKmV102()*.8)).map(s=>({id:'community-'+s.id,name:s.name,loc:{lat:s.lat,lng:s.lng},address:'みんなのおすすめスポット',uri:'',openFiltered:false,businessStatus:'',types:[],kind:s.kind,community:true}));
       communityNearby.sort((a,b)=>String(a.id).includes(String(state.forcedCommunitySpotId||''))?-1:String(b.id).includes(String(state.forcedCommunitySpotId||''))?1:0);
-      places=[...communityNearby,...places];
+      places=[...(state.forcedPlace?[state.forcedPlace]:[]),...communityNearby,...places];
     }else{
       await wait(420);
       markStep('stepPlaces','done');
@@ -2727,8 +2729,8 @@ async function createRoute(){
 
   }catch(e){
     console.error(e);
-    alert('コースを作れませんでした。位置情報やGoogle API設定を確認して、もう一度試してください。');
     showHomeState('builderState');
+    $('routeFailModalV117').classList.add('show');
   }
 }
 function wait(ms){return new Promise(r=>setTimeout(r,ms))}
@@ -2793,8 +2795,7 @@ function drawCandidate(c){
   fitPath(c.path);
 }
 function showCandidate(index){
-  const routeLabels=['条件にぴったり','テーマ優先','往復少なめ'];
-  if($('routeTypeV110'))$('routeTypeV110').textContent=routeLabels[index%3];
+  if($('routeTypeV110'))$('routeTypeV110').textContent='周回コース';
   const c=state.routes[index];if(!c)return;
   state.selected=index;
   drawCandidate(c);
@@ -2813,17 +2814,8 @@ function showCandidate(index){
     state.theme==='direct'?'寄り道なし周回コース':
     matched?`${themeLabel()}周回コース`:'周回コース';
 
-  if(c.demo){
-    $('routeSummary').textContent='無料デモ表示です。Google MapsをONにすると、実際の徒歩道に沿って生成します。';
-  }else if(explicitTheme && !c.themeMatched){
-    $('routeSummary').textContent=`近くに「${themeLabel()}」の実スポットを十分取得できなかったため、テーマ名を付けず周回ルートとして表示しています。`;
-  }else if(state.theme==='water'){
-    $('routeSummary').textContent='Googleで取得した川沿い・河川敷・水辺周辺の実スポットを経由し、出発地点へ戻る徒歩ルートです。';
-  }else if(state.theme==='green'){
-    $('routeSummary').textContent='Googleで取得した公園・緑地の実スポットを経由し、出発地点へ戻る徒歩ルートです。';
-  }else{
-    $('routeSummary').textContent='Googleの実スポットと徒歩ルートを使い、出発地点へ戻る周回コースを作りました。';
-  }
+  const stopNames=(c.spots||[]).map(x=>x.name).filter(Boolean);
+  $('routeSummary').textContent=stopNames.length?`${stopNames.slice(0,2).join('・')}を通るコース`:'出発地点に戻る周回コース';
 
   $('resultKm').textContent=c.km.toFixed(1);
   $('resultMin').textContent=mins;
@@ -2835,7 +2827,7 @@ function showCandidate(index){
   const spotTitleEl=document.querySelector('#resultState .spot-title');
   if(spotTitleEl)spotTitleEl.hidden=resultStopCount===0;
   if($('spotStrip'))$('spotStrip').hidden=resultStopCount===0;
-  $('candidateCount').textContent=`候補 ${index+1} / ${state.routes.length}`;
+  $('candidateCount').textContent=`${index+1} / ${state.routes.length}`;
   let q=$('routeQualityV109');
   if(!q){
     q=document.createElement('div');q.id='routeQualityV109';q.className='route-quality-v109';
@@ -2860,11 +2852,29 @@ function renderSpots(c){
   list.forEach((s,i)=>{
     const el=document.createElement('div');
     el.className='spot-card';
-    el.innerHTML=`<div class="spot-icon">${themeEmoji()}</div><div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div>`;
+    el.innerHTML=`<div class="spot-icon">${themeEmoji()}</div><div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
+    el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
     if(s.id||s.uri)el.onclick=()=>openSpotDetail(s);
     $('spotStrip').appendChild(el);
   });
 }
+
+async function replaceSpotV117(index){
+  const c=state.routes[state.selected];if(!c)return;
+  const current=(c.spots||[])[index];
+  const pool=(state.places||[]).filter(p=>!c.spots?.some(s=>s.id===p.id));
+  if(!pool.length){alert('入れ替えられる別のスポットが見つかりませんでした。');return}
+  const next=pool[0];
+  const spots=[...(c.spots||[])];spots[index]=next;
+  const start=c.path[0];
+  try{
+    showHomeState('generatingState');$('generatePhaseV117').textContent='寄り道を入れ替えています';
+    const spec=demoSpec(start,state.selected+index+11,spots);
+    const nr=state.mapEngine==='google'?await refineThemedSpecV113(start,spec,effectiveTargetKmV102(),1):null;
+    if(nr){state.routes[state.selected]=nr;showHomeState('resultState');setTimeout(()=>showCandidate(state.selected),60)}else{showHomeState('resultState');alert('このスポットでは周回コースを作れませんでした。')}
+  }catch(e){showHomeState('resultState');alert('スポットを入れ替えられませんでした。')}
+}
+
 function renderCandidateList(){
   const box=$('candidateList'); if(!box)return;
   box.innerHTML='';
@@ -2873,7 +2883,7 @@ function renderCandidateList(){
     const el=document.createElement('button');
     el.className='candidate-card'+(i===state.selected?' active':'');
     el.type='button';
-    const label=i===0?'条件にいちばん近い':i===1?'景色違いの候補':'もうひとつの候補';
+    const label=`候補 ${i+1}`;
     el.innerHTML=`<div class="candidate-thumb">${i===0?'🌿':i===1?'🏙':'🌊'}</div>
       <div><b>${i+1}. ${escapeHtml((['cafe','food','green','water'].includes(state.theme)&&!c.themeMatched)?'周回':themeLabel())}コース</b><small>${c.km.toFixed(1)} km ・ 約 ${mins}分 ・ 出発地点に戻る</small>
       <div class="candidate-tags"><span>${(c.spots||[]).length}件寄り道</span><span>${c.themeMatched?'テーマ経由':'周回優先'}</span><span>${(c.overlapRatio||0)<.12?'往復少なめ':'周回'}</span><span>${label}</span></div></div><div>›</div>`;
@@ -3023,7 +3033,7 @@ function renderHistory(){
   if($('weekChartV109'))renderWeekChartV109(h);
 
   if(!h.length){
-    el.innerHTML='<div class="history-empty">まだ散歩の記録はありません。<br>「Google Mapsで歩く」を押したコースがここに残ります。</div>';
+    el.innerHTML='<div class="history-empty">まだ散歩の記録はありません。<br>実際に歩いた散歩がここに残ります。</div>';
     return;
   }
   el.innerHTML=h.slice(0,20).map(x=>{
@@ -3301,14 +3311,24 @@ function syncDirectThemeV110(){
   const direct=state.theme==='direct';
   $('stopCountCardV110')?.classList.toggle('hidden-v110',direct);
   if(direct)state.stopCount='0';
-  else if(state.stopCount==='0')state.stopCount='2';
-  qsa('[data-stops]').forEach(x=>x.classList.toggle('active',x.dataset.stops===state.stopCount));
+  else if(state.stopCount==='0')state.stopCount='1';
+  if($('quickOptionsV117'))$('quickOptionsV117').classList.toggle('direct',direct);
+  if($('stopSelectV117'))$('stopSelectV117').value=direct?'1':state.stopCount;
 }
 qsa('.theme').forEach(btn=>btn.onclick=()=>{
   qsa('.theme').forEach(x=>x.classList.remove('active'));btn.classList.add('active');state.theme=btn.dataset.theme;syncDirectThemeV110();
 });
 qsa('[data-stops]').forEach(btn=>btn.onclick=()=>{state.stopCount=btn.dataset.stops;qsa('[data-stops]').forEach(x=>x.classList.toggle('active',x===btn));});
 syncDirectThemeV110();
+if($('stopSelectV117'))$('stopSelectV117').onchange=e=>{state.stopCount=e.target.value};
+if($('paceSelectV117'))$('paceSelectV117').onchange=e=>{state.pace=e.target.value;state.paceKmh=PACE_V102[state.pace].kmh;updateDistance()};
+const PREF_LABEL_V117={none:'特になし',walkable:'歩きやすさ優先',quiet:'静かな道',green:'緑の多い道',water:'水辺を多めに',flat:'坂少なめ'};
+$('coursePrefBtnV117').onclick=()=>$('coursePrefModalV117').classList.add('show');
+$('coursePrefCloseV117').onclick=()=>$('coursePrefModalV117').classList.remove('show');
+qsa('[data-pref]').forEach(btn=>btn.onclick=()=>{state.coursePref=btn.dataset.pref;qsa('[data-pref]').forEach(x=>{x.classList.toggle('active',x===btn);x.querySelector('span').textContent=x===btn?'✓':''});$('coursePrefValueV117').textContent=PREF_LABEL_V117[state.coursePref];$('coursePrefModalV117').classList.remove('show')});
+$('forcedPlaceBtnV117').onclick=()=>$('forcedPlaceModalV117').classList.add('show');$('forcedPlaceCloseV117').onclick=()=>$('forcedPlaceModalV117').classList.remove('show');$('forcedPlaceClearV117').onclick=()=>{state.forcedPlace=null;$('forcedPlaceValueV117').textContent='指定なし';$('forcedPlaceResultsV117').innerHTML='';$('forcedPlaceModalV117').classList.remove('show')};
+async function searchForcedPlaceV117(){const q=$('forcedPlaceInputV117').value.trim();if(!q)return;if(!(state.googleEnabled&&state.apiKey)){alert('場所検索にはGoogle MapsをONにしてください。');return}try{await loadGoogleMaps(state.apiKey);const {Place}=await google.maps.importLibrary('places');const center=state.customStart||state.current||state.center;const {places}=await Place.searchByText({textQuery:q,fields:['id','displayName','location','formattedAddress','googleMapsURI','types'],locationBias:{center,radius:6000},language:'ja',region:'jp',maxResultCount:6});bumpUsage('places',1);$('forcedPlaceResultsV117').innerHTML=(places||[]).filter(x=>x.location).map((x,i)=>`<button data-forced-index="${i}"><b>${escapeHtml(x.displayName||q)}</b><small>${escapeHtml(x.formattedAddress||'')}</small></button>`).join('')||'<p>見つかりませんでした。</p>';const arr=(places||[]).filter(x=>x.location);qsa('[data-forced-index]').forEach(b=>b.onclick=()=>{const x=arr[+b.dataset.forcedIndex];state.forcedPlace={id:x.id,name:x.displayName||q,loc:literal(x.location),address:x.formattedAddress||'',uri:x.googleMapsURI||'',types:x.types||[],kind:'forced'};$('forcedPlaceValueV117').textContent=state.forcedPlace.name;$('forcedPlaceModalV117').classList.remove('show')})}catch(e){alert('場所を検索できませんでした。')}}
+$('forcedPlaceSearchV117').onclick=searchForcedPlaceV117;$('forcedPlaceInputV117').addEventListener('keydown',e=>{if(e.key==='Enter')searchForcedPlaceV117()});
 $('openOnlyToggle').onclick=()=>{
   state.openOnly=!state.openOnly;
   $('openOnlyToggle').classList.toggle('on',state.openOnly);
@@ -3372,6 +3392,20 @@ function setPendingStart(p,engine){
     startLMarker=L.marker([p.lat,p.lng]).addTo(startLMap);
   }
 }
+
+async function searchStartPlaceV117(){
+  const q=$('startSearchInputV117').value.trim();if(!q)return;
+  if(!(state.googleEnabled&&state.apiKey)){alert('場所名検索にはGoogle MapsをONにしてください。地図タップはそのまま使えます。');return}
+  try{
+    await loadGoogleMaps(state.apiKey);const {Place}=await google.maps.importLibrary('places');
+    const {places}=await Place.searchByText({textQuery:q,fields:['displayName','location','formattedAddress'],language:'ja',region:'jp',maxResultCount:5});bumpUsage('places',1);
+    const p=places?.[0];if(!p?.location){alert('場所が見つかりませんでした。');return}
+    const loc=literal(p.location);setPendingStart(loc,'google');if(startGMap){startGMap.setCenter(loc);startGMap.setZoom(16)}
+    if($('pickedStartText'))$('pickedStartText').textContent=p.displayName||p.formattedAddress||q;
+  }catch(e){console.warn(e);alert('場所を検索できませんでした。もう一度試してください。')}
+}
+$('startSearchBtnV117').onclick=searchStartPlaceV117;$('startSearchInputV117').addEventListener('keydown',e=>{if(e.key==='Enter')searchStartPlaceV117()});
+
 $('mapStartBtn').onclick=openStartMap;
 $('startMapClose').onclick=()=>$('startMapModal').classList.remove('show');
 $('confirmStartBtn').onclick=()=>{
@@ -3435,14 +3469,26 @@ function openGoogleMapsNavigation(){
     return;
   }
 
-  saveHistory(c);
-
-  // On Android/iPhone this hands the walking route to Google Maps.
-  // If the selected start is not near the device's current position,
-  // Google Maps may show a route preview instead of immediate turn-by-turn navigation.
-  window.location.href=url;
+  startWalkTrackingV117(c);
+  // Google Maps opens separately where supported; SANPO keeps the walking session ready.
+  const w=window.open(url,'_blank');if(!w)window.location.href=url;
 }
 
+
+
+let walkWatchV117=null,walkSessionV117=null;
+function startWalkTrackingV117(c){
+  walkSessionV117={started:Date.now(),distanceKm:0,last:null,routeKm:c.km,stops:(c.spots||[]).length,theme:state.theme,rating:''};
+  localStorage.setItem('sanpo_active_walk_v117',JSON.stringify(walkSessionV117));
+  if(navigator.geolocation){walkWatchV117=navigator.geolocation.watchPosition(pos=>{
+    const p={lat:pos.coords.latitude,lng:pos.coords.longitude,t:pos.timestamp,acc:pos.coords.accuracy};const w=walkSessionV117;if(!w)return;
+    if(p.acc>50){w.last=p;return}if(w.last){const dt=(p.t-w.last.t)/1000,d=hav(w.last,p),kmh=dt>0?d/(dt/3600):99;if(dt>=2&&d<.15&&kmh>=.7&&kmh<=7.2)w.distanceKm+=d}w.last=p;localStorage.setItem('sanpo_active_walk_v117',JSON.stringify(w));updateWalkLiveV117();
+  },()=>{}, {enableHighAccuracy:true,maximumAge:3000,timeout:12000})}
+  updateWalkLiveV117();$('walkModal').classList.add('show');
+}
+function updateWalkLiveV117(){const w=walkSessionV117;if(!w)return;const min=Math.max(0,Math.round((Date.now()-w.started)/60000));$('walkRemainKm').textContent=`${w.distanceKm.toFixed(2)} km`;$('walkRemainMin').textContent=`${min} 分`;const labels=$('walkModal').querySelectorAll('.walk-stat small');if(labels[0])labels[0].textContent='実測距離';if(labels[1])labels[1].textContent='経過時間'}
+function finishWalkV117(){const w=walkSessionV117;if(!w)return;if(walkWatchV117!=null)navigator.geolocation.clearWatch(walkWatchV117);walkWatchV117=null;const min=Math.max(1,Math.round((Date.now()-w.started)/60000));const h=readArrayStore(KEY.history);h.unshift({id:Date.now(),date:new Date().toISOString(),theme:w.theme,km:+w.distanceKm.toFixed(2),min,cal:calorieEstimateV108(min,state.paceKmh),google:true,spot:'',stops:w.stops,amountMode:state.amountMode,pace:state.pace,actual:true,rating:state.walkRating||'',favorite:false,memo:''});localStorage.setItem(KEY.history,JSON.stringify(h.slice(0,60)));localStorage.removeItem('sanpo_active_walk_v117');$('finishKmV110').textContent=w.distanceKm.toFixed(1);$('finishMinV110').textContent=min;$('finishStopsV110').textContent=w.stops+'件';$('walkModal').classList.remove('show');$('walkFinishV110').classList.add('show');walkSessionV117=null;renderHistory()}
+$('walkEnd').onclick=finishWalkV117;$('walkClose').onclick=()=>$('walkModal').classList.remove('show');
 
 function showBuilderStep(step){
   const s1=$('builderStep1'),s2=$('builderStep2');
@@ -3483,13 +3529,20 @@ $('walkRouteBtn').onclick=()=>{
 };
 $('cancelWalkConfirmV110').onclick=()=>$('walkConfirmV110').classList.remove('show');
 $('confirmGoogleWalkV110').onclick=()=>{
-  const r=state.routes[state.selected];
-  if(r){localStorage.setItem('sanpo_pending_finish_v110',JSON.stringify({time:Date.now(),km:Number(r.km||effectiveTargetKmV102()),min:r.min||Math.round(Number(r.km||effectiveTargetKmV102())/state.paceKmh*60),stops:r.stops?.length||resolvedStopCount()}));}
   $('walkConfirmV110').classList.remove('show');openGoogleMapsNavigation();
 };
 $('finishCloseV110').onclick=()=>$('walkFinishV110').classList.remove('show');
 $('finishPostSpotV110').onclick=()=>{$('walkFinishV110').classList.remove('show');navTo('spotsPage');$('communityPostModal').classList.add('show');};
-$('finishSaveV110').onclick=()=>{let h=[];try{h=readArrayStore(KEY.history)}catch(e){};if(h[0])h[0].memo=$('finishMemoV110').value.trim();localStorage.setItem(KEY.history,JSON.stringify(h));localStorage.removeItem('sanpo_pending_finish_v110');renderHistory();$('walkFinishV110').classList.remove('show');navTo('historyPage');};
+$('finishSaveV110').onclick=()=>{let h=[];try{h=readArrayStore(KEY.history)}catch(e){};if(h[0]){h[0].memo=$('finishMemoV110').value.trim();h[0].rating=state.walkRating||h[0].rating||'';}localStorage.setItem(KEY.history,JSON.stringify(h));localStorage.removeItem('sanpo_pending_finish_v110');renderHistory();$('walkFinishV110').classList.remove('show');navTo('historyPage');};
+
+
+$('shareRouteBtnV117').onclick=async()=>{
+  const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
+  try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
+};
+let swipeStartX117=null;$('resultState').addEventListener('touchstart',e=>{swipeStartX117=e.changedTouches[0].clientX},{passive:true});$('resultState').addEventListener('touchend',e=>{if(swipeStartX117==null||!state.routes.length)return;const dx=e.changedTouches[0].clientX-swipeStartX117;swipeStartX117=null;if(Math.abs(dx)<65)return;const n=dx<0?(state.selected+1)%state.routes.length:(state.selected-1+state.routes.length)%state.routes.length;showCandidate(n)},{passive:true});
+$('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
+qsa('[data-walk-rating]').forEach(b=>b.onclick=()=>{state.walkRating=b.dataset.walkRating;qsa('[data-walk-rating]').forEach(x=>x.classList.toggle('active',x===b))});
 
 /* ===== settings ===== */
 $('apiKeyInput').value=state.apiKey;
@@ -3533,7 +3586,7 @@ async function boot(){
   updateWeather(p);
   try{
     const pending=JSON.parse(localStorage.getItem('sanpo_pending_finish_v110')||'null');
-    if(pending && Date.now()-pending.time<1000*60*60*8){
+    if(false && pending && Date.now()-pending.time<1000*60*60*8){
       $('finishKmV110').textContent=Number(pending.km||0).toFixed(1);$('finishMinV110').textContent=pending.min||0;$('finishStopsV110').textContent=(pending.stops||0)+'件';
       setTimeout(()=>$('walkFinishV110').classList.add('show'),500);
     }
@@ -3545,7 +3598,7 @@ boot().catch(e=>console.warn('boot skipped',e));
 </script>
 
 <script>
-window.SANPO_BUILD='v116-20261001';
+window.SANPO_BUILD='v117-20261002';
 console.info('[SANPO] build', window.SANPO_BUILD);
 </script>
 </body>
