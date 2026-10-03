@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="sanpo-build" content="v126-distance-3course">
+  <meta name="sanpo-build" content="v127-three-slot-generation">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbf8">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <title>SANPO | 今の気分から散歩コースをつくる</title>
-<meta name="sanpo-build" content="v126-20261002-map-recovery-course-switch-restored">
-<!-- SANPO v126: keep v118 map/search recovery; restore pre-swipe course switching -->
+<meta name="sanpo-build" content="v127-20261002-map-recovery-course-switch-restored">
+<!-- SANPO v127: keep v118 map/search recovery; restore pre-swipe course switching -->
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1541,14 +1541,14 @@ body{letter-spacing:.005em}
 }
 
 
-/* ===== SANPO v126: distance accuracy + spot photos ===== */
+/* ===== SANPO v127: distance accuracy + spot photos ===== */
 .spot-photo-hero-v115{position:relative!important}
 .spot-photo-placeholder-v115,
 .spot-photo-hero-v115>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
 .spot-photo-placeholder-v115[hidden],
 .spot-photo-hero-v115>img[hidden]{display:none!important}
-.spot-icon.spot-photo-v126{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
-.spot-icon.spot-photo-v126 img{width:100%;height:100%;object-fit:cover;display:block}
+.spot-icon.spot-photo-v127{width:72px!important;height:72px!important;overflow:hidden!important;background:#edf4f0!important;flex:0 0 72px!important}
+.spot-icon.spot-photo-v127 img{width:100%;height:100%;object-fit:cover;display:block}
 
 </style>
 </head>
@@ -2092,7 +2092,7 @@ const state={
 };
 
 let googleLoadPromise=null;
-let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v126: max 6 route calls / generation
+let routeCallsV117=0; const ROUTE_CALL_LIMIT_V117=6; // v127: max 6 route calls / generation
 let gmap=null;
 let gPolylines=[];
 let gMarkers=[];
@@ -2272,7 +2272,7 @@ function resolvedStopCount(){
 }
 
 function themeSearchConfig(){
-  // v126: Do not hard-filter Places by one Google place type.
+  // v127: Do not hard-filter Places by one Google place type.
   // Gather a broad pool first, then score the theme fit inside SANPO.
   if(state.theme==='cafe'){
     return {
@@ -2348,7 +2348,7 @@ async function onePlaceTextSearch(start,config,textQuery,openOnlyOverride=null){
 function uniqueNearbyPlaces(start,places){
   const target=effectiveTargetKmV102();
   const seen=new Set();
-  // v126: a 5 km loop works best when the destination is roughly 0.5–1.7 km away.
+  // v127: a 5 km loop works best when the destination is roughly 0.5–1.7 km away.
   // Very distant POIs force a piston/out-and-back route or overshoot the target.
   const maxDirect=Math.max(.8,target*.38);
   const ideal=Math.max(.35,target*.22);
@@ -2454,7 +2454,7 @@ function bearingBetweenV122(a,b){
   return (deg(Math.atan2(y,x))+360)%360;
 }
 function loopSupportPointsV123(start,anchor,seed,target){
-  // v126: put the real destination on the outer arc of the loop.
+  // v127: put the real destination on the outer arc of the loop.
   // Route order becomes: start -> side A -> POI -> side B -> start.
   // This is much less likely to create a long branch that must be walked twice.
   const base=bearingBetweenV122(start,anchor);
@@ -2636,7 +2636,7 @@ function routeRetraceRatioV123(path){
   return Math.min(1,retraced/total);
 }
 function routeShapeScoreV123(r){
-  // v126: requested distance is the primary requirement.
+  // v127: requested distance is the primary requirement.
   // Retracing still matters, but it must not make a 6.6 km route beat a clean 5.0 km route.
   return (r.distanceError||0)*6.0+(r.retraceRatio||0)*2.4+(r.overlapRatio||0)*0.8;
 }
@@ -2730,132 +2730,164 @@ async function buildPlainFallbackV109(start,seed,targetKm){
   const spec=demoSpec(start,seed,[]);
   return await refinePlainSpecV109(start,spec,targetKm,2);
 }
+
+function scaledSpecForTargetV127(start,spec,firstResult,targetKm){
+  const working=cloneSpecV109(spec);
+  const fixedSet=new Set(working.fixedIndices||[]);
+  const ratio=targetKm/Math.max(.2,firstResult.km||targetKm);
+
+  // Road networks amplify waypoint geometry, so use a damped correction.
+  // Example: 6.6 km returned for 5 km target -> geometry shrinks clearly,
+  // without collapsing the loop into the start point.
+  const factor=Math.max(.62,Math.min(1.42,1+(ratio-1)*1.18));
+
+  working.intermediates=working.intermediates.map((p,i)=>{
+    if(fixedSet.has(i))return p; // real Google POI never moves
+    return scalePointFromStartV109(start,p,factor);
+  });
+  working.waypoints=working.intermediates.map(p=>({...p}));
+  return working;
+}
+
+function betterRouteV127(a,b,targetKm){
+  if(!a)return b;
+  if(!b)return a;
+  a.distanceError=Math.abs(a.km-targetKm)/Math.max(.1,targetKm);
+  b.distanceError=Math.abs(b.km-targetKm)/Math.max(.1,targetKm);
+
+  const aBad=(a.retraceRatio||0)>.34;
+  const bBad=(b.retraceRatio||0)>.34;
+  if(aBad!==bBad)return aBad?b:a;
+
+  // Distance dominates. Shape breaks near-ties.
+  const sa=a.distanceError*8+(a.retraceRatio||0)*1.8+(a.overlapRatio||0)*.55;
+  const sb=b.distanceError*8+(b.retraceRatio||0)*1.8+(b.overlapRatio||0)*.55;
+  return sb<sa?b:a;
+}
+
 async function buildGoogleRoutes(start,places){
   const wanted=state.forcedPlace?Math.max(1,resolvedStopCount()):resolvedStopCount();
   const target=effectiveTargetKmV102();
-  const raw=[];
   const explicitTheme=['cafe','food','green','water'].includes(state.theme);
   const isRandom=state.theme==='random';
   const ranked=(places||[]).slice(0,20);
 
-  const pushCandidate=(c)=>{
-    if(!c)return;
-    c.distanceError=Math.abs(c.km-target)/Math.max(.1,target);
-    raw.push(c);
-  };
+  // ---- Phase 1: always prepare three genuinely different candidate specs ----
+  const specs=[];
+  const primary=diversifyPlacesV122(start,ranked,3);
 
-  // v126 policy:
-  //  - max 6 Routes calls stays unchanged.
-  //  - aim for exactly three candidates.
-  //  - each candidate gets up to two calls to converge toward the requested distance.
-  //  - "おまかせ" is treated like a real theme candidate when POIs exist,
-  //    instead of wasting calls on one-shot 6–7 km routes.
-  if(explicitTheme || isRandom){
-    const primary=diversifyPlacesV122(start,ranked,3);
+  for(let i=0;i<3;i++){
+    let chosen=[];
 
-    if(primary.length){
-      for(let i=0;i<Math.min(3,primary.length);i++){
-        if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
-
-        const chosen = wanted<=1
-          ? [primary[i]]
-          : pickCandidateSpots(ranked,wanted,i*2);
-
-        if(!chosen.length)continue;
-
-        try{
-          const spec=demoSpec(start,i,chosen);
-          const c=await refineThemedSpecV113(start,spec,target,2);
-          if(c){
-            c.themeMatched=true;
-            pushCandidate(c);
-          }
-        }catch(e){
-          console.warn('spot route candidate failed',e);
-        }
-      }
+    if((explicitTheme||isRandom) && wanted>0 && primary[i]){
+      chosen = wanted<=1 ? [primary[i]] : pickCandidateSpots(ranked,wanted,i*2);
     }
 
-    // If POI search returned too few candidates, use any remaining route-call budget
-    // for distance-refined pure loops. This is a fallback, not the normal path.
-    let seed=20;
-    while(raw.length<3 && routeCallsV117<ROUTE_CALL_LIMIT_V117){
-      try{
-        const spec=demoSpec(start,seed++,[]);
-        const callsLeft=ROUTE_CALL_LIMIT_V117-routeCallsV117;
-        const c=await refinePlainSpecV109(start,spec,target,Math.min(2,callsLeft));
-        if(c){
-          c.themeMatched=false;
-          pushCandidate(c);
-        }
-      }catch(e){
-        console.warn('fallback loop candidate failed',e);
-        break;
-      }
-    }
-  }else{
-    // Theme "なし": three independently shaped loops, each distance-refined.
-    for(let i=0;i<3;i++){
-      if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
-      try{
-        const spec=demoSpec(start,i*3,[]);
-        const callsLeft=ROUTE_CALL_LIMIT_V117-routeCallsV117;
-        const c=await refinePlainSpecV109(start,spec,target,Math.min(2,callsLeft));
-        if(c){
-          c.themeMatched=false;
-          pushCandidate(c);
-        }
-      }catch(e){
-        console.warn('plain loop candidate failed',e);
-      }
+    // If "おまかせ" has fewer than 3 usable POIs, fill the missing slots
+    // with normal loop shapes instead of ending with 1 candidate.
+    const seed = chosen.length ? i : (30+i*5);
+    specs.push(demoSpec(start,seed,chosen));
+  }
+
+  const attempts=[];
+
+  // One call for each of the three candidates first.
+  for(let i=0;i<specs.length;i++){
+    if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+    try{
+      const first=await googleCandidate(start,specs[i]);
+      first.distanceError=Math.abs(first.km-target)/Math.max(.1,target);
+      first.themeMatched=(specs[i].spots||[]).length>0;
+      attempts.push({spec:specs[i],route:first});
+    }catch(e){
+      console.warn('v127 first candidate failed',i,e);
+      attempts.push({spec:specs[i],route:null});
     }
   }
 
-  // De-dupe only truly near-identical candidates.
+  // ---- Phase 2: use remaining calls to correct distance, one retry per slot ----
+  for(let i=0;i<attempts.length;i++){
+    if(state.cancelled || routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+    const item=attempts[i];
+    if(!item.route)continue;
+
+    const err=Math.abs(item.route.km-target)/Math.max(.1,target);
+    const shapeNeedsWork=(item.route.retraceRatio||0)>.22;
+
+    // Good already: save the API call for another candidate that needs correction.
+    if(err<=.055 && !shapeNeedsWork)continue;
+
+    try{
+      const correctedSpec=scaledSpecForTargetV127(start,item.spec,item.route,target);
+      const corrected=await googleCandidate(start,correctedSpec);
+      corrected.distanceError=Math.abs(corrected.km-target)/Math.max(.1,target);
+      corrected.themeMatched=(item.spec.spots||[]).length>0;
+      item.route=betterRouteV127(item.route,corrected,target);
+    }catch(e){
+      console.warn('v127 correction failed',i,e);
+    }
+  }
+
+  // If a first call failed and budget remains, retry that slot once as a plain loop.
+  for(let i=0;i<attempts.length;i++){
+    if(routeCallsV117>=ROUTE_CALL_LIMIT_V117)break;
+    if(attempts[i].route)continue;
+    try{
+      const fallbackSpec=demoSpec(start,60+i*7,[]);
+      const c=await googleCandidate(start,fallbackSpec);
+      c.distanceError=Math.abs(c.km-target)/Math.max(.1,target);
+      c.themeMatched=false;
+      attempts[i]={spec:fallbackSpec,route:c};
+    }catch(e){}
+  }
+
+  let candidates=attempts.map(x=>x.route).filter(Boolean);
+
+  // De-dupe only truly identical-looking outputs.
   const deduped=[];
-  raw
+  candidates
     .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b))
     .forEach(r=>{
-      const spotId=(r.spot?.id||'');
+      const pA=r.path?.[Math.floor((r.path.length||1)*.28)];
       const duplicate=deduped.some(x=>{
-        const sameSpot=spotId && (x.spot?.id||'')===spotId;
-        const kmNear=Math.abs(x.km-r.km)<.035;
-        const pA=x.path?.[Math.floor((x.path.length||1)*.30)];
-        const pB=r.path?.[Math.floor((r.path.length||1)*.30)];
-        const shapeNear=pA&&pB&&hav(pA,pB)<.055;
-        return sameSpot ? (kmNear&&shapeNear) : (!spotId && !(x.spot?.id) && kmNear&&shapeNear);
+        const sameSpot=(r.spot?.id && x.spot?.id && r.spot.id===x.spot.id);
+        const pB=x.path?.[Math.floor((x.path.length||1)*.28)];
+        const sameShape=pA&&pB&&hav(pA,pB)<.035;
+        const sameKm=Math.abs(r.km-x.km)<.025;
+        return sameSpot ? (sameShape&&sameKm) : (!r.spot?.id&&!x.spot?.id&&sameShape&&sameKm);
       });
       if(!duplicate)deduped.push(r);
     });
 
   const distErr=r=>Math.abs(r.km-target)/Math.max(.1,target);
 
-  // Distance is hard-bounded. For 5 km:
-  //   preferred = 4.7–5.3 km (±6%)
-  //   second    = 4.5–5.5 km (±10%)
-  // We no longer show 6.6 km just because it is the only route Google returned.
-  const preferred=deduped.filter(r=>distErr(r)<=.06 && (r.retraceRatio||0)<=.22);
-  const acceptable=deduped.filter(r=>distErr(r)<=.10 && (r.retraceRatio||0)<=.26);
+  // Pick up to three. Distance is the hard product condition:
+  // 5 km -> first 4.7–5.3, then 4.5–5.5.
+  const preferred=deduped
+    .filter(r=>distErr(r)<=.06 && (r.retraceRatio||0)<=.28)
+    .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b));
 
-  let routes=[...preferred];
+  const acceptable=deduped
+    .filter(r=>distErr(r)<=.10 && (r.retraceRatio||0)<=.30 && !preferred.includes(r))
+    .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b));
+
+  const routes=[...preferred];
   for(const r of acceptable){
     if(routes.length>=3)break;
-    if(!routes.includes(r))routes.push(r);
+    routes.push(r);
   }
 
-  // A third candidate may be slightly outside 10% only when it is very close and clean.
+  // One final narrow rescue band. Do not resurrect 6.6 km for a 5 km request.
   if(routes.length<3){
-    const near=deduped
-      .filter(r=>distErr(r)<=.12 && (r.retraceRatio||0)<=.20 && !routes.includes(r))
+    const rescue=deduped
+      .filter(r=>distErr(r)<=.115 && (r.retraceRatio||0)<=.25 && !routes.includes(r))
       .sort((a,b)=>routeShapeScoreV123(a)-routeShapeScoreV123(b));
-    for(const r of near){
+    for(const r of rescue){
       if(routes.length>=3)break;
       routes.push(r);
     }
   }
 
-  // Never return an obviously wrong-distance course as a fake success.
-  // If only one or two good courses exist, show one or two.
   state.extensionOffer=null;
   return routes.slice(0,3);
 }
@@ -3126,7 +3158,7 @@ function renderSpots(c){
     const el=document.createElement('div');
     el.className='spot-card';
     const spotVisual=s.photoUri
-      ? `<div class="spot-icon spot-photo-v126"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
+      ? `<div class="spot-icon spot-photo-v127"><img src="${escapeHtml(s.photoUri)}" alt="${escapeHtml(s.name||'立ち寄りスポット')}の写真" loading="lazy"></div>`
       : `<div class="spot-icon">${themeEmoji()}</div>`;
     el.innerHTML=`${spotVisual}<div><b>${i+1}. ${escapeHtml(s.name)}</b><small>${escapeHtml(s.address||'')}</small>${s.openFiltered?'<small class="open">営業中候補</small>':''}</div><button class="spot-replace-v117" data-replace-spot="${i}">入れ替え</button>`;
     el.querySelector('[data-replace-spot]')?.addEventListener('click',ev=>{ev.stopPropagation();replaceSpotV117(i)});
@@ -3879,7 +3911,7 @@ $('shareRouteBtnV117').onclick=async()=>{
   const c=state.routes[state.selected];if(!c)return;const url=buildGoogleMapsWalkUrl(c);const txt=`SANPO ${c.km.toFixed(1)}km・約${Math.round(c.km/state.paceKmh*60)}分の散歩コース`;
   try{if(navigator.share)await navigator.share({title:'SANPO 散歩コース',text:txt,url});else{await navigator.clipboard.writeText(url);alert('コースURLをコピーしました。')}}catch(e){}
 };
-// v126: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
+// v127: result-screen swipe switching removed. Use the '別の候補' button or 3-course comparison instead.
 
 if($('failAnyHoursV124'))$('failAnyHoursV124').onclick=()=>{state.openOnly=false;$('openOnlyToggle')?.classList.remove('on');$('settingsOpenOnlyV109')?.classList.remove('on');savePrefsV109();$('routeFailModalV117').classList.remove('show');createRoute()};
 $('failCloseV117').onclick=()=>$('routeFailModalV117').classList.remove('show');$('failRetryV117').onclick=()=>{$('routeFailModalV117').classList.remove('show');createRoute()};$('failNoThemeV117').onclick=()=>{state.theme='direct';qsa('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme==='direct'));syncDirectThemeV110();$('routeFailModalV117').classList.remove('show');createRoute()};$('failLessStopsV117').onclick=()=>{state.stopCount=String(Math.max(1,(Number(state.stopCount)||2)-1));if($('stopSelectV117'))$('stopSelectV117').value=state.stopCount;$('routeFailModalV117').classList.remove('show');createRoute()};
